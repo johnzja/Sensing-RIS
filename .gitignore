@@ -1,0 +1,7 @@
+paper/SensingRIS.pdf
+paper/*.synctex.gz
+paper/*.thm
+paper/*.aux
+
+*.log
+*.mat
