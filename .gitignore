@@ -5,3 +5,5 @@ paper/*.aux
 
 *.log
 *.mat
+
+.DS_Store
