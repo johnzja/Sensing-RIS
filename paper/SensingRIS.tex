@@ -94,14 +94,18 @@ Signal model:
 \label{Signal model}
 y=\bm f^{H}\bm \Theta\bm G\bm ws+z,
 \end{equation}
-where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS; $s$ denotes the transmitted normalized symbol; $z$ denotes the \ac{AWGN} introduced at the receiver user.
+where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with $\left\Vert \bm w\right \Vert^{2}\leq P$; $s$ denotes the transmitted normalized symbol; $z$ denotes the \ac{AWGN} introduced at the receiver user.
 
-Interference field at the $n$-th RIS element:
+Interference field at the $n$-th RIS element, with beamforming vector $\bm w=\bm u$ and transmitted symbol $s=1$:
 \begin{equation}
 \label{interference}
-E_{n}=
+E_{n}=\left( \sum\nolimits_{m=1}^{M}G_{nm}u_{m}+\right)
 \end{equation}
 
+\begin{equation}
+\label{Power of Interference}
+P=A \left| E_{n} \right |^{2}+\zeta.
+\end{equation}
 
 \appendices
 \section{xxx}
