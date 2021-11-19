@@ -156,12 +156,12 @@ Then, the power of interference field can be written as
 \begin{aligned}
 P(t)&=A \left| E_{n} (t)\right |^{2}+\zeta\\
 &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{Sensor detection signal}}\\
-&~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{j\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},
+&~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{j\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
 \end{aligned}
 \end{equation}
 where $v'\overset{\text{d}}{=}v\sim\mathcal{CN}\left(0,\sigma_{v}^{2}\right)$.
 
-To estimate the phase $\varphi$, we need enough observations from the sensor detection signal. For simplicity and without loss of generality, let us assume $\psi(t)=\omega t$. Assume furthermore that $L$ observations $P[l]=P(t_{l})$ at time 
+To estimate the phase $\varphi$, we need enough observations from the sensor detection signal. For simplicity and without loss of generality, let us assume $\psi(t)=\omega t$ and $\omega=\frac{2\pi}{T_{s}}$. Assume furthermore that $L$ observations $P[l]=P(t_{l})$ at time 
 \begin{equation}
 \label{observation time}
 t_{l}=\frac{l}{L}T_{s},~\forall l\in \left\{0,\cdots ,L-1\right\}
@@ -170,7 +170,18 @@ are used for estimation.
 \subsubsection{LS method}
 Apply $L$-point \ac{DFT} to the observed sensor detection signals $P[1],\cdots ,P[L]$, we have
 \begin{equation}
-p[l']=\sum\nolimits_{l=},~\forall l'\in [L].
+\label{DFT}
+p[l']=\sum\nolimits_{l=0}^{L-1}P[l]e^{-j\frac{2\pi}{L}ll'},~\forall l'\in [L].
+\end{equation}
+Specifically, we have
+\begin{equation}
+\label{DFT l=1}
+p[1]=\sum\nolimits_{l=0}^{L-1}A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\frac{2\pi}{L}l+\varphi\right)\right]e^{-j\frac{2\pi}{L}l}=\frac{A}{2}e^{j\varphi}.
+\end{equation}
+Then, the phase $\varphi$ can be estimated as
+\begin{equation}
+\label{LS estimate result}
+\hat{\varphi}=\frac{2p[1]}{A}.
 \end{equation}
 
 %% zja working below
