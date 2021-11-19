@@ -138,19 +138,31 @@ The SNR maximization problem for the receiver user can be formulated as
 The optimal phase-shift for the $n$-th RIS element can be obtained as
 \begin{equation}
 \label{optimal RIS}
-\theta_{n}\opt = \exp\left(-j\arg\left(f_{n}^{*}\sum\nolimits_{m=1}^{M}G_{nm}w_{m}\right)\right),~\forall n.
+\theta_{n}\opt = \exp\left(-j\arg\left(f_{n}^{*}\bm g_{n}^{T}\bm w\right)\right),~\forall n,
 \end{equation}
+where $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
 
-Interference field at the $n$-th RIS element, with beamforming vector $\bm w=\bm u$ and transmitted symbol $s=1$:
+Interference field at the $n$-th RIS element, with transmitted symbol $s=1$:
 \begin{equation}
 \label{interference}
-E_{n}=\sum\nolimits_{m=1}^{M}G_{nm}u_{m}+f_{n}^{*}e^{j\varphi (t)}+v(t)
+E_{n}(t)=\bm g_{n}^{T}\bm w+f_{n}^{*}e^{j\psi (t)}+v(t).
 \end{equation}
 
+Define $\alpha = \left\vert\bm g_{n}^{T}\bm w\right\vert$ and $\beta = \left\vert f_{n}^{*}\right \vert$, and define the phase to be measured as $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$.
+Then, the power of interference field can be written as
 \begin{equation}
 \label{Power of Interference}
-P=A \left| E_{n} \right |^{2}+\zeta.
+\begin{aligned}
+P(t)&=A \left| E_{n} (t)\right |^{2}+\zeta\\
+&=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{Sensor detection signal}}\\
+&~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{j\left(\psi(t)+\varphi\right)}\right)v^{*}(t)\right\}+A\left|v(t)\right|^{2}+\zeta}_{\text{Noise}}.
+\end{aligned}
 \end{equation}
+
+To estimate the phase $\varphi$, we need enough observations from the sensor detection signal. For simplicity and without loss of generality, let us assume $\psi(t)=\omega t$. Assume furthermore that $L$ observations $P(t_{1}),\cdots ,P(t_{L})$ at time $t_{1},\cdots ,t_{L}$ are used for estimation.
+\subsubsection{LS method}
+
+
 
 \appendices
 \section{xxx}
