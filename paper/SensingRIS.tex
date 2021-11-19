@@ -1,21 +1,29 @@
 \documentclass[12pt,draftclsnofoot,journal,onecolumn]{IEEEtran}
 \usepackage{amsfonts}
 \usepackage{amsmath,amssymb}
-\usepackage{graphicx}
-\usepackage{color, soul}
+\usepackage{acronym}  % make an acronym
 \usepackage{algorithm,algorithmic}
+\usepackage{balance}
 \usepackage{bm}
 \usepackage{booktabs}
-\usepackage{flushend}
-\usepackage{tikz}
+\usepackage{color, soul}
 \usepackage{cite}
+\usepackage{flushend}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage{tikz}
 \usetikzlibrary{arrows}
 \usepackage{subfigure}
-\usepackage{indentfirst}
 \usepackage[amsmath,thmmarks]{ntheorem}
 \usepackage{theorem}
-\usepackage{acronym}  % make an acronym
-\usepackage{balance}
+% Enable Hyper-references.
+\usepackage{hyperref}
+\hypersetup{hidelinks, 
+colorlinks=true,
+allcolors=black,
+pdfstartview=Fit,
+breaklinks=true}
+
 \newtheorem{theorem}{\bf Theorem}
 \newtheorem{proposition}{\bf Proposition}
 \newtheorem{lemma}{\bf Lemma}
@@ -44,7 +52,7 @@
 \acrodef{UL-TBF}[UL-TBF]{uplink transmit beamforming}
 \acrodef{TPS}[TPS]{transmit phase shifter}
 \acrodef{RC}[RC]{receiver combining}
-\acrodef{AWGN}[AWGN]{additive white gaussian noise}
+\acrodef{AWGN}[AWGN]{additive white Gaussian noise}
 
 \def \H {^H}
 \def \opt {^{\text{opt}}}
@@ -87,7 +95,8 @@ xxx
 \begin{IEEEkeywords}
 xxx
 \end{IEEEkeywords}
-
+\section{Introduction}
+    Sensing RIS \cite{ma2020smartsensing}.
 \section{System Model}
 \label{System Model}
 \subsection{MISO case}
