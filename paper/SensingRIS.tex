@@ -53,6 +53,7 @@ breaklinks=true}
 \acrodef{TPS}[TPS]{transmit phase shifter}
 \acrodef{RC}[RC]{receiver combining}
 \acrodef{AWGN}[AWGN]{additive white Gaussian noise}
+\acrodef{DFT}[DFT]{discrete Fourier transform}
 
 \def \H {^H}
 \def \opt {^{\text{opt}}}
@@ -160,9 +161,17 @@ P(t)&=A \left| E_{n} (t)\right |^{2}+\zeta\\
 \end{equation}
 where $v'\overset{\text{d}}{=}v\sim\mathcal{CN}\left(0,\sigma_{v}^{2}\right)$.
 
-To estimate the phase $\varphi$, we need enough observations from the sensor detection signal. For simplicity and without loss of generality, let us assume $\psi(t)=\omega t$. Assume furthermore that $L$ observations $P(t_{1}),\cdots ,P(t_{L})$ at time $t_{1},\cdots ,t_{L}$ are used for estimation.
+To estimate the phase $\varphi$, we need enough observations from the sensor detection signal. For simplicity and without loss of generality, let us assume $\psi(t)=\omega t$. Assume furthermore that $L$ observations $P[l]=P(t_{l})$ at time 
+\begin{equation}
+\label{observation time}
+t_{l}=\frac{l}{L}T_{s},~\forall l\in \left\{0,\cdots ,L-1\right\}
+\end{equation}
+are used for estimation.
 \subsubsection{LS method}
-
+Apply $L$-point \ac{DFT} to the observed sensor detection signals $P[1],\cdots ,P[L]$, we have
+\begin{equation}
+p[l']=\sum\nolimits_{l=},~\forall l'\in [L].
+\end{equation}
 
 
 \appendices
