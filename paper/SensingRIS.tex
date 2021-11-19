@@ -173,9 +173,30 @@ Apply $L$-point \ac{DFT} to the observed sensor detection signals $P[1],\cdots ,
 p[l']=\sum\nolimits_{l=},~\forall l'\in [L].
 \end{equation}
 
+%% zja working below
+\subsubsection{ML method}
+    Suppose the noise field $v'(t)=v'_R(t) + jv'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_n(t)\right|^2$ is a noncentral chi-squared distribution with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
+    \begin{equation}
+        \begin{aligned}
+        \mu_{n,R} & = \alpha + \beta \cos(\psi(t)+\varphi),    \\ 
+        \mu_{n,I} & = \beta \sin(\psi(t)+\varphi).   \\
+        \end{aligned}
+    \end{equation}
+    Thus, the output of the power sensor is 
+    \begin{equation}
+        P(t)  = A\left((v'_{R} + \mu_{n,R})^2 + (v'_{I} + \mu_{n,I})^2 \right)+ \zeta 
+    \end{equation}
+    By defining the noncentral parameter $\lambda(t)$ as
+    \begin{equation}
+        \lambda(t)  = A(\mu_{n,R}^2 + \mu_{n,I}^2) = A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right],
+    \end{equation}
+    then the p.d.f of $s(t) := P(t)-\zeta$ is 
+    \begin{equation}
+        f_{s(t)}(x) = \frac{1}{A\sigma_{v}^2}I_{0}\left(\frac{\sqrt{\lambda(t) x}}{A\sigma_v^2/2}\right), x \geq 0
+    \end{equation}
 
 \appendices
-\section{xxx}
+
 
 \section*{Acknowledgments}
 
