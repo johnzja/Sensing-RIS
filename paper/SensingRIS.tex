@@ -59,6 +59,10 @@
 \def \ml {multi-layer }
 \def \tb {transmit beamformer }
 \def \sl {single-layer }
+\def \diag {\text{diag}}
+\def \opt {^{\text{opt}}}
+\def \exp {\text{exp}}
+\def \arg {\text{arg}}
 \newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}   %Use Input in the format of Algorithm
 \renewcommand{\algorithmicensure}{\textbf{Output:}}  %UseOutput in the format of Algorithm
@@ -89,17 +93,49 @@ xxx
 \subsection{MISO case}
 \label{MISO case}
 
+RIS phase-shift matrix:
+\begin{equation}
+\label{RIS}
+\bm \Theta = \diag \left(\bm \theta\right )=\diag \left(\left[\theta_{1},\cdots ,\theta_{N}\right]\right).
+\end{equation}
+
 Signal model:
 \begin{equation}
 \label{Signal model}
 y=\bm f^{H}\bm \Theta\bm G\bm ws+z,
 \end{equation}
-where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with $\left\Vert \bm w\right \Vert^{2}\leq P$; $s$ denotes the transmitted normalized symbol; $z$ denotes the \ac{AWGN} introduced at the receiver user.
+where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with $\left\Vert \bm w\right \Vert_{2}^{2}\leq P$; $s$ denotes the transmitted normalized symbol; $z\sim \mathcal{CN}\left(0,\sigma_{z}^{2}\right)$ denotes the \ac{AWGN} introduced at the receiver user.
+
+With fixed positions of the BS and the RIS, the beamforming vector can be fixed as
+\begin{equation}
+\label{fixed w}
+\bm w=\sqrt{P}\bm a\left(\alpha\right),
+\end{equation}
+where $\alpha$ is ...
+
+The SNR maximization problem for the receiver user can be formulated as
+\begin{subequations}
+\label{optimization}
+\begin{align}
+\label{objective}
+\max_{\bm \Theta}~~&\text{SNR}=\frac{1}{\sigma_{z}^{2}}
+\left\vert
+\bm f^{H}\bm \Theta\bm G\bm w \right\vert^{2},\\
+\label{constraint}
+~~~~~\text{s.t.~~~}&\left\vert\theta_{n}\right\vert=1,~\forall n.
+\end{align}
+\end{subequations}
+
+The optimal phase-shift for the $n$-th RIS element can be obtained as
+\begin{equation}
+\label{optimal RIS}
+\theta_{n}\opt = \exp\left(-j\arg\left(f_{n}^{*}\sum\nolimits_{m=1}^{M}G_{nm}w_{m}\right)\right),~\forall n.
+\end{equation}
 
 Interference field at the $n$-th RIS element, with beamforming vector $\bm w=\bm u$ and transmitted symbol $s=1$:
 \begin{equation}
 \label{interference}
-E_{n}=\left( \sum\nolimits_{m=1}^{M}G_{nm}u_{m}+\right)
+E_{n}=\sum\nolimits_{m=1}^{M}G_{nm}u_{m}+f_{n}^{*}e^{j\varphi (t)}+v(t)
 \end{equation}
 
 \begin{equation}
