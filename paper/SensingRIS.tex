@@ -155,9 +155,10 @@ Then, the power of interference field can be written as
 \begin{aligned}
 P(t)&=A \left| E_{n} (t)\right |^{2}+\zeta\\
 &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{Sensor detection signal}}\\
-&~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{j\left(\psi(t)+\varphi\right)}\right)v^{*}(t)\right\}+A\left|v(t)\right|^{2}+\zeta}_{\text{Noise}}.
+&~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{j\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},
 \end{aligned}
 \end{equation}
+where $v'\overset{\text{d}}{=}v\sim\mathcal{CN}\left(0,\sigma_{v}^{2}\right)$.
 
 To estimate the phase $\varphi$, we need enough observations from the sensor detection signal. For simplicity and without loss of generality, let us assume $\psi(t)=\omega t$. Assume furthermore that $L$ observations $P(t_{1}),\cdots ,P(t_{L})$ at time $t_{1},\cdots ,t_{L}$ are used for estimation.
 \subsubsection{LS method}
