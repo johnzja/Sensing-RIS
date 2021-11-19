@@ -1,21 +1,29 @@
 \documentclass[12pt,draftclsnofoot,journal,onecolumn]{IEEEtran}
 \usepackage{amsfonts}
 \usepackage{amsmath,amssymb}
-\usepackage{graphicx}
-\usepackage{color, soul}
+\usepackage{acronym}  % make an acronym
 \usepackage{algorithm,algorithmic}
+\usepackage{balance}
 \usepackage{bm}
 \usepackage{booktabs}
-\usepackage{flushend}
-\usepackage{tikz}
+\usepackage{color, soul}
 \usepackage{cite}
+\usepackage{flushend}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage{tikz}
 \usetikzlibrary{arrows}
 \usepackage{subfigure}
-\usepackage{indentfirst}
 \usepackage[amsmath,thmmarks]{ntheorem}
 \usepackage{theorem}
-\usepackage{acronym}  % make an acronym
-\usepackage{balance}
+% Enable Hyper-references.
+\usepackage{hyperref}
+\hypersetup{hidelinks, 
+colorlinks=true,
+allcolors=black,
+pdfstartview=Fit,
+breaklinks=true}
+
 \newtheorem{theorem}{\bf Theorem}
 \newtheorem{proposition}{\bf Proposition}
 \newtheorem{lemma}{\bf Lemma}
@@ -44,7 +52,7 @@
 \acrodef{UL-TBF}[UL-TBF]{uplink transmit beamforming}
 \acrodef{TPS}[TPS]{transmit phase shifter}
 \acrodef{RC}[RC]{receiver combining}
-\acrodef{AWGN}[AWGN]{additive white gaussian noise}
+\acrodef{AWGN}[AWGN]{additive white Gaussian noise}
 
 \def \H {^H}
 \def \opt {^{\text{opt}}}
@@ -83,29 +91,30 @@ xxx
 \begin{IEEEkeywords}
 xxx
 \end{IEEEkeywords}
-
+\section{Introduction}
+    Sensing RIS \cite{ma2020smartsensing}.
 \section{System Model}
 \label{System Model}
-\subsection{MISO case}
-\label{MISO case}
+    \subsection{MISO case}
+    \label{MISO case}
 
-Signal model:
-\begin{equation}
-\label{Signal model}
-y=\bm f^{H}\bm \Theta\bm G\bm ws+z,
-\end{equation}
-where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with $\left\Vert \bm w\right \Vert^{2}\leq P$; $s$ denotes the transmitted normalized symbol; $z$ denotes the \ac{AWGN} introduced at the receiver user.
+    Signal model:
+    \begin{equation}
+        \label{Signal model}
+        y=\bm f^{H}\bm \Theta\bm G\bm ws+z,
+    \end{equation}
+    where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with $\left\Vert \bm w\right \Vert^{2}\leq P$; $s$ denotes the transmitted normalized symbol; $z$ denotes the \ac{AWGN} introduced at the receiver user.
 
-Interference field at the $n$-th RIS element, with beamforming vector $\bm w=\bm u$ and transmitted symbol $s=1$:
-\begin{equation}
-\label{interference}
-E_{n}=\left( \sum\nolimits_{m=1}^{M}G_{nm}u_{m}+\right)
-\end{equation}
+    Interference field at the $n$-th RIS element, with beamforming vector $\bm w=\bm u$ and transmitted symbol $s=1$:
+    \begin{equation}
+        \label{interference}
+    E_{n}=\left( \sum\nolimits_{m=1}^{M}G_{nm}u_{m}+\right)
+    \end{equation}
 
-\begin{equation}
-\label{Power of Interference}
-P=A \left| E_{n} \right |^{2}+\zeta.
-\end{equation}
+    \begin{equation}
+        \label{Power of Interference}
+        P=A \left| E_{n} \right |^{2}+\zeta.
+    \end{equation}
 
 \appendices
 \section{xxx}

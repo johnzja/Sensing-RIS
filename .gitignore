@@ -2,6 +2,11 @@ paper/SensingRIS.pdf
 paper/*.synctex.gz
 paper/*.thm
 paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.out
 
 *.log
 *.mat
