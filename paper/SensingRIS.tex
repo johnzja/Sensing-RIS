@@ -181,7 +181,7 @@ p[1]=\sum\nolimits_{l=0}^{L-1}A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(
 Then, the phase $\varphi$ can be estimated as
 \begin{equation}
 \label{LS estimate result}
-\hat{\varphi}=\frac{2p[1]}{A}.
+\hat{\varphi}=\arg\left(\frac{2p[1]}{A}\right) = \arg\left(p[1]\right).
 \end{equation}
 
 %% zja working below
@@ -201,9 +201,9 @@ Then, the phase $\varphi$ can be estimated as
     \begin{equation}
         \lambda(t)  = A(\mu_{n,R}^2 + \mu_{n,I}^2) = A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right],
     \end{equation}
-    then the p.d.f of $s(t) := P(t)-\zeta$ is 
+    then the p.d.f of $s(t) := P(t)-\zeta$ is given by the zeroth-order modified Bessel function
     \begin{equation}
-        f_{s(t)}(x) = \frac{1}{A\sigma_{v}^2}I_{0}\left(\frac{\sqrt{\lambda(t) x}}{A\sigma_v^2/2}\right), x \geq 0
+        f_{s(t)}(x) = \frac{1}{A\sigma_{v}^2} \exp\left(-\frac{x+\lambda(t)}{A\sigma_v^2}\right)I_{0}\left(\frac{\sqrt{\lambda(t) x}}{A\sigma_v^2/2}\right), x \geq 0.
     \end{equation}
 
 \appendices
