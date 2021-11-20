@@ -53,6 +53,7 @@ breaklinks=true}
 \acrodef{TPS}[TPS]{transmit phase shifter}
 \acrodef{RC}[RC]{receiver combining}
 \acrodef{AWGN}[AWGN]{additive white Gaussian noise}
+\acrodef{DFT}[DFT]{discrete Fourier transform}
 
 \def \H {^H}
 \def \opt {^{\text{opt}}}
@@ -155,14 +156,33 @@ Then, the power of interference field can be written as
 \begin{aligned}
 P(t)&=A \left| E_{n} (t)\right |^{2}+\zeta\\
 &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{Sensor detection signal}}\\
-&~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{j\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},
+&~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{j\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
 \end{aligned}
 \end{equation}
 where $v'\overset{\text{d}}{=}v\sim\mathcal{CN}\left(0,\sigma_{v}^{2}\right)$.
 
-To estimate the phase $\varphi$, we need enough observations from the sensor detection signal. For simplicity and without loss of generality, let us assume $\psi(t)=\omega t$. Assume furthermore that $L$ observations $P(t_{1}),\cdots ,P(t_{L})$ at time $t_{1},\cdots ,t_{L}$ are used for estimation.
+To estimate the phase $\varphi$, we need enough observations from the sensor detection signal. For simplicity and without loss of generality, let us assume $\psi(t)=\omega t$ and $\omega=\frac{2\pi}{T_{s}}$. Assume furthermore that $L$ observations $P[l]=P(t_{l})$ at time 
+\begin{equation}
+\label{observation time}
+t_{l}=\frac{l}{L}T_{s},~\forall l\in \left\{0,\cdots ,L-1\right\}
+\end{equation}
+are used for estimation.
 \subsubsection{LS method}
-
+Apply $L$-point \ac{DFT} to the observed sensor detection signals $P[1],\cdots ,P[L]$, we have
+\begin{equation}
+\label{DFT}
+p[l']=\sum\nolimits_{l=0}^{L-1}P[l]e^{-j\frac{2\pi}{L}ll'},~\forall l'\in [L].
+\end{equation}
+Specifically, we have
+\begin{equation}
+\label{DFT l=1}
+p[1]=\sum\nolimits_{l=0}^{L-1}A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\frac{2\pi}{L}l+\varphi\right)\right]e^{-j\frac{2\pi}{L}l}=\frac{A}{2}e^{j\varphi}.
+\end{equation}
+Then, the phase $\varphi$ can be estimated as
+\begin{equation}
+\label{LS estimate result}
+\hat{\varphi}=\arg\left(\frac{2p[1]}{A}\right) = \arg\left(p[1]\right).
+\end{equation}
 
 %% zja working below
 \subsubsection{ML method}
@@ -181,9 +201,19 @@ To estimate the phase $\varphi$, we need enough observations from the sensor det
     \begin{equation}
         \lambda(t)  = A(\mu_{n,R}^2 + \mu_{n,I}^2) = A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right],
     \end{equation}
-    then the p.d.f of $s(t) := P(t)-\zeta$ is 
+    then the p.d.f of $s(t) := P(t)-\zeta$ is given by the zeroth-order modified Bessel function
     \begin{equation}
-        f_{s(t)}(x) = \frac{1}{A\sigma_{v}^2}I_{0}\left(\frac{\sqrt{\lambda(t) x}}{A\sigma_v^2/2}\right), x \geq 0
+        f_{s(t)}(x) = \frac{1}{A\sigma_{v}^2} \exp\left(-\frac{x+\lambda(t)}{A\sigma_v^2}\right)I_{0}\left(\frac{\sqrt{\lambda(t) x}}{A\sigma_v^2/2}\right), x \geq 0.
+        \label{ML single observation}
+    \end{equation}
+    In the following analysis, we assume that $\sigma_{\xi}^2 = 0$. If we have obtained observations $P[l], \forall l\in [L]$, then the log likelihood function is 
+    \begin{equation}
+        \mathcal{L}(P[0:L] | \varphi) = \sum_{l=0}^{L-1}\left[-\frac{P[l] + \lambda(t_l)}{A\sigma_v^2} + \log I_0\left(\frac{\sqrt{P[l] \lambda(t_l)}}{A\sigma_v^2/2}\right)\right] - L\log(A\sigma_v^2),
+        \label{ML likelihood}
+    \end{equation}
+    and the derivative of \eqref{ML likelihood} is 
+    \begin{equation}
+        \frac{\partial \mathcal{L}(P[0:L] | \varphi)}{\partial \varphi} = \frac{2\alpha\beta}{\sigma_v^2}\sum_{l=0}^{L-1}\sin(\psi(t_l)+\varphi) \left[1 - \frac{ I_1\left(\frac{\sqrt{P[l] \lambda(t_l)}}{A\sigma_v^2/2}\right) }{ I_0\left( \frac{\sqrt{P[l] \lambda(t_l)}}{A\sigma_v^2/2} \right)} \frac{\sqrt{P[l]}}{\sqrt{\lambda(t_l)}}\right].
     \end{equation}
 
 \appendices
