@@ -13,3 +13,4 @@ paper/*.out
 
 .DS_Store
 .vscode/
+*.asv
