@@ -6,4 +6,5 @@ RIS_pos = [5, 5];
 user_pos = [50, 0];
 fc = 5e8;
 [f, G] = generate_channel(N, M, BS_pos, RIS_pos, user_pos, fc);
-[w, theta] = traditional_beamforming(f, G);
+P = 1;
+[w, theta] = traditional_beamforming(f, G, P);
