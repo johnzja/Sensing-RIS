@@ -1,10 +1,12 @@
 clear all;
-N = 32; % RIS element
-M = 4; % BS antenna
+N = [8, 8]; % RIS element
+M = [2, 2]; % BS antenna
+K = 1;
 BS_pos = [0, 0];
 RIS_pos = [5, 5];
 user_pos = [50, 0];
 fc = 5e8;
-[f, G] = generate_channel(N, M, BS_pos, RIS_pos, user_pos, fc);
+L1 = 2; L2 = 8; Lc = 0;
+[f, G] = generate_channel_multipath(N, M, K, BS_pos, RIS_pos, user_pos, L1, L2, Lc);
 P = 1;
 [w, theta] = traditional_beamforming(f, G, P);
