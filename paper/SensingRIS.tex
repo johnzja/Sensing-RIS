@@ -5,6 +5,7 @@
 \usepackage{algorithm,algorithmic}
 \usepackage{balance}
 \usepackage{bm}
+\usepackage{bbm}
 \usepackage{booktabs}
 \usepackage{color, soul}
 \usepackage{cite}
@@ -208,12 +209,12 @@ Then, the phase $\varphi$ can be estimated as
     \end{equation}
     In the following analysis, we assume that $\sigma_{\xi}^2 = 0$. If we have obtained observations $P[l], \forall l\in [L]$, then the log likelihood function is 
     \begin{equation}
-        \mathcal{L}(P[0:L] | \varphi) = \sum_{l=0}^{L-1}\left[-\frac{P[l] + \lambda(t_l)}{A\sigma_v^2} + \log I_0\left(\frac{\sqrt{P[l] \lambda(t_l)}}{A\sigma_v^2/2}\right)\right] - L\log(A\sigma_v^2),
+        \mathcal{L}(P[0:L] | \varphi) = \sum_{l=0}^{L-1}\left[-\frac{P[l] + \lambda_l}{A\sigma_v^2} + \log I_0\left(\frac{\sqrt{P[l] \lambda_l}}{A\sigma_v^2/2}\right)\right] - L\log(A\sigma_v^2),
         \label{ML likelihood}
     \end{equation}
-    and the derivative of \eqref{ML likelihood} is 
+    where $\lambda_l := \lambda(t_l)$, and the derivative of \eqref{ML likelihood} is 
     \begin{equation}
-        \frac{\partial \mathcal{L}(P[0:L] | \varphi)}{\partial \varphi} = \frac{2\alpha\beta}{\sigma_v^2}\sum_{l=0}^{L-1}\sin(\psi(t_l)+\varphi) \left[1 - R\left( \frac{\sqrt{P[l]\lambda(t_l)}}{A\sigma_v^2/2} \right) \frac{\sqrt{P[l]}}{\sqrt{\lambda(t_l)}}\right],
+        \frac{\partial \mathcal{L}(P[0:L] | \varphi)}{\partial \varphi} = \frac{2\alpha\beta}{\sigma_v^2}\sum_{l=0}^{L-1}\sin(\psi(t_l)+\varphi) \left[1 - R\left( \frac{\sqrt{P[l]\lambda_l}}{A\sigma_v^2/2} \right) \frac{\sqrt{P[l]}}{\sqrt{\lambda_l}}\right],
     \end{equation}
     where the function $R(z)$ is defined as $R(z) = I_1(z)/I_0(z)$. Since the derivative of the function $R(z)$ satisfies the property
     \begin{equation}
@@ -222,8 +223,8 @@ Then, the phase $\varphi$ can be estimated as
     then the second derivative of the likelihood function $\mathcal{L}$ can be expressed as
     \begin{equation}
         \begin{aligned}
-        \frac{\partial^2 \mathcal{L}(P[0:L] | \varphi)}{\partial \varphi^2}  = &  \frac{2\alpha\beta}{\sigma_v^2} \sum_{l=0}^{L-1}{\cos(\psi(t_l)+\varphi)}\left[1 - R\left(z_l\right) \frac{\sqrt{P[l]}}{\sqrt{\lambda(t_l)}}\right] + \\
-        & \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{\sin^2(\psi(t_l)+\varphi) \left(1-R^2(z_l) -\frac{2}{z_l}R(z_l)\right)\frac{P[l]}{\lambda(t_l)} },\\
+        \frac{\partial^2 \mathcal{L}(P[0:L] | \varphi)}{\partial \varphi^2}  = &  \frac{2\alpha\beta}{\sigma_v^2} \sum_{l=0}^{L-1}{\cos(\psi(t_l)+\varphi)}\left[1 - R\left(z_l\right) \frac{\sqrt{P[l]}}{\sqrt{\lambda_l}}\right] + \\
+        & \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{\sin^2(\psi(t_l)+\varphi) \left(1-R^2(z_l) -\frac{2}{z_l}R(z_l)\right)\frac{P[l]}{\lambda_l} },\\
         \end{aligned}
         \label{Second Derivative Likelihood}
     \end{equation}
@@ -233,22 +234,35 @@ Then, the phase $\varphi$ can be estimated as
     \end{equation}
 
 \subsubsection{CRLB}
-    In fact, taking the expectation of \eqref{Second Derivative Likelihood} yields the CRLB of the estimators for $\hat{\varphi}$.
+    In fact, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\hat{\varphi}$. Following are some analytically evaluated useful integrals.
     \begin{equation}
         \begin{aligned}
             \mathbb{E}\left[R(z_l) \sqrt{P[l]}\right] & = \int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x+\lambda_l}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x}\\
-            & = \sqrt{\lambda_l},
+            & = \sqrt{\lambda_l},\\
         \end{aligned}
     \end{equation}
     \begin{equation}
-        \mathbb{E}\left[\frac{R(z_l)}{z_l} P[l]\right] = \frac{A\sigma_v^2}{2}
+        \begin{aligned}
+            \mathbb{E}\left[\frac{R(z_l)}{z_l} P[l]\right] &= \frac{A\sigma_v^2}{2}\\
+            \mathbb{E}\left[P[l]\right] &= A\sigma_v^2 + \lambda_l
+        \end{aligned}
     \end{equation}
+    The trickiest expectation is evaluated approximately by using the asymptotic expansion $x(1-R^2(\sqrt{x}/2)) \approx \sqrt{x}/2$:
     \begin{equation}
-        \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l
+        \begin{aligned}
+            \mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] & \approx g(\lambda_l, a) \\ 
+            & \triangleq  \frac{1}{4}\sqrt{\frac{\pi a}{\lambda_l^3}}e^{-\lambda_l/(2a)}\left((a+\lambda_l)I_0(\lambda_l/(2a))+\lambda_l I_1(\lambda_l/(2a))\right),
+        \end{aligned}
     \end{equation}
+    where $a=A\sigma_v^2 \ll \lambda_l$. From the above equations, we can obtain
     \begin{equation}
-        \mathbb{E}\left[\frac{\partial^2\mathcal{L}}{\partial\varphi^2}\right] = 
+        \begin{aligned}
+        \frac{1}{{\rm CRLB}(\varphi)} & = -\mathbb{E}\left[\frac{\partial^2\mathcal{L}}{\partial\varphi^2}\right] \\
+        & =  -\frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] - \frac{a}{\lambda_l}\right) } \\
+        & \approx \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\frac{a}{\lambda_l}-g(\lambda_l, a)\right)^{+} },
+        \end{aligned}
     \end{equation}
+    where $(x)^{+}$ denotes $x \mathbbm{1}_{\{x \ge 0\}}$.
 
 
 
