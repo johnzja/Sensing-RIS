@@ -1,4 +1,12 @@
-function [L,dL,d2L] = calc_likelihood(P, alpha, beta, A, psi_arr, varphi, sigma_v)
+function [L,dL,d2L] = calc_likelihood(P, varphi, SensingRIS_param)
+% Calculate the log-likelihood function of observed power sequence P under phase assumption varphi.
+% Parameter extraction.
+    A = SensingRIS_param.A;
+    alpha = SensingRIS_param.alpha;
+    beta = SensingRIS_param.beta;
+    sigma_v = SensingRIS_param.sigma_v;
+    psi_arr = SensingRIS_param.psi_arr;
+    
     lambda = A*(alpha^2 + beta^2 + 2*alpha*beta*cos(psi_arr + varphi));
     z = sqrt(P .* lambda)/(A*sigma_v^2/2);
     len = length(P);

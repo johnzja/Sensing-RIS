@@ -262,8 +262,11 @@ Then, the phase $\varphi$ can be estimated as
         & \approx \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\frac{a}{\lambda_l}-g(\lambda_l, a)\right)^{+} },
         \end{aligned}
     \end{equation}
-    where $(x)^{+}$ denotes $x \mathbbm{1}_{\{x \ge 0\}}$.
-
+    where $(x)^{+}$ denotes $x \mathbbm{1}_{\{x \ge 0\}}$. We can also define the single-variable $g$ function for simplicity:
+    \begin{equation}
+        g(\gamma) = \frac{1}{4} \sqrt{\frac{\pi}{\gamma}}e^{-\gamma/2}\left((1+1/\gamma)I_0(\gamma/2) + I_1(\gamma/2)\right),
+    \end{equation}
+    where $\gamma_l = \lambda_l / a$ is the interferential SNR. It seems that the CRLB is independent of the true value of $\varphi$.
 
 
 \appendices
