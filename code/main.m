@@ -12,7 +12,9 @@ f_psi = 1/Ts;       % Frequency offset w.r.t carrier-freq.
 A = 1;
 
 sigma_v_arr = 0.1:0.1:1;
-sigma_v     = 0.7;
+% sigma_v     = 0.7;
+% sigma_zeta  = 0.05;
+sigma_v     = 0.5;
 sigma_zeta  = 0.05;
 
 randn('seed', 0);
@@ -20,6 +22,7 @@ rand('seed', 0);
 
 N_exp = 2000;
 MSE_arr_LS = zeros(N_exp, 1);
+MSE_arr_VM = zeros(N_exp, 1);
 MSE_arr_Newton = zeros(N_exp, 1);
 
 SensingRIS_param.alpha      = alpha;
@@ -64,6 +67,13 @@ for idx = 1:N_exp
     delta = (varphi_hat - varphi)/(2*pi);
     MSE_arr_LS(idx) = ((delta - round(delta))*(2*pi))^2;
 
+    % von-Mises method
+    varphi_hat = EM_von_mises(P, SensingRIS_param);
+    delta = (varphi_hat - varphi)/(2*pi);
+    MSE_arr_VM(idx) = ((delta - round(delta))*(2*pi))^2;
+    
+    
+    
     % Study the correctness of the derivative.
     % logL = zeros(L, 1);
     % dlogL = zeros(L, 1);
@@ -100,6 +110,7 @@ end
 
 fprintf('Sim Complete.\n');
 fprintf('std var LS  \t = %f rads\n', sqrt(mean(MSE_arr_LS)));
+fprintf('std var VM  \t = %f rads\n', sqrt(mean(MSE_arr_VM)));
 fprintf('std var Newton\t = %f rads\n', sqrt(mean(MSE_arr_Newton)));
 fprintf('std var CRLB\t = %f rads\n', sqrt(CRLB));
 
