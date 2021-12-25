@@ -73,6 +73,11 @@ breaklinks=true}
 \def \opt {^{\text{opt}}}
 \def \exp {\text{exp}}
 \def \arg {\text{arg}}
+\def \CN {\mathcal{CN}}
+\def \VM {\mathcal{VM}}
+\def \j {{\rm {j}}}
+\def \re {\rm Re}
+
 \newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}   %Use Input in the format of Algorithm
 \renewcommand{\algorithmicensure}{\textbf{Output:}}  %UseOutput in the format of Algorithm
@@ -98,7 +103,7 @@ xxx
 xxx
 \end{IEEEkeywords}
 \section{Introduction}
-    Sensing RIS \cite{ma2020smartsensing}.
+    Now we introduce a new flavor of channel estimation and beamforming techniques in RIS-aided wireless communication systems. When equipped with a Sensing RIS \cite{ma2020smartsensing}, we can obtain CSI directly from the RIS power sensors, and immediately calculate the beamforming phases for each RIS element.
 \section{System Model}
 \label{System Model}
 \subsection{MISO case}
@@ -247,7 +252,7 @@ Then, the phase $\varphi$ can be estimated as
             \mathbb{E}\left[P[l]\right] &= A\sigma_v^2 + \lambda_l
         \end{aligned}
     \end{equation}
-    The trickiest expectation is evaluated approximately by using the asymptotic expansion $x(1-R^2(\sqrt{x}/2)) \approx \sqrt{x}/2$:
+    The trickiest expectation is evaluated approximately by using the asymptotic expansion $x(1-R^2(2\sqrt{x})) \approx \sqrt{x}/2$:
     \begin{equation}
         \begin{aligned}
             \mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] & \approx g(\lambda_l, a) \\ 
@@ -268,6 +273,59 @@ Then, the phase $\varphi$ can be estimated as
     \end{equation}
     where $\gamma_l = \lambda_l / a$ is the interferential SNR. It seems that the CRLB is independent of the true value of $\varphi$.
 
+\subsection{von Mises-EM method}
+    We discover from our experiments that both the LS method and the Newton-ML method are close to the CRLB. Specifically, the Newton-ML method provides an almost optimal estimator for the phase difference $\varphi$ between the BS-RIS path and the RIS-User path. However, the computation of the Newton-ML estimator is quite complicated due to intensive calculation of modified Bessel functions. Now we introduce an iterative method for estimating $\varphi$ without any computation of special functions.
+
+    This algorithm is based on the Bayesian inference of von-Mises distributions. The von-Mises distribution $VM(\mu, \kappa)$ is a two-parameter distribution on $[0, 2\pi]$, with the probability density function given by 
+    \begin{equation}
+        p(\theta|\mu, \kappa) = \frac{\exp(\kappa \cos(\theta - \mu))}{I_0(\kappa)}, 0\leq \theta \leq 2\pi,
+    \end{equation}
+    where $\mu \in [0,2\pi]$ and $\kappa >0$ being the cyclic location parameter and the concentration parameter. The von-Mises distribution is closely related to the complex Gaussian distribution.
+    
+    \begin{lemma}[Bayesian estimation of von-Mises distribution]\label{lemma_1}
+        Let $\theta \sim \VM(\mu, \kappa)$, and $z \sim \CN(e^{\j\theta}, \sigma^2)$. Then the posterior distribution $\theta | z$ is also a von-Mises distribution $\VM(\mu', \kappa')$ with parameters $\mu'$ and $\kappa'$ satisfying
+        \begin{equation}
+            \kappa' e^{\j\mu'} = \kappa e^{\j\mu} + \frac{1}{\sigma^2/2}z.
+        \end{equation}
+    \end{lemma}
+    \begin{IEEEproof}
+        Since $z=z_r + \j z_i \sim \CN(e^{\j \theta}, \sigma^2)$, the conditional density for $z|\theta$ is given by 
+        \begin{equation}
+            p(z|\theta) = \frac{1}{\sigma^2}\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right)
+        \end{equation}
+        The posterior density $p(\theta | z) \propto p(\theta)p(z|\theta)$. Thus
+        \begin{equation}
+            \begin{aligned}
+                p(\theta|z) & \propto \exp(\kappa \cos(\theta - \mu))\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right) \\
+                & \propto \exp\left( \kappa \cos(\theta - \mu) + \frac{2}{\sigma^2}(z_r \cos\theta + z_i\sin\theta) \right) \\
+                & \propto \exp\left( \re\left[ \kappa e^{\j (\theta - \mu)} + \frac{1}{\sigma^2/2} z^* e^{\j \theta} \right] \right) \\
+                & = \exp\left( \re\left[ e^{\j \theta}\left(\kappa e^{-\j\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
+            \end{aligned}
+        \end{equation}
+        Since the density of von-Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{\j \theta}(\kappa e^{\j \mu})^* \right] \right)$, we can also parameterize the von-Mises distribution by a single complex parameter $\kappa e^{\j\mu}$. Thus, the above $p(\theta|z)$ is a von-Mises density with parameter $\kappa'e^{\j\mu'}$, satisfying $\kappa' e^{\j\mu'} = \kappa e^{\j\mu} + 1/(\sigma^2/2)\,z$. This completes the proof.
+    \end{IEEEproof}
+    From the above proof, we can also denote the von-Mises distribution $\VM(\mu, \kappa)$ as $\VM(\kappa e^{\j\mu})$. This representation is more convenient when manipulating the posterior distributions in Bayesian inference.
+
+    \begin{lemma}[Noncentral $\CN$ posterior distribution on circle is $\VM$]\label{lemma_2}
+        Suppose $z \sim \CN(z_0, \sigma^2)$, where $z_0 \in \mathbbm{C}$, and a positive radius $r>0$. Then the posterior distribution of angle $\theta= \arg (z)$ on a circle $|z|=r$ obeys the von-Mises distribution
+        \begin{equation}
+            p(\theta |\, |z|=r) \sim \VM\left(\arg(z_0), \frac{r|z_0|}{\sigma^2/2}\right).
+        \end{equation}
+    \end{lemma}
+    \begin{IEEEproof}
+        Trivial.
+    \end{IEEEproof}
+    Combining the results of {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}}, we can construct the EM algorithm for estimating $\varphi$. Since the output of the power sensors $P[l]$ does not contain phase information, we can treat the phases as latent variables. Let $s_l = \sqrt{P[l]/A}$ be the noisy estimation for $|\alpha + \beta e^{\j (\varphi + \psi_l)} + v_l|$, and $\theta_l$ be the latent variables $\arg (\alpha + \beta e^{\j (\varphi + \psi_l)} + v_l)$. Since the noise $v_l \sim {\rm i.i.d.}\;\CN(0, \sigma_v^2)$, then from {\bf Lemma \ref{lemma_2}}, $\theta_l | s_l, \varphi \sim \VM(\arg(\alpha + \beta e^{\j (\varphi + \psi_l)}), s_l |\alpha + \beta e^{\j (\varphi + \psi_l)}|/(\sigma_v^2/2))$. Thus, we can infer the latent variables by ML estimation 
+    \begin{equation}
+        \hat{\theta}_{l, {\rm ML}} | s_l, \varphi = \arg(\alpha + \beta e^{\j (\varphi + \psi_l)})
+        \label{eqn:E-step}
+    \end{equation}
+    After inferring the latent variables $\hat{\theta}_{l, {\rm ML}}$, we can update the estimation of $\varphi$ using Bayesian rule in {\bf Lemma \ref{lemma_1}}
+    \begin{equation}
+        \varphi | s_l, \theta_l \sim \VM\left( \kappa e^{\j \mu} + \frac{1}{\beta\sigma_v^2/2}\sum_{l=0}^{L-1}{\left(s_l e^{\j\theta_l}-\alpha\right)e^{-\j \psi_l}}\right)
+        \label{eqn:M-step}
+    \end{equation}
+    Performing E-step with \eqref{eqn:E-step} and M-step with \eqref{eqn:M-step} alternately, then the estimation precision for $\varphi$ can be iteratively improved. Note that although the modified Bessel functions appear in the density function of von-Mises distribution, the bother is avoided in the von Mises-EM algorithm.
 
 \appendices
 
