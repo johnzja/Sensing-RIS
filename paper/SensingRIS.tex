@@ -2,7 +2,8 @@
 \usepackage{amsfonts}
 \usepackage{amsmath,amssymb}
 \usepackage{acronym}  % make an acronym
-\usepackage{algorithm,algorithmic}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 \usepackage{balance}
 \usepackage{bm}
 \usepackage{bbm}
@@ -12,6 +13,7 @@
 \usepackage{flushend}
 \usepackage{graphicx}
 \usepackage{indentfirst}
+\usepackage{setspace}
 \usepackage{tikz}
 \usetikzlibrary{arrows}
 \usepackage{subfigure}
@@ -75,7 +77,7 @@ breaklinks=true}
 \def \arg {\text{arg}}
 \def \CN {\mathcal{CN}}
 \def \VM {\mathcal{VM}}
-\def \j {{\rm {j}}}
+\def \j  {\rm {j}}
 \def \re {\rm Re}
 
 \newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
@@ -298,7 +300,7 @@ Then, the phase $\varphi$ can be estimated as
             \begin{aligned}
                 p(\theta|z) & \propto \exp(\kappa \cos(\theta - \mu))\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right) \\
                 & \propto \exp\left( \kappa \cos(\theta - \mu) + \frac{2}{\sigma^2}(z_r \cos\theta + z_i\sin\theta) \right) \\
-                & \propto \exp\left( \re\left[ \kappa e^{\j (\theta - \mu)} + \frac{1}{\sigma^2/2} z^* e^{\j \theta} \right] \right) \\
+                & \propto \exp\left( \re\left[ \kappa e^{\j (\theta - \mu)} + \frac{1}{\sigma^2/2}z^{*} e^{\j \theta} \right] \right) \\
                 & = \exp\left( \re\left[ e^{\j \theta}\left(\kappa e^{-\j\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
             \end{aligned}
         \end{equation}
@@ -326,6 +328,29 @@ Then, the phase $\varphi$ can be estimated as
         \label{eqn:M-step}
     \end{equation}
     Performing E-step with \eqref{eqn:E-step} and M-step with \eqref{eqn:M-step} alternately, then the estimation precision for $\varphi$ can be iteratively improved. Note that although the modified Bessel functions appear in the density function of von-Mises distribution, the bother is avoided in the von Mises-EM algorithm.
+
+    \begin{algorithm}[H] 
+        \caption{von Mises-EM phase estimation} \label{alg:VM-EM}
+        \setstretch{1.35}
+        \begin{algorithmic}[1]
+            \REQUIRE Incident wave intensity $\alpha$, $\beta$; sensor data $P[l]$; amplification factor $A$ and noise variance $\sigma_v^2$; predefined phase shifts $\psi_l$.
+            \ENSURE $\hat{\varphi}$
+            \STATE $s_l \leftarrow \sqrt{P[l]/A}, \forall l=0,1,\cdots,L-1$
+            \STATE $\hat{\varphi} \leftarrow \arg\{{\rm FFT}(P)[1]\}$
+            \STATE $\kappa \leftarrow 1$
+            \WHILE {$\hat{\varphi}$ not convergence}
+                \STATE $\mu_l \leftarrow \alpha + \beta e^{\j (\hat{\varphi}+\psi_l)}, \forall l=0,1,\cdots,L-1$
+                \STATE $w_l \leftarrow s_l e^{\j \arg(\mu_l)} - \alpha, \forall l=0,1,\cdots,L-1$
+                \STATE $z_\varphi \leftarrow \kappa e^{\j \hat{\varphi}} + \left( \sum_{l=0}^{L-1}{w_l e^{-\j \psi_l}}\right) / (\beta \sigma_v^2/2)$
+                \STATE $\hat{\varphi} \leftarrow \arg(z_\varphi)$
+                \STATE $\kappa \leftarrow |z_\varphi|$
+            \ENDWHILE
+        \end{algorithmic}
+    \end{algorithm}
+
+    However, in the above {\bf Algorithm \ref{alg:VM-EM}}, we need the interferential parameters $\alpha$ and $\beta$. In fact, these parameters are channel gains that can be directly measured without interference of the BS and UE. 
+
+
 
 \appendices
 
