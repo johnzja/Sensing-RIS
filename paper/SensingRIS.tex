@@ -204,6 +204,7 @@ Then, the phase $\varphi$ can be estimated as
     Thus, the output of the power sensor is 
     \begin{equation}
         P(t)  = A\left((v'_{R} + \mu_{n,R})^2 + (v'_{I} + \mu_{n,I})^2 \right)+ \zeta 
+        \label{eqn:sensor power}
     \end{equation}
     By defining the noncentral parameter $\lambda(t)$ as
     \begin{equation}
@@ -241,18 +242,24 @@ Then, the phase $\varphi$ can be estimated as
     \end{equation}
 
 \subsubsection{CRLB}
-    In fact, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\hat{\varphi}$. Following are some analytically evaluated useful integrals.
+    In fact, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\hat{\varphi}$. Since in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, $\mathbb{E}\left[P[l]\right]$, and $\mathbb{E}\left[R^2(z_l)P[l]\right]$. These expectation integrals are partially based on the properties of the non-central chi-square distribution. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power}:
+    \begin{equation}
+        \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l,
+        \label{eqn:expectation of P_l}
+    \end{equation}
+    and, in fact, the expectation $\mathbb{E}\left[R(z_l) \sqrt{P[l]}\right]$ can be evaluated by taking the derivative w.r.t $\lambda_l$ in the identity $\mathbb{E}_{\lambda_l, A\sigma_v^2}[e^{\lambda_l/(A\sigma_v^2)}]=e^{\lambda_l/(A\sigma_v^2)}$:
     \begin{equation}
         \begin{aligned}
             \mathbb{E}\left[R(z_l) \sqrt{P[l]}\right] & = \int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x+\lambda_l}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x}\\
+            & = e^{-\lambda_l/(A\sigma_v^2)}\int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x} \\
+            & = e^{-\lambda_l/(A\sigma_v^2)} A\sigma_v^2 \sqrt{\lambda_l} \frac{\partial}{\partial\lambda_l} \int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_0\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right) {\rm d}x}\\
+            & = e^{-\lambda_l/(A\sigma_v^2)} A\sigma_v^2 \sqrt{\lambda_l} \frac{\partial}{\partial\lambda_l} \left(e^{\lambda_l/(A\sigma_v^2)}\right)\\
             & = \sqrt{\lambda_l},\\
         \end{aligned}
     \end{equation}
+    and the expectation $\mathbb{E}\left[R(z_l)P[l]/z_l\right]$ is, in fact, the same as above. The result is
     \begin{equation}
-        \begin{aligned}
-            \mathbb{E}\left[\frac{R(z_l)}{z_l} P[l]\right] &= \frac{A\sigma_v^2}{2}\\
-            \mathbb{E}\left[P[l]\right] &= A\sigma_v^2 + \lambda_l
-        \end{aligned}
+        \mathbb{E}\left[\frac{R(z_l)}{z_l} P[l]\right] = \frac{A\sigma_v^2}{2}.
     \end{equation}
     The trickiest expectation is evaluated approximately by using the asymptotic expansion $x(1-R^2(2\sqrt{x})) \approx \sqrt{x}/2$:
     \begin{equation}
@@ -280,7 +287,7 @@ Then, the phase $\varphi$ can be estimated as
 
     This algorithm is based on the Bayesian inference of von-Mises distributions. The von-Mises distribution $VM(\mu, \kappa)$ is a two-parameter distribution on $[0, 2\pi]$, with the probability density function given by 
     \begin{equation}
-        p(\theta|\mu, \kappa) = \frac{\exp(\kappa \cos(\theta - \mu))}{I_0(\kappa)}, 0\leq \theta \leq 2\pi,
+        p(\theta|\mu, \kappa) = \frac{\exp(\kappa \cos(\theta - \mu))}{2\pi I_0(\kappa)}, 0\leq \theta \leq 2\pi,
     \end{equation}
     where $\mu \in [0,2\pi]$ and $\kappa >0$ being the cyclic location parameter and the concentration parameter. The von-Mises distribution is closely related to the complex Gaussian distribution.
     
