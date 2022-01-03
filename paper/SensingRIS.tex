@@ -79,6 +79,7 @@ breaklinks=true}
 \def \VM {\mathcal{VM}}
 \def \j  {\rm {j}}
 \def \re {\rm Re}
+\def \nc {\mathcal{NC}}
 
 \newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}   %Use Input in the format of Algorithm
@@ -242,7 +243,7 @@ Then, the phase $\varphi$ can be estimated as
     \end{equation}
 
 \subsubsection{CRLB}
-    In fact, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\hat{\varphi}$. Since in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, $\mathbb{E}\left[P[l]\right]$, and $\mathbb{E}\left[R^2(z_l)P[l]\right]$. These expectation integrals are partially based on the properties of the non-central chi-square distribution. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power}:
+    In fact, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\hat{\varphi}$. Since in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, $\mathbb{E}\left[P[l]\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. These expectation integrals are partially based on the properties of the non-central chi-square distribution. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power}:
     \begin{equation}
         \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l,
         \label{eqn:expectation of P_l}
@@ -275,6 +276,7 @@ Then, the phase $\varphi$ can be estimated as
         & =  -\frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] - \frac{a}{\lambda_l}\right) } \\
         & \approx \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\frac{a}{\lambda_l}-g(\lambda_l, a)\right)^{+} },
         \end{aligned}
+        \label{eqn:CRLB}
     \end{equation}
     where $(x)^{+}$ denotes $x \mathbbm{1}_{\{x \ge 0\}}$. We can also define the single-variable $g$ function for simplicity:
     \begin{equation}
@@ -282,7 +284,7 @@ Then, the phase $\varphi$ can be estimated as
     \end{equation}
     where $\gamma_l = \lambda_l / a$ is the interferential SNR. It seems that the CRLB is independent of the true value of $\varphi$.
 
-\subsection{von Mises-EM method}
+\subsubsection{von Mises-EM method}
     We discover from our experiments that both the LS method and the Newton-ML method are close to the CRLB. Specifically, the Newton-ML method provides an almost optimal estimator for the phase difference $\varphi$ between the BS-RIS path and the RIS-User path. However, the computation of the Newton-ML estimator is quite complicated due to intensive calculation of modified Bessel functions. Now we introduce an iterative method for estimating $\varphi$ without any computation of special functions.
 
     This algorithm is based on the Bayesian inference of von-Mises distributions. The von-Mises distribution $VM(\mu, \kappa)$ is a two-parameter distribution on $[0, 2\pi]$, with the probability density function given by 
@@ -355,14 +357,54 @@ Then, the phase $\varphi$ can be estimated as
         \end{algorithmic}
     \end{algorithm}
 
-    However, in the above {\bf Algorithm \ref{alg:VM-EM}}, we need the interferential parameters $\alpha$ and $\beta$. In fact, these parameters are channel gains that can be directly measured without interference of the BS and UE. 
+    However, in the above {\bf Algorithm \ref{alg:VM-EM}}, we need the interferential parameters $\alpha$ and $\beta$. In fact, these parameters are channel gains that can be directly measured without interference signaling of the BS and UE. 
 
-
+\subsection{MIMO case: Generalization to Multiusers}
 
 \appendices
 
 
 \section*{Acknowledgments}
+
+\section*{Appendix A\\ Expectation Evaluation}\label{appendix: expectation evaluation}
+    In order to evaluate the expectation $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$, we first introduce some preliminaries about the noncentral chi distribution $\nc_{\chi_k}(\lambda)$ with noncentrality parameter $\lambda>0$. The distribution $\nc_{\chi_k}(\lambda)$ is the distribution of the length of a $k$-dimensional standard normal distribution $\mathcal{N}({\bm \mu}, {\bm I}_k)$, with $\lambda = \Vert {\bm \mu} \Vert_2$. In particular, we are interested in the case where $k=2$, since that is the case on the complex plane. For  $k=2$, suppose $Y \sim \nc_{\chi_2}(m)$, then
+    \begin{equation}
+        \mathbb{E}\left[Y\right] = \sqrt{\frac{\pi}{2}}L_{1/2}(-m^2/2),
+        \label{eqn:noncentral chi mean}
+    \end{equation}
+    where $L_{1/2}$ denotes the generalized Laguerre function of order $1/2$. The function $L_{1/2}(x)$ has explicit expression 
+    \begin{equation}
+        L_{1/2}(x) = e^{x/2}\left[(1-x)I_0\left(-\frac{x}{2}\right)-xI_1\left(-\frac{x}{2}\right) \right].
+        \label{eqn:Laguerre half order}
+    \end{equation}
+    Recall that $x(1-R^2(2\sqrt{x})) \sim \sqrt{x}/2$, the random variable $P[l] \sim a/2 \vert \CN\left((\alpha + \beta e^{\j (\phi_l + \varphi)})/(\sigma_v / \sqrt{2}), 2\right)\vert^2$, and $\vert \CN\left((\alpha + \beta e^{\j (\phi_l + \varphi)})/(\sigma_v / \sqrt{2}), 2\right)\vert$ is in fact a noncentral chi distribution of dimension $k=2$ and noncentrality parameter $m=\lvert\alpha + \beta e^{\j (\phi_l + \varphi)}\rvert/(\sigma_v / \sqrt{2})$ Thus, we can convert the expectation  $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$ into the expectation of a noncentral chi random variable:
+    \begin{equation}
+        \begin{aligned}
+        \mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l] & = \mathbb{E}\left[\left(1-R^2\left(\frac{\sqrt{\lambda P[l]}}{a/2}\right)\right)\frac{P[l]}{\lambda}\right] \\
+        & \approx \left(\frac{a}{\lambda}\right)^2 \mathbb{E}\left[ \sqrt{\frac{\lambda P[l]}{a^2}}/2 \right]\\
+        & = \frac{1}{2}\frac{\sqrt{\lambda}}{a}\left(\frac{a}{\lambda}\right)^2 \sqrt{\frac{a}{2}}\mathbb{E}\left[\nc_{\chi_2}(m)\right],\\
+        \end{aligned}
+        \label{eqn:approx evaluation}
+    \end{equation}
+    where $m=\lvert\alpha + \beta e^{\j (\phi_l + \varphi)}\rvert/(\sigma_v / \sqrt{2}) = \sqrt{2\lambda/a} = \sqrt{2\gamma}$, and thus $m^2/2=\gamma$. Plugging \eqref{eqn:noncentral chi mean} and \eqref{eqn:Laguerre half order} into \eqref{eqn:approx evaluation}, we obtain the final expression 
+    \begin{equation}
+        \begin{aligned}
+        \mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l] & \approx \frac{1}{2}\frac{\sqrt{\lambda}}{a}\left(\frac{a}{\lambda}\right)^2 \sqrt{\frac{a}{2}} \sqrt{\frac{\pi}{2}} e^{-\gamma/2}\left[(1+\gamma)I_0(\gamma/2)+\gamma I_1(\gamma/2)\right] \\
+        & = \frac{1}{4}\sqrt{\frac{\pi}{\gamma}}e^{-\gamma/2}\left[(1+\gamma^{-1})I_0(\gamma/2)+ I_1(\gamma/2)\right] \\
+        & := g(\gamma).
+        \end{aligned}
+        \label{eqn:approx evaluation result}
+    \end{equation}
+    The approximation error can be obtained by the asymptotic expansion error. Assume the asymptotic expansion error does not exceeds $\delta$, i.e.,
+    \begin{equation}
+        \lvert x(1-R^2(2\sqrt{x}))-\sqrt{x}/2 \rvert \leq \delta,
+        \label{eqn:asymptotic error}
+    \end{equation}
+    then 
+    \begin{equation}
+        \lvert \mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l] - g(\gamma)\rvert \leq \frac{1}{\gamma^2} \delta. 
+    \end{equation}
+    We have discovered numerically that $\delta \leq 0.07$, and that as $x\to \infty$, the approximation error tends to zero. Thus, \eqref{eqn:approx evaluation result} is a nearly perfect approximation when $\gamma$ is large.
 
 
 \footnotesize
