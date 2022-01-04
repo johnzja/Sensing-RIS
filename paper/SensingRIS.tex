@@ -395,17 +395,44 @@ Then, the phase $\varphi$ can be estimated as
         \end{aligned}
         \label{eqn:approx evaluation result}
     \end{equation}
-    The approximation error can be obtained by the asymptotic expansion error. Assume the asymptotic expansion error does not exceeds $\delta$, i.e.,
+    The approximation error of the expectation can be upper bounded by the asymptotic expansion error. Assume that the asymptotic expansion error does not exceeds $\delta$, i.e.,
     \begin{equation}
         \lvert x(1-R^2(2\sqrt{x}))-\sqrt{x}/2 \rvert \leq \delta,
         \label{eqn:asymptotic error}
     \end{equation}
-    then 
+    then we have 
     \begin{equation}
         \lvert \mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l] - g(\gamma)\rvert \leq \frac{1}{\gamma^2} \delta. 
     \end{equation}
-    We have discovered numerically that $\delta \leq 0.07$, and that as $x\to \infty$, the approximation error tends to zero. Thus, \eqref{eqn:approx evaluation result} is a nearly perfect approximation when $\gamma$ is large.
-
+    We have discovered numerically that $\delta \leq 0.07$, and that as $x\to \infty$, the approximation error tends to zero. Thus, \eqref{eqn:approx evaluation result} is a nearly perfect approximation when $\gamma$ is large. To be more precise, the function $g(\gamma)$ has asymptotic expansion at $\gamma \to +\infty$
+    \begin{equation}
+        g(\gamma) \sim \frac{1}{2}\left(\frac{1}{\gamma} + \frac{1}{4\gamma^2} + \mathcal{O}(\frac{1}{\gamma^3})\right).
+    \end{equation}
+    Thus, $1/\gamma - g(\gamma) \sim 1/2\,\Theta(1/\gamma)$, and the relative error of a single term in the CRLB expression is upper bounded by 
+    \begin{equation}
+        \begin{aligned}
+        r & \leq \frac{\delta/\gamma^2}{\lvert \,\lvert 1/\gamma - g(\gamma)\rvert - \lvert g(\gamma) -  \mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]\rvert\,\rvert} \\
+        & \leq \frac{\delta/\gamma^2}{1/((2+\epsilon)\gamma) - \delta/\gamma^2} \\
+        & = \frac{\delta}{\gamma/(2+\epsilon) - \delta}, \\
+        \end{aligned}
+    \end{equation}
+    and this upper bound holds whenever $\gamma > (2+\epsilon)\delta$, and $\epsilon$ is chosen to satisfy 
+    \begin{equation}
+        \frac{1}{\gamma} - g(\gamma) > \frac{1}{(2+\epsilon)\gamma}, \forall \gamma > (2+\epsilon)\delta,
+    \end{equation}
+    which is equivalent to 
+    \begin{equation}
+        \epsilon > \frac{1}{1-\gamma g(\gamma)}-2, \forall \gamma > (2+\epsilon)\delta.
+    \end{equation}
+    Since the function $ 1/(1-\gamma g(\gamma))$ is decreasing on $\gamma>0$, the inequality is equivalent to 
+    \begin{equation}
+        \epsilon > \frac{1}{1-(2+\epsilon)\delta\, g((2+\epsilon)\delta)}-2.
+    \end{equation}
+    In fact, choosing $\epsilon=4$ will satisfy all the conditions above when $\delta = 0.07$. So the relative error is upper bounded by 
+    \begin{equation}
+        r \leq \frac{0.07}{\gamma/6 - 0.07}, \forall \gamma > 0.42.
+    \end{equation}
+    We can easily see from the above inequality that this approximation becomes arbitrarily good when $\gamma\to\infty$.
 
 \footnotesize
 \balance 
