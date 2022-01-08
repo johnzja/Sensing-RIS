@@ -296,7 +296,11 @@ Then, the phase $\varphi$ can be estimated as
         \label{eqn:CRLB_simple}
     \end{equation}
     where $\gamma_l=\bar{\gamma}\left(1+K\cos(\psi_l+\varphi)\right)$ are solely determined by the average SNR $\bar{\gamma}$ and the interferential contrast $K$. The best prediction accuracy occurs when $\lvert K \rvert = 1$, i.e., the RIS-received signal from BS is as strong as that from UE. Note that in \eqref{eqn:CRLB_simple}, due to the symmetry of the $\sin^2(\cdot)$ function, the accuracy $1/{\rm CRLB}(\varphi)$ is only a function of $\bar{\gamma}$ and $\lvert K \rvert$. Thus, we can plot $1/{\rm CRLB}(\varphi)$ as a two-variable function:
-
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width=14cm]{figures/crlb.pdf}
+        \caption{CRLB}
+    \end{figure}
 
 \subsubsection{von Mises-EM method}
     We discover from our experiments that both the LS method and the Newton-ML method are close to the CRLB. Specifically, the Newton-ML method provides an almost optimal estimator for the phase difference $\varphi$ between the BS-RIS path and the RIS-User path. However, the computation of the Newton-ML estimator is quite complicated due to intensive calculation of modified Bessel functions. Now we introduce an iterative method for estimating $\varphi$ without any computation of special functions.
