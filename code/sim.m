@@ -1,5 +1,5 @@
-%% Construct MISO-Multiuser RIS Channel Estimation-Beamforming platform.
-
+%% Construct MISO Single-user RIS Channel Estimation-Beamforming platform.
+clear; clc;
 c = 299792458;
 fc = 10e9;
 lambda = c/fc;
@@ -7,7 +7,6 @@ lambda = c/fc;
 Ny = 10;
 Nz = 10;
 N = Ny * Nz;
-K = 10;             % Number of UEs.
 M = 10;             % Number of antennas at BS.
 
 % lambda/2-spaced RIS.
@@ -16,6 +15,7 @@ RIS_conf.Nz = Nz;
 RIS_conf.N = N;
 RIS_conf.center_y = ((1:Ny)-mean((1:Ny)))*lambda/2;
 RIS_conf.center_z = ((1:Nz)-mean((1:Nz)))*lambda/2;
+RIS_conf.lambda = lambda;
 
 % Setup hyperparameters for the location of BS and Users.
 R_BS_range = [20, 100];
@@ -29,32 +29,43 @@ psi_UE_range = [-pi/3, pi/3];
 % Setup simulation necessities.
 N_sim = 1000;
 rng(0);
-Pt_BS = 1;      % Total transmit power is 1W. (on M transmit antennas).
+Pt_BS = 1;      % Total transmit power is 1W. (distributed on M transmit antennas).
 Pt_UE = 300e-3; % 300mW UE transmit power.
+L1 = 4;         % Number of BS-RIS NLOS paths.
+L2 = 4;         % Number of RIS-UE NLOS paths.
+kappa = 0.8;    % LOS ratio.
+Np = 10;        % Number of pilots in traditional beamforming.
 
-R_UE = zeros(K, 1);
-theta_UE = zeros(K, 1);
-psi_UE = zeros(K, 1);
 
 %% Run simulation.
 for idx_sim =  1:N_sim
     [R_BS, theta_BS, psi_BS] = randPos(R_BS_range, theta_BS_range, psi_BS_range);
-    for k=1:K
-        [r_ue, theta_ue, psi_ue] = randPos(R_UE_range, theta_UE_range, psi_UE_range);
-        R_UE(k) = r_ue; theta_UE(k) = theta_ue; psi_UE(k) = psi_ue;
-    end
-    
+    pos_BS = R_BS*[cos(psi_BS)*cos(theta_BS), cos(psi_BS)*sin(theta_BS), sin(psi_BS)];
+    pos_UE = zeros(K, 3);
+
+    [R_UE, theta_UE, psi_UE] = randPos(R_UE_range, theta_UE_range, psi_UE_range);
+    pos_UE(k, :) = R_UE*[cos(psi_UE)*cos(theta_UE), cos(psi_UE)*sin(theta_UE), sin(psi_UE)];
+
     % Calculate the channel G, h(k), and the parameters alpha and beta.
-    % Based on the Friis transmission formula.
+    % (Based on the Friis transmission formula.)
     % The "channels" are complex power-based transfer functions.
-    G = zeros(M, N);
-    for m = 1:M
-        for n = 1:N
-            nx = mod(n-1, Nx) + 1;
-            nz = floor((n-1)/Nx)+1;
-            G(m,n) = (lambda/(4*pi*
-        end
-    end
+    [f_LOS, G_LOS] = generate_channel_los([Ny, Nz], [M, 1], RIS_conf, pos_BS, [0,0,0], pos_UE);
+    [f_NLOS, G_NLOS] = generate_channel_multipath([Ny, Nz], [M, 1], RIS_conf, pos_BS, [0,0,0], pos_UE, L1, L2);
+    f = sqrt(kappa/(1+kappa))*f_LOS + sqrt(1/(1+kappa))*f_NLOS;
+    G = sqrt(kappa/(1+kappa))*G_LOS + sqrt(1/(1+kappa))*G_NLOS;
+    
+    % TODO: Perform channel estimation by traditional methods: Orthogonal
+    % pilots, MMSE. Assume the RIS to be continuously adjustable.
+    [f_hat, G_hat] = traditional_channel_estimation(N, M, RIS_conf, f, G, Np);
+    
+    
+    
+    % TODO: Traditional beamforming (Adjusting theta).
+    
+    % TODO: Calculate the sum rate of all the users.
+    
+    % TODO: Use IRF to directly perform beamforming, using the same amount
+    % of pilots.
     
 end
 
