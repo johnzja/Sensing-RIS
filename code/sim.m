@@ -36,6 +36,9 @@ L2 = 4;         % Number of RIS-UE NLOS paths.
 kappa = 0.8;    % LOS ratio.
 Np = 10;        % Number of pilots in traditional beamforming.
 
+BS_conf.M = M;
+BS_conf.Pt_BS = Pt_BS;
+
 
 %% Run simulation.
 for idx_sim =  1:N_sim
@@ -49,21 +52,17 @@ for idx_sim =  1:N_sim
     % Calculate the channel G, h(k), and the parameters alpha and beta.
     % (Based on the Friis transmission formula.)
     % The "channels" are complex power-based transfer functions.
+    % Notice: The channel G must be highly structured and predictable.
     [f_LOS, G_LOS] = generate_channel_los([Ny, Nz], [M, 1], RIS_conf, pos_BS, [0,0,0], pos_UE);
     [f_NLOS, G_NLOS] = generate_channel_multipath([Ny, Nz], [M, 1], RIS_conf, pos_BS, [0,0,0], pos_UE, L1, L2);
     f = sqrt(kappa/(1+kappa))*f_LOS + sqrt(1/(1+kappa))*f_NLOS;
     G = sqrt(kappa/(1+kappa))*G_LOS + sqrt(1/(1+kappa))*G_NLOS;
     
-    % TODO: Perform channel estimation by traditional methods: Orthogonal
+    % Perform channel estimation by traditional methods: Orthogonal
     % pilots, MMSE. Assume the RIS to be continuously adjustable.
-    [f_hat, G_hat] = traditional_channel_estimation(N, M, RIS_conf, f, G, Np);
-    
-    
-    
-    % TODO: Traditional beamforming (Adjusting theta).
-    
-    % TODO: Calculate the sum rate of all the users.
-    
+    [P_recv_traditional, Rate_traditional] = ...
+        traditional_channel_estimation_beamforming(N, M, RIS_conf, BS_conf, f, G, Np);
+
     % TODO: Use IRF to directly perform beamforming, using the same amount
     % of pilots.
     

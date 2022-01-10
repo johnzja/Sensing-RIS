@@ -171,7 +171,7 @@ where $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
         \label{eqn:MMSE_CE}
     \end{equation} 
     where ${\bm Z}\in \mathbb{C}^{M\times P}$ and each element ${\bm Z}_{i,j}\sim \CN(0,\sigma^2)$, $\sigma^2=-174{\rm dBm/Hz}$. 
-    Substituting $\Theta = F_{N,K}$ into \eqref{eqn:MMSE_CE} yields the MMSE channel estimation problem stated as 
+    Substituting ${\bm \Theta} = {\bm F}_{N,K}$ into \eqref{eqn:MMSE_CE} and denoting $\hat{\bm H} = {\bm G}^{\rm T}{\rm diag}({\bm f}^{*})$, then the MMSE channel estimation problem can be re-stated as 
     \begin{equation}
         \hat{\bm H} = \arg\max_{\bm H} \lVert {\bm Y}_{\rm BS} - {\bm H} {\bm F}_{N,K}\rVert_{F}^2,
     \end{equation}
@@ -179,6 +179,7 @@ where $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
     \begin{equation}
         \hat{\bm H} = \frac{1}{P}{\bm Y}{\bm F}_{N,K}^{H}.
     \end{equation}
+    After obtaining $\hat{\bm H}$, we can optimize for ${\bm w}$ and ${\bm \theta}$ by iterative optimization.
 
 \section{Channel Estimation with Interference Random Fields}
 Interference field at the $n$-th RIS element, with transmitted symbol $s=1$:
@@ -205,7 +206,7 @@ To estimate the phase $\varphi$, we need enough observations from the sensor det
 t_{l}=\frac{l}{L}T_{s},~\forall l\in \left\{0,\cdots ,L-1\right\}
 \end{equation}
 are used for estimation.
-\subsubsection{LS method}
+\subsection{LS method}
 Apply $L$-point \ac{DFT} to the observed sensor detection signals $P[1],\cdots ,P[L]$, we have
 \begin{equation}
 \label{DFT}
@@ -223,7 +224,7 @@ Then, the phase $\varphi$ can be estimated as
 \end{equation}
 
 %% zja working below
-\subsubsection{ML method}
+\subsection{ML method}
     Suppose the noise field $v'(t)=v'_R(t) + jv'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_n(t)\right|^2$ is a noncentral chi-squared distribution with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
     \begin{equation}
         \begin{aligned}
@@ -271,7 +272,7 @@ Then, the phase $\varphi$ can be estimated as
         \hat{\varphi}^{(k+1)} = \hat{\varphi}^{(k)} - \frac{\mathcal{L}'(\hat{\varphi}^{(k)})}{\mathcal{L}''(\hat{\varphi}^{(k)})}
     \end{equation}
 
-\subsubsection{CRLB}
+\subsection{CRLB}
     In fact, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\hat{\varphi}$. Since in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, $\mathbb{E}\left[P[l]\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. These expectation integrals are partially based on the properties of the non-central chi-square distribution. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power}:
     \begin{equation}
         \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l,
@@ -331,7 +332,7 @@ Then, the phase $\varphi$ can be estimated as
         \caption{CRLB}
     \end{figure}
 
-\subsubsection{von Mises-EM method}
+\subsection{von Mises-EM method}
     We discover from our experiments that both the LS method and the Newton-ML method are close to the CRLB. Specifically, the Newton-ML method provides an almost optimal estimator for the phase difference $\varphi$ between the BS-RIS path and the RIS-User path. However, the computation of the Newton-ML estimator is quite complicated due to intensive calculation of modified Bessel functions. Now we introduce an iterative method for estimating $\varphi$ without any computation of special functions.
 
     This algorithm is based on the Bayesian inference of von-Mises distributions. The von-Mises distribution $VM(\mu, \kappa)$ is a two-parameter distribution on $[0, 2\pi]$, with the probability density function given by 
