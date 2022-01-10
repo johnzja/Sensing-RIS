@@ -165,10 +165,20 @@ where $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
     \begin{equation}
         {\bm y}_{{\rm BS}, p} = {\bm G}^{T} {\rm diag}({\bm f}^{*}) {\bm \theta}_p x+n, 
     \end{equation}
-    where ${\bm \theta}_p \in \mathbb{C}^{N\times 1}$ is the $p$-th RIS phase vector, and ${\bm y}_{{\rm BS}, p}$ is the $p$-th  BS received vector. The RIS phase vectors ${\bm \theta}_p$ is designed to be the first $P$ columns of the DFT matrix. After gathering the $P$ received vectors during $P$ pilot slots and assuming $x=1$, the matrix identity is expressed as 
+    where ${\bm \theta}_p \in \mathbb{C}^{N\times 1}$ is the $p$-th RIS phase vector, and ${\bm y}_{{\rm BS}, p}$ is the $p$-th  BS received vector. The RIS phase vectors ${\bm \theta}_p$ is designed to be the first $P$ columns of the DFT matrix. After gathering the $P$ received vectors during $P$ consecutive pilot slots, assuming $x=1$, the matrix identity is expressed as 
     \begin{equation}
         {\bm Y}_{\rm BS}={\bm G}^{T} {\rm diag}({\bm f}^{*}) {\bm \Theta} + {\bm Z}, 
+        \label{eqn:MMSE_CE}
     \end{equation} 
+    where ${\bm Z}\in \mathbb{C}^{M\times P}$ and each element ${\bm Z}_{i,j}\sim \CN(0,\sigma^2)$, $\sigma^2=-174{\rm dBm/Hz}$. 
+    Substituting $\Theta = F_{N,K}$ into \eqref{eqn:MMSE_CE} yields the MMSE channel estimation problem stated as 
+    \begin{equation}
+        \hat{\bm H} = \arg\max_{\bm H} \lVert {\bm Y}_{\rm BS} - {\bm H} {\bm F}_{N,K}\rVert_{F}^2,
+    \end{equation}
+    which is a least-square problem, and we know that this system is solved by 
+    \begin{equation}
+        \hat{\bm H} = \frac{1}{P}{\bm Y}{\bm F}_{N,K}^{H}.
+    \end{equation}
 
 \section{Channel Estimation with Interference Random Fields}
 Interference field at the $n$-th RIS element, with transmitted symbol $s=1$:
