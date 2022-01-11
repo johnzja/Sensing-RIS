@@ -1,4 +1,4 @@
-function [P_recv, Rate] = traditional_channel_estimation_beamforming(N, M, RIS_conf, BS_conf, f, G, Np)
+function [P_recv, Rate] = traditional_CE_BF(N, M, RIS_conf, BS_conf, f, G, Np)
     Ny = N(1); Nz = N(2);
     My = M(1); Mz = M(2);
     N = Ny * Nz;
@@ -9,7 +9,7 @@ function [P_recv, Rate] = traditional_channel_estimation_beamforming(N, M, RIS_c
     % Channel estimation scheme: Just estimate fk and G together, for each user.
     PSD_noise = db2pow(-174-30);
     BW = 100e6;                 % System baseband BW = 100MHz.
-    P_noise = PSD_noise * BW;   % Thermonoise for BS receiver equipped with M RF-chains.
+    P_noise = PSD_noise * BW;   % Thermo-noise for BS receiver equipped with M RF-chains.
     sigma_noise = sqrt(P_noise);
     
     H = (G.') * diag(conj(f));
@@ -40,5 +40,5 @@ function [P_recv, Rate] = traditional_channel_estimation_beamforming(N, M, RIS_c
         end
     end
     P_recv = objective(2*iter);
-    Rate = log2(1+P_recv/P_noise);
+    Rate = log2(1+P_recv/P_noise);  % In fact, this is the spectral efficiency.
 end

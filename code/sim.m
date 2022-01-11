@@ -44,6 +44,8 @@ BS_conf.Pt_BS = Pt_BS;
 for idx_sim =  1:N_sim
     [R_BS, theta_BS, psi_BS] = randPos(R_BS_range, theta_BS_range, psi_BS_range);
     pos_BS = R_BS*[cos(psi_BS)*cos(theta_BS), cos(psi_BS)*sin(theta_BS), sin(psi_BS)];
+    BS_conf.pos_BS = pos_BS;    % For IRF methods, the algorithm needs to know where the BS is.
+    BS_conf.BS_pos_sph = [R_BS, theta_BS, psi_BS];
     pos_UE = zeros(K, 3);
 
     [R_UE, theta_UE, psi_UE] = randPos(R_UE_range, theta_UE_range, psi_UE_range);
@@ -53,15 +55,16 @@ for idx_sim =  1:N_sim
     % (Based on the Friis transmission formula.)
     % The "channels" are complex power-based transfer functions.
     % Notice: The channel G must be highly structured and predictable.
-    [f_LOS, G_LOS] = generate_channel_los([Ny, Nz], [M, 1], RIS_conf, pos_BS, [0,0,0], pos_UE);
+    [f_LOS, G_LOS] = generate_channel_los([Ny, Nz], [M, 1], RIS_conf, [R_BS, theta_BS, psi_BS], [R_UE, theta_UE, psi_UE]);
     [f_NLOS, G_NLOS] = generate_channel_multipath([Ny, Nz], [M, 1], RIS_conf, pos_BS, [0,0,0], pos_UE, L1, L2);
     f = sqrt(kappa/(1+kappa))*f_LOS + sqrt(1/(1+kappa))*f_NLOS;
     G = sqrt(kappa/(1+kappa))*G_LOS + sqrt(1/(1+kappa))*G_NLOS;
     
     % Perform channel estimation by traditional methods: Orthogonal
-    % pilots, MMSE. Assume the RIS to be continuously adjustable.
+    % pilots, MMSE. Assume the RIS to be continuously adjustable within
+    % [0,2pi].
     [P_recv_traditional, Rate_traditional] = ...
-        traditional_channel_estimation_beamforming(N, M, RIS_conf, BS_conf, f, G, Np);
+        traditional_CE_BF(N, M, RIS_conf, BS_conf, f, G, Np);
 
     % TODO: Use IRF to directly perform beamforming, using the same amount
     % of pilots.

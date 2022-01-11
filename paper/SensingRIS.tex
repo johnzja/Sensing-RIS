@@ -273,7 +273,7 @@ Then, the phase $\varphi$ can be estimated as
     \end{equation}
 
 \subsection{CRLB}
-    In fact, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\hat{\varphi}$. Since in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, $\mathbb{E}\left[P[l]\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. These expectation integrals are partially based on the properties of the non-central chi-square distribution. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power}:
+    The CRLB problem of the same type was first formulated in \cite{jiang2016cramer}, however, the authors introduced too much approximation and did not provide an error analysis. In fact, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\hat{\varphi}$. Since in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, $\mathbb{E}\left[P[l]\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. These expectation integrals are partially based on the properties of the non-central chi-square distribution. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power}:
     \begin{equation}
         \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l,
         \label{eqn:expectation of P_l}
