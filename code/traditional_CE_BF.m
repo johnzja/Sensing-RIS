@@ -1,20 +1,17 @@
-function [P_recv, Rate] = traditional_CE_BF(N, M, RIS_conf, BS_conf, f, G, Np)
-    Ny = N(1); Nz = N(2);
-    My = M(1); Mz = M(2);
-    N = Ny * Nz;
-    
+function [P_recv, Rate] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Np)
+    % Extract necessary parameters.
+    N = RIS_conf.N;
     F = dftmtx(N);
     Thetas = F(:, 1:Np);    
+    sigma_noise = BS_conf.sigma_noise;
+    P_noise = BS_conf.sigma_noise^2;
+    M = BS_conf.M;
     
     % Channel estimation scheme: Just estimate fk and G together, for each user.
-    PSD_noise = db2pow(-174-30);
-    BW = 100e6;                 % System baseband BW = 100MHz.
-    P_noise = PSD_noise * BW;   % Thermo-noise for BS receiver equipped with M RF-chains.
-    sigma_noise = sqrt(P_noise);
-    
     H = (G.') * diag(conj(f));
-    Y = H*Thetas + sigma_noise * randn([M, Np]);
-    H_hat = Y*Thetas'/Np;
+    tmp = sqrt(BS_conf.Pt_UE)*H*Thetas;
+    Y = tmp + sigma_noise * (randn([M, Np])+1j*randn([M, Np])/sqrt(2));
+    H_hat = Y*Thetas'/Np/sqrt(BS_conf.Pt_UE);
     
     % Perform beamforming based on H_hat. The model is: y_UE = theta.' * (H).' *w*s + n
     theta = exp(1j*2*pi*rand(N, 1));
@@ -30,15 +27,15 @@ function [P_recv, Rate] = traditional_CE_BF(N, M, RIS_conf, BS_conf, f, G, Np)
         w = sqrt(Pt_BS)*w/norm(w);
         objective(2*idx-1) = abs(theta.'*H_hat.'*w)^2;
         % update theta
+        theta = exp(-1j*angle(H_hat.'*w));
         t = theta.'*H_hat.'*w;
-        theta = exp(-1j*angle(t));
         objective(2*idx) = abs(t)^2;
         if abs(objective(2*idx)-objective(2*idx-1))/objective(2*idx) < threshold
-            P_recv = objective(2*idx);
+            P_recv = abs(theta.'*H.'*w)^2;         % Incorporate the true channel.
             Rate = log2(1+P_recv/P_noise);
             return;
         end
     end
-    P_recv = objective(2*iter);
+    P_recv = abs(theta.'*H.'*w)^2;
     Rate = log2(1+P_recv/P_noise);  % In fact, this is the spectral efficiency.
 end
