@@ -1,3 +1,4 @@
+# Latex workspace & outputs.
 paper/SensingRIS.pdf
 paper/*.synctex.gz
 paper/*.thm
@@ -16,3 +17,5 @@ paper/*.out
 *.asv
 *.xdv
 
+# Data storage.
+code/data/
