@@ -13,9 +13,9 @@ for idx = 1:8:256
 end
 
 %% Make GIF.
-for idx = 1:8:256
+for idx = 1:16:256
     A = imread(sprintf('data/figs/save_%d.jpg', idx));
-    [im2, map2] = rgb2ind(A,256);
+    [im2, map2] = rgb2ind(A, 32);
     if idx == 1
         imwrite(im2, map2, 'data/move.gif', 'DelayTime', 0.001, 'LoopCount', Inf);
     else
