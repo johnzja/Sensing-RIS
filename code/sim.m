@@ -29,67 +29,100 @@ psi_UE_range = [-pi/3, pi/3];
 % Setup simulation necessities.
 N_sim = 100;
 rng(0);
-Pt_BS = 1;      % Total transmit power is 1W. (distributed on M transmit antennas).
-Pt_UE = 300e-3; % 300mW UE transmit power.
-L1 = 4;         % Number of BS-RIS NLOS paths.
-L2 = 4;         % Number of RIS-UE NLOS paths.
-kappa = 0.8;    % LOS ratio.
-Np = 1088;       % Number of pilots in traditional beamforming.
+Pt_BS_range = logspace(-1,1, 10);
+SE = zeros(length(Pt_BS_range), 4);
 
-BS_conf.My = M;             % Assume the BS is equipped with lambda/2 ULA.
-BS_conf.Mz = 1;
-BS_conf.M = BS_conf.My*BS_conf.Mz;
-BS_conf.Pt_BS = Pt_BS;
-BS_conf.Pt_UE = Pt_UE;
+for idx_scan = 1:length(Pt_BS_range)
+    % Pt_BS = 1;      % Total transmit power is 1W. (distributed on M transmit antennas).
+    Pt_BS = Pt_BS_range(idx_scan);
+    Pt_UE = 300e-3; % 300mW UE transmit power.
+    L1 = 4;         % Number of BS-RIS NLOS paths.
+    L2 = 4;         % Number of RIS-UE NLOS paths.
+    kappa = 0.8;    % LOS ratio.
+    Np = 1088;      % Number of pilots in traditional beamforming.
 
-PSD_noise = db2pow(-174-30);
-BW = 180e3;                     % System baseband BW = 100MHz.
-P_noise = PSD_noise * BW;       % Thermo-noise for BS receiver equipped with M RF-chains.
-sigma_noise = sqrt(P_noise);
-BS_conf.sigma_noise = sigma_noise;
-RIS_conf.sigma_v = sqrt(PSD_noise * 100e6); % 100M BW for IRF-sensing elements.
+    BS_conf.My = M;             % Assume the BS is equipped with lambda/2 ULA.
+    BS_conf.Mz = 1;
+    BS_conf.M = BS_conf.My*BS_conf.Mz;
+    BS_conf.Pt_BS = Pt_BS;
+    BS_conf.Pt_UE = Pt_UE;
 
-%% Run simulations.
-Rates = zeros(N_sim, 3);
+    PSD_noise = db2pow(-174-30);    % Setup the PSD of the thermo-noise.
+    BW = 180e3;                     % System baseband BW on each subcarrier = 180kHz.
+    P_noise = PSD_noise * BW;       % Thermo-noise for BS receiver equipped with M RF-chains.
+    sigma_noise = sqrt(P_noise);
+    BS_conf.sigma_noise = sigma_noise;
+    RIS_conf.sigma_v = sqrt(PSD_noise * 100e6); % 100M BW for IRF-sensing elements.
 
-for idx_sim =  1:N_sim
-    [R_BS, theta_BS, psi_BS] = randPos(R_BS_range, theta_BS_range, psi_BS_range);
-    pos_BS = R_BS*[cos(psi_BS)*cos(theta_BS), cos(psi_BS)*sin(theta_BS), sin(psi_BS)];
-    BS_conf.pos_BS = pos_BS;    % For IRF methods, the algorithm needs to know where the BS is.
-    BS_conf.BS_pos_sph = [R_BS, theta_BS, psi_BS];
+    %% Run simulations.
+    Rates = zeros(N_sim, 4);
+    for idx_sim =  1:N_sim
+        [R_BS, theta_BS, psi_BS] = randPos(R_BS_range, theta_BS_range, psi_BS_range);
+        pos_BS = R_BS*[cos(psi_BS)*cos(theta_BS), cos(psi_BS)*sin(theta_BS), sin(psi_BS)];
+        BS_conf.pos_BS = pos_BS;    % For IRF methods, the algorithm needs to know where the BS is.
+        BS_conf.BS_pos_sph = [R_BS, theta_BS, psi_BS];
 
-    [R_UE, theta_UE, psi_UE] = randPos(R_UE_range, theta_UE_range, psi_UE_range);
-    pos_UE = R_UE*[cos(psi_UE)*cos(theta_UE), cos(psi_UE)*sin(theta_UE), sin(psi_UE)];
+        [R_UE, theta_UE, psi_UE] = randPos(R_UE_range, theta_UE_range, psi_UE_range);
+        pos_UE = R_UE*[cos(psi_UE)*cos(theta_UE), cos(psi_UE)*sin(theta_UE), sin(psi_UE)];
 
-    % Calculate the channel G, h(k), and the parameters alpha and beta.
-    % (Based on the Friis transmission formula.)
-    % The "channels" are complex power-based transfer functions.
-    % Notice: The channel G must be highly structured and predictable.
-    [f_LOS, G_LOS] = generate_channel_los(RIS_conf, BS_conf, [R_BS, theta_BS, psi_BS], [R_UE, theta_UE, psi_UE]);
-    [f_NLOS, G_NLOS] = generate_channel_multipath([Ny, Nz], [M, 1], RIS_conf, pos_BS, [0,0,0], pos_UE, L1, L2);
-    f = sqrt(kappa/(1+kappa))*f_LOS + sqrt(1/(1+kappa))*f_NLOS;
-    G = sqrt(kappa/(1+kappa))*G_LOS + sqrt(1/(1+kappa))*G_NLOS;
-    
-    % Baseline 1: Random phasing, random precoding...
-    w = (randn([M,1])+1j*randn([M,1]))/sqrt(2);
-    w = sqrt(Pt_BS)*w/norm(w);
-    theta = exp(1j*2*pi*rand([N,1]));
-    y = f'*diag(theta)*G*w;
-    Rate_random = log2(1+abs(y)^2/P_noise);
-    Rates(idx_sim, 1) = Rate_random;
-    
-    % Baseline 2: Perform channel estimation by traditional methods: Orthogonal
-    % pilots, MMSE. Assume the RIS to be continuously adjustable within
-    % [0,2pi].
-    [P_recv_traditional, Rate_traditional] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Np);
-    Rates(idx_sim, 2) = Rate_traditional;
-    
-    % Use IRF to directly perform beamforming, using only 3 pilots.
-    [P_recv_IRF, Rate_IRF] = IRF_CE_BF(RIS_conf, BS_conf, f, G, 3);
-    Rates(idx_sim, 3) = Rate_IRF;
+        % Calculate the channel G, h(k), and the parameters alpha and beta.
+        % (Based on the Friis transmission formula.)
+        % The "channels" are complex power-based transfer functions.
+        % Notice: The channel G must be highly structured and predictable.
+        [f_LOS, G_LOS] = generate_channel_los(RIS_conf, BS_conf, [R_BS, theta_BS, psi_BS], [R_UE, theta_UE, psi_UE]);
+        [f_NLOS, G_NLOS] = generate_channel_multipath([Ny, Nz], [M, 1], RIS_conf, pos_BS, [0,0,0], pos_UE, L1, L2);
+        f = sqrt(kappa/(1+kappa))*f_LOS + sqrt(1/(1+kappa))*f_NLOS;
+        G = sqrt(kappa/(1+kappa))*G_LOS + sqrt(1/(1+kappa))*G_NLOS;
+
+        % Baseline 1: Random phasing, random precoding...
+        w = (randn([M,1])+1j*randn([M,1]))/sqrt(2);
+        w = sqrt(Pt_BS)*w/norm(w);
+        theta = exp(1j*2*pi*rand([N,1]));
+        y = f'*diag(theta)*G*w;
+        Rate_random = log2(1+abs(y)^2/P_noise);
+        Rates(idx_sim, 1) = Rate_random;
+
+        % Baseline 2: Perform channel estimation by traditional methods: Orthogonal
+        % pilots, MMSE. Assume the RIS to be continuously adjustable within
+        % [0,2pi].
+        [P_recv_traditional, Rate_traditional] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Np);
+        Rates(idx_sim, 2) = Rate_traditional;
+
+        % Use IRF to directly perform beamforming, using only 3 pilots.
+        [P_recv_IRF, Rate_IRF] = IRF_CE_BF(RIS_conf, BS_conf, f, G, 3);
+        Rates(idx_sim, 3) = Rate_IRF;
+
+        % Genie told me the channel.
+        [P_recv_Oracle, Rate_Oracle] = traditional_BF(RIS_conf, BS_conf, f, G);
+        Rates(idx_sim, 4) = Rate_Oracle;
+    end
+    R = mean(Rates);
+    SE(idx_scan, :) = R;
+    fprintf('Pt_{BS} = %f \n', Pt_BS);
 end
-
 disp('sim complete.');
+
+%% Analyze the data.
+dbP = 10*log10(Pt_BS_range).';    % in dBW.
+
+set(0,'DefaultLineMarkerSize',4);
+set(0,'DefaultTextFontSize',14);
+set(0,'DefaultAxesFontSize',12);
+set(0,'DefaultLineLineWidth',1.4);
+set(0,'defaultfigurecolor','w');
+figure('color',[1 1 1]); hold on;
+plot(dbP, SE(:,1), 'bp-');
+plot(dbP, SE(:,2), 'gs-');
+plot(dbP, SE(:,3), 'ro-');
+plot(dbP, SE(:,4), 'ko-.');
+
+
+set(gca,'FontName','Times New Roman');
+grid on; box on;
+legend('Random', 'MMSE', 'Proposed-IRF', 'Oracle');
+xlabel('BS transmit power (dBW)', 'interpreter', 'latex');
+ylabel('Achieved spectral efficiency (bps/Hz)', 'interpreter', 'latex');
+
 
 %% Utilities.
 function [R, theta, psi] = randPos(R_range, theta_range, psi_range)
