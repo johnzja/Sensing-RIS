@@ -39,8 +39,9 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np)
     % Estimate the phase difference varphi for each of the RIS elements.
     varphi = zeros(N_ris,1);
     for n=1:N_ris
-        SensingRIS_param.alpha	= abs(s_alpha(n));  % Noises should also be added here.
-        SensingRIS_param.beta	= abs(s_beta(n));
+        SensingRIS_param.alpha	= abs(s_alpha(n)+sigma_v*(randn()+1j*randn())/sqrt(2*L));  
+        % Noises should also be added here.
+        SensingRIS_param.beta	= abs(s_beta(n)+sigma_v*(randn()+1j*randn())/sqrt(2*L));
         varphi(n) = EM_von_mises(P_int(:,n), SensingRIS_param);
     end
     
