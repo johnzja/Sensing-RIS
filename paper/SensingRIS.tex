@@ -58,7 +58,7 @@ breaklinks=true}
 \acrodef{RC}[RC]{receiver combining}
 \acrodef{AWGN}[AWGN]{additive white Gaussian noise}
 \acrodef{DFT}[DFT]{discrete Fourier transform}
-\acrodef{IRF}[IRF]{interferential random field}
+\acrodef{IRF}[IRF]{interference random field}
 
 \def \H {^H}
 \def \opt {^{\text{opt}}}
@@ -163,13 +163,12 @@ where $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
     \begin{equation}
         {\bm y}_{{\rm BS}, p} = {\bm G}^{T} {\rm diag}({\bm f}^{*}) {\bm \theta}_p x+n, 
     \end{equation}
-    where ${\bm \theta}_p \in \mathbb{C}^{N\times 1}$ is the $p$-th RIS phase vector, and ${\bm y}_{{\rm BS}, p}$ is the $p$-th  BS received vector. The RIS phase vectors ${\bm \theta}_p$ is designed to be the first $P$ columns of the DFT matrix. After gathering the $P$ received vectors during $P$ consecutive pilot slots, assuming $x=1$, the matrix identity is expressed as 
+    where ${\bm \theta}_p \in \mathbb{C}^{N\times 1}$ is the $p$-th RIS phase vector, and ${\bm y}_{{\rm BS}, p}$ is the $p$-th  BS received vector. The RIS phase vectors ${\bm \theta}_p$ is designed to be the first $P$ columns of the DFT matrix. After gathering the $P$ received vectors during $P$ consecutive pilot slots and assuming $x=1$, the matrix identity is expressed as 
     \begin{equation}
         {\bm Y}_{\rm BS}={\bm G}^{T} {\rm diag}({\bm f}^{*}) {\bm \Theta} + {\bm Z}, 
         \label{eqn:MMSE_CE}
     \end{equation} 
-    where ${\bm Z}\in \mathbb{C}^{M\times P}$ and each element ${\bm Z}_{i,j}\sim \CN(0,\sigma^2)$, $\sigma^2=-174{\rm dBm/Hz}$. 
-    Substituting ${\bm \Theta} = {\bm F}_{N,K}$ into \eqref{eqn:MMSE_CE} and denoting $\hat{\bm H} = {\bm G}^{\rm T}{\rm diag}({\bm f}^{*})$, then the MMSE channel estimation problem can be re-stated as 
+    where ${\bm Z}\in \mathbb{C}^{M\times P}$, with each matrix element ${\bm Z}_{i,j}\sim \CN(0,\sigma^2)$, and the thermal noise variance $\sigma^2=-174{\rm dBm/Hz}$. Substituting ${\bm \Theta} = {\bm F}_{N,K}$ into \eqref{eqn:MMSE_CE} and letting $\hat{\bm H} = {\bm G}^{\rm T}{\rm diag}({\bm f}^{*})$, then the MMSE channel estimation problem can be re-stated as 
     \begin{equation}
         \hat{\bm H} = \arg\max_{\bm H} \lVert {\bm Y}_{\rm BS} - {\bm H} {\bm F}_{N,K}\rVert_{F}^2,
     \end{equation}
@@ -180,46 +179,57 @@ where $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
     After obtaining $\hat{\bm H}$, we can optimize for ${\bm w}$ and ${\bm \theta}$ by iterative optimization.
 
 \section{Channel Estimation with Interference Random Fields}
-Interference field at the $n$-th RIS element, with transmitted symbol $s=1$:
-\begin{equation}
-\label{interference}
-E_{n}(t)=\bm g_{n}^{T}\bm w+f_{n}^{*}e^{{\rm j}\psi (t)}+v(t).
-\end{equation}
+\subsection{How can IRF Perform Channel Estimation?}
+    It is widely known that most of the existing channel estimation methods employ the transceivers as the explorers of CSI. The transmitter emits EM waves, which imping the RIS, and the bounced-back waves enter the receiver, telling it what the channel is. It seems that we are using EM waves to probe the environment. However, for RIS-aided systems, the channel may have up to thousands of free parameters, which makes the probing process extremely inefficient, especially when the transceivers are only equipped with dozens of antennas. That's like shedding a few beams of light into a blackbox and trying to distinguish thousands of objects inside. Apparently, a more reasonable way is just simply to place our probes inside the blackbox. That's why we want to attach power sensors to the RIS. 
 
-Define $\alpha = \left\vert\bm g_{n}^{T}\bm w\right\vert$ and $\beta = \left\vert f_{n}^{*}\right \vert$, and define the phase to be measured as $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$.
-Then, the power of interference field can be written as
-\begin{equation}
-\label{Power of Interference}
-\begin{aligned}
-P(t)&=A \left| E_{n} (t)\right |^{2}+\zeta\\
-&=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{Sensor detection signal}}\\
-&~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{j\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
-\end{aligned}
-\end{equation}
-where $v'\overset{\text{d}}{=}v\sim\mathcal{CN}\left(0,\sigma_{v}^{2}\right)$.
+    However, how can these low-cost power sensors obtain key information about the CSI? 
 
-To estimate the phase $\varphi$, we need enough observations from the sensor detection signal. For simplicity and without loss of generality, let us assume $\psi(t)=\omega t$ and $\omega=\frac{2\pi}{T_{s}}$. Assume furthermore that $L$ observations $P[l]=P(t_{l})$ at time 
-\begin{equation}
-\label{observation time}
-t_{l}=\frac{l}{L}T_{s},~\forall l\in \left\{0,\cdots ,L-1\right\}
-\end{equation}
-are used for estimation.
+\subsection{Models for IRFs}
+    Interference field at the $n$-th RIS element, with both of the  \ac{BS} and \ac{UE} transmitted symbols being $s=1$. Then the interference signal that appeared on each RIS element can be represented by its baseband equivalent signal
+    \begin{equation}
+    \label{interference}
+    E_{n,{\rm BB}}(t)=\bm g_{n}^{T}\bm w+f_{n}^{*}e^{{\rm j}\psi (t)}+v(t).
+    \end{equation}
+    Thus, the corresponding passband electric field induced on each RIS element is represented by 
+    \begin{equation}
+        E_{n}(t) = \sqrt{2} {\rm Re}\left( E_{n,{\rm BB}}(t)e^{{\rm j}\omega_c t} \right),
+    \end{equation}
+    where $\omega_c = 2\pi f_c$ denotes the carrier frequency, and the coefficient $\sqrt{2}$ ensures that the passband signal energy is equal to the baseband signal energy. 
+
+    Define $\alpha = \left\vert\bm g_{n}^{T}\bm w\right\vert$ and $\beta = \left\vert f_{n}^{*}\right \vert$, and define the phase to be estimated as $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$. Then, the power of interference field can be written as
+    \begin{equation}
+        \label{Power of Interference}
+        \begin{aligned}
+            P(t)&=A \left| E_{n, {\rm BB}} (t)\right |^{2}+\zeta\\
+            &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{Sensor detection signal}}\\
+            &~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{j\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
+        \end{aligned}
+    \end{equation}
+    where $v'\overset{\text{d}}{=}v\sim\mathcal{CN}\left(0,\sigma_{v}^{2}\right)$, and $\zeta$ is the signal processing noise after measuring the field power. 
+
+    To estimate the phase $\varphi$, we need enough observations from the sensor-detected power signal $P(t)$. For simplicity and without loss of generality, we can assume $\psi(t)=\omega t$ and $\omega=\frac{2\pi}{T_{s}}$. Furthermore, assume that $L$ observations $P[l]=P(t_{l})$ at equally-spaced instants 
+    \begin{equation}
+        \label{observation time}
+        t_{l}=\frac{l}{L}T_{s},~\forall l\in \left\{0,\cdots ,L-1\right\}
+    \end{equation}
+    are used for estimation of $\varphi$.
+
 \subsection{LS method}
-Apply $L$-point \ac{DFT} to the observed sensor detection signals $P[1],\cdots ,P[L]$, we have
-\begin{equation}
-\label{DFT}
-p[l']=\sum\nolimits_{l=0}^{L-1}P[l]e^{-j\frac{2\pi}{L}ll'},~\forall l'\in [L].
-\end{equation}
-Specifically, we have
-\begin{equation}
-\label{DFT l=1}
-p[1]=\sum\nolimits_{l=0}^{L-1}A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\frac{2\pi}{L}l+\varphi\right)\right]e^{-j\frac{2\pi}{L}l}=\frac{A}{2}e^{j\varphi}.
-\end{equation}
-Then, the phase $\varphi$ can be estimated as
-\begin{equation}
-\label{LS estimate result}
-\hat{\varphi}=\arg\left(\frac{2p[1]}{A}\right) = \arg\left(p[1]\right).
-\end{equation}
+    Apply $L$-point \ac{DFT} to the observed sensor detection signals $P[0],\cdots ,P[L-1]$, we have
+    \begin{equation}
+        \label{DFT}
+        p[l']=\sum\nolimits_{l=0}^{L-1}P[l]e^{-{\rm j}\frac{2\pi}{L}ll'},~\forall l'\in [L].
+    \end{equation}
+    Specifically, we have the complex amplitude of the first harmonics $p[1]$ as 
+    \begin{equation}
+        \label{DFT l=1}
+        p[1]=\sum\nolimits_{l=0}^{L-1}A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\frac{2\pi}{L}l+\varphi\right)\right]e^{-j\frac{2\pi}{L}l}=LA\alpha\beta  e^{j\varphi}.
+    \end{equation}
+    Then, the phase $\varphi$ can be estimated as
+    \begin{equation}
+        \label{LS estimate result}
+        \hat{\varphi}=\arg\left(\frac{p[1]}{LA\alpha\beta}\right) = \arg\left(p[1]\right).
+    \end{equation}
 
 %% zja working below
 \subsection{ML method}
