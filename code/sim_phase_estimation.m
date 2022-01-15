@@ -15,14 +15,14 @@ K = 0.6;
 gamma_bar = 2;
 N_scan = 9;        % # Scan points.
 
-gamma_bar_arr = linspace(1,9,N_scan);
+K_arr = linspace(0.1,1,N_scan);
 MSE_arr_LS = zeros(N_exp, N_scan);
 MSE_arr_VM = zeros(N_exp, N_scan);
 MSE_arr_Newton = zeros(N_exp, N_scan);
 CRLB = zeros(1, N_scan);
     
 for idx_scan = 1:N_scan
-    gamma_bar = gamma_bar_arr(idx_scan);
+    K = K_arr(idx_scan);
     beta    = (1-sqrt(1-K^2))/K;
     sigma_v = sqrt((alpha^2+beta^2)/gamma_bar);
 
@@ -94,14 +94,16 @@ set(0,'DefaultAxesFontSize',12);
 set(0,'DefaultLineLineWidth',1.4);
 set(0,'defaultfigurecolor','w');
 figure('color',[1 1 1]); hold on;
-plot(gamma_bar_arr, MSE_LS, 'bp-');
-plot(gamma_bar_arr, MSE_VM, 'gs-');
-plot(gamma_bar_arr, MSE_Newton, 'ro-');
-plot(gamma_bar_arr, CRLB, 'ko-.');
+plot(K_arr, MSE_LS, 'bp-');
+plot(K_arr, MSE_VM, 'gs-');
+plot(K_arr, MSE_Newton, 'ro-');
+plot(K_arr, CRLB, 'ko-.');
 
 
 set(gca,'FontName','Times New Roman');
 grid on; box on;
 legend('LS', 'VM-EM', 'Newton-ML', 'CRLB');
-xlabel('$\bar{\gamma}$', 'interpreter', 'latex');
+% xlabel('$\bar{\gamma}$', 'interpreter', 'latex');
+xlabel('$K$', 'interpreter', 'latex');
 ylabel('E$\left(\hat{\varphi}-\varphi\right)^2$', 'interpreter', 'latex');
+

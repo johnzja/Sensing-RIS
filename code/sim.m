@@ -4,8 +4,8 @@ c = 299792458;
 fc = 10e9;
 lambda = c/fc;
 
-Ny = 32;
-Nz = 34;
+Ny = 40;
+Nz = 30;
 N = Ny * Nz;
 M = 8;              % Number of antennas at BS.
 
@@ -27,32 +27,34 @@ theta_UE_range = [-pi/2, pi/2];
 psi_UE_range = [-pi/3, pi/3];
 
 % Setup simulation necessities.
-N_sim = 100;
+PSD_noise = db2pow(-174-30);    % Setup the PSD of the thermo-noise.
+BW = 180e3;                     % System baseband BW on each subcarrier = 180kHz.
+P_noise = PSD_noise * BW;       % Thermo-noise for BS receiver equipped with M RF-chains.
+Pt_UE = 300e-3;                 % 300mW UE transmit power.
+sigma_noise = sqrt(P_noise);
+RIS_conf.sigma_v = sqrt(PSD_noise * 100e6);     % 100M BW for IRF-sensing elements.
+    
+N_sim = 200;
 rng(0);
 Pt_BS_range = logspace(-1,1, 10);
 SE = zeros(length(Pt_BS_range), 4);
 
-for idx_scan = 1:length(Pt_BS_range)
+parfor idx_scan = 1:length(Pt_BS_range)
     % Pt_BS = 1;      % Total transmit power is 1W. (distributed on M transmit antennas).
     Pt_BS = Pt_BS_range(idx_scan);
-    Pt_UE = 300e-3; % 300mW UE transmit power.
+    
     L1 = 4;         % Number of BS-RIS NLOS paths.
     L2 = 4;         % Number of RIS-UE NLOS paths.
     kappa = 0.8;    % LOS ratio.
-    Np = 1088;      % Number of pilots in traditional beamforming.
-
+    Np = N;         % Number of pilots in traditional beamforming.
+    
+    BS_conf = struct()
     BS_conf.My = M;             % Assume the BS is equipped with lambda/2 ULA.
     BS_conf.Mz = 1;
     BS_conf.M = BS_conf.My*BS_conf.Mz;
     BS_conf.Pt_BS = Pt_BS;
     BS_conf.Pt_UE = Pt_UE;
-
-    PSD_noise = db2pow(-174-30);    % Setup the PSD of the thermo-noise.
-    BW = 180e3;                     % System baseband BW on each subcarrier = 180kHz.
-    P_noise = PSD_noise * BW;       % Thermo-noise for BS receiver equipped with M RF-chains.
-    sigma_noise = sqrt(P_noise);
     BS_conf.sigma_noise = sigma_noise;
-    RIS_conf.sigma_v = sqrt(PSD_noise * 100e6); % 100M BW for IRF-sensing elements.
 
     %% Run simulations.
     Rates = zeros(N_sim, 4);
@@ -100,19 +102,21 @@ for idx_scan = 1:length(Pt_BS_range)
     SE(idx_scan, :) = R;
     fprintf('Pt_{BS} = %f \n', Pt_BS);
 end
-disp('sim complete.');
+disp('sim complete. Files saved at data/');
+save('data/IRF_sim.mat', 'Pt_BS_range', 'SE', 'M', 'Pt_UE', 'RIS_conf');
 
 %% Analyze the data.
+load('data/IRF_sim.mat');
 dbP = 10*log10(Pt_BS_range).';    % in dBW.
 
-set(0,'DefaultLineMarkerSize',4);
+set(0,'DefaultLineMarkerSize',6);
 set(0,'DefaultTextFontSize',14);
 set(0,'DefaultAxesFontSize',12);
 set(0,'DefaultLineLineWidth',1.4);
 set(0,'defaultfigurecolor','w');
 figure('color',[1 1 1]); hold on;
-plot(dbP, SE(:,1), 'bp-');
-plot(dbP, SE(:,2), 'gs-');
+plot(dbP, SE(:,1), 'color', [1, 0, 0.9], 'LineStyle', '-', 'marker', 'x');
+plot(dbP, SE(:,2), 'color', [0, 0, 1], 'LineStyle', '-', 'marker', 'x');
 plot(dbP, SE(:,3), 'ro-');
 plot(dbP, SE(:,4), 'ko-.');
 
@@ -121,7 +125,7 @@ set(gca,'FontName','Times New Roman');
 grid on; box on;
 legend('Random', 'MMSE', 'Proposed-IRF', 'Oracle');
 xlabel('BS transmit power (dBW)', 'interpreter', 'latex');
-ylabel('Achieved spectral efficiency (bps/Hz)', 'interpreter', 'latex');
+ylabel('Capacity (bps/Hz)', 'interpreter', 'latex');
 
 
 %% Utilities.
