@@ -59,6 +59,7 @@ breaklinks=true}
 \acrodef{AWGN}[AWGN]{additive white Gaussian noise}
 \acrodef{DFT}[DFT]{discrete Fourier transform}
 \acrodef{IRF}[IRF]{interference random field}
+\acrodef{MISO}[MISO]{multiple-input single-output}
 
 \def \H {^H}
 \def \opt {^{\text{opt}}}
@@ -95,7 +96,7 @@ breaklinks=true}
 \title{Sensing RIS}
 \author{{Jieao Zhu, Kunzan Liu, Zhongzhichao Wan, and Linglong Dai
 \vspace*{-1em}}
-\thanks{Beijing National Research Center for Information Science and Technology (BNRist)}
+\thanks{All authors are with the Beijing National Research Center for Information Science and Technology (BNRist) as well as the Department of Electronic Engineering, Tsinghua University, Beijing 100084, China (e-mails: \{zja21, lkz18, wzzc20\}@mails.tsinghua.edu.cn, daill@tsinghua.edu.cn).}
 %\thanks{Corresponding author: Linglong Dai.}
 }
 
@@ -119,20 +120,26 @@ xxx
     \end{itemize}
 
 \section{System Model}  \label{System Model}
-    In this section, we will first specify the channel model of the RIS-assisted MISO system. Then, the basic models, notations, and properties of the \ac{IRF} will be introduced.
+    In this section, we will first specify the system model of the RIS-assisted \ac{MISO} system, and introduce traditional approaches for the corresponding beamforming design and channel estimation in Subsection~\ref{MISO case}. Then, the signal model of the \ac{IRF} on the RIS will be introduced in Subsection~\ref{Models for IRFs}.
 
     \subsection{RIS-Aided MISO System}  \label{MISO case}
-        We consider the situation where a single-antenna user is served by an $M$-antenna BS and an $N$-element \ac{RIS}. The RIS phase-shift matrix is represented by
+        Let us consider a RIS-aided MISO system, where an $N$-element RIS is employed for enhancing the transmission from an $M$-antenna \ac{BS} to a single-antenna user. Assume furthermore that the phase-shift of RIS's each element can be continuously and independently controlled. Then, the RIS precoding matrix can be represented by
         \begin{equation}
             \label{RIS}
-            \bm \Theta = \diag \left(\bm \theta\right )=\diag \left(\left[\theta_{1},\cdots ,\theta_{N}\right]\right),
+            \bm \Theta = \diag \left(\bm \theta\right )=\diag \left(\left[\theta_{1},\cdots ,\theta_{N}\right]^{T}\right),
         \end{equation}
-        where $\theta_i, 1\leq i \leq N$ denotes the phase-shift coefficient of the $i$-th \ac{RIS} element, satisfying $\lvert \theta_i\rvert=1$. The UE-received symbol is then given by 
+        where $\theta_i (i\in[N])$ denotes the phase-shift of the $i$-th \ac{RIS} element, satisfying $\lvert \theta_i\rvert=1$. Therefore, the signal received by the user can be written as 
         \begin{equation}
             \label{Signal model}
             y=\bm f^{H} \bm\Theta \bm G \bm w s+z,
         \end{equation}
-        where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel from the \ac{RIS} to the user and the channel from the BS to the \ac{RIS}, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with $\left\Vert \bm w\right \Vert_{2}^{2}\leq P$; The letter $s$ denotes the normalized transmitted symbol; $z\sim \mathcal{CN}\left(0,\sigma_{z}^{2}\right)$ denotes the \ac{AWGN} introduced at the receiver user.
+        where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the \ac{RIS} to the user and the channel spanning from the BS to the \ac{RIS}, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with power constraint $\left\Vert \bm w\right \Vert_{2}^{2}\leq P_{\text{max}}$; $s$ denotes the normalized transmitted symbol; $z\sim \mathcal{CN}\left(0,\sigma_{z}^{2}\right)$ denotes the \ac{AWGN} introduced at the receiver user.
+        
+        \subsubsection{Beamforming design}
+        
+        \subsubsection{Channel estimation}
+        
+        
         In this paper, we assume that the \ac{BS} and \ac{RIS} are fixed. With fixed positions of the \ac{BS} and the \ac{RIS}, the optimal beamforming vector is expressed as 
         \begin{equation}
             \label{fixed w}
@@ -181,6 +188,7 @@ where $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
     After obtaining $\hat{\bm H}$, we can optimize for ${\bm w}$ and ${\bm \theta}$ by iterative optimization.
 
 \subsection{Models for IRFs}
+\label{Models for IRFs}
     Interference field at the $n$-th RIS element, with both of the  \ac{BS} and \ac{UE} transmitted symbols being $s=1$. Then the interference signal that appeared on each RIS element can be represented by its baseband equivalent signal
     \begin{equation}
     \label{interference}
