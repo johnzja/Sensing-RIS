@@ -305,65 +305,34 @@ where $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
         \end{aligned}
         \label{Second Derivative Likelihood}
     \end{equation}
-    where $z_l = \sqrt{P[l]\lambda(t_l)}/(A\sigma_v^2/2)$. Then, we can perform the Newton iteration to obtain $\hat{\varphi}$:
+    where
+    \begin{equation}
+        z_l = \sqrt{P[l]\lambda(t_l)}/(A\sigma_v^2/2)
+        \label{eqn:def z_l}
+    \end{equation}
+    Then, we can perform the Newton iteration to obtain $\hat{\varphi}$:
     \begin{equation}
         \hat{\varphi}^{(k+1)} = \hat{\varphi}^{(k)} - \frac{\mathcal{L}'(\hat{\varphi}^{(k)})}{\mathcal{L}''(\hat{\varphi}^{(k)})}
     \end{equation}
 
 \subsection{CRLB}
-    The CRLB problem of the same type was first formulated in \cite{jiang2016cramer}, however, the authors introduced too much approximation and did not provide an error analysis. In fact, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\hat{\varphi}$. Since in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, $\mathbb{E}\left[P[l]\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. These expectation integrals are partially based on the properties of the non-central chi-square distribution. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power}:
-    \begin{equation}
-        \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l,
-        \label{eqn:expectation of P_l}
-    \end{equation}
-    and, in fact, the expectation $\mathbb{E}\left[R(z_l) \sqrt{P[l]}\right]$ can be evaluated by taking the derivative w.r.t $\lambda_l$ in the identity $\mathbb{E}_{\lambda_l, A\sigma_v^2}[e^{\lambda_l/(A\sigma_v^2)}]=e^{\lambda_l/(A\sigma_v^2)}$:
-    \begin{equation}
-        \begin{aligned}
-            \mathbb{E}\left[R(z_l) \sqrt{P[l]}\right] & = \int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x+\lambda_l}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x}\\
-            & = e^{-\lambda_l/(A\sigma_v^2)}\int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x} \\
-            & = e^{-\lambda_l/(A\sigma_v^2)} A\sigma_v^2 \sqrt{\lambda_l} \frac{\partial}{\partial\lambda_l} \int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_0\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right) {\rm d}x}\\
-            & = e^{-\lambda_l/(A\sigma_v^2)} A\sigma_v^2 \sqrt{\lambda_l} \frac{\partial}{\partial\lambda_l} \left(e^{\lambda_l/(A\sigma_v^2)}\right)\\
-            & = \sqrt{\lambda_l},\\
-        \end{aligned}
-    \end{equation}
-    and the expectation $\mathbb{E}\left[R(z_l)P[l]/z_l\right]$ is, in fact, the same as above. The result is
-    \begin{equation}
-        \mathbb{E}\left[\frac{R(z_l)}{z_l} P[l]\right] = \frac{A\sigma_v^2}{2}.
-    \end{equation}
-    The trickiest expectation is evaluated approximately by using the asymptotic expansion $x(1-R^2(2\sqrt{x})) \approx \sqrt{x}/2$:
-    \begin{equation}
-        \begin{aligned}
-            \mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] & \approx g(\lambda_l, a) \\ 
-            & \triangleq  \frac{1}{4}\sqrt{\frac{\pi a}{\lambda_l^3}}e^{-\lambda_l/(2a)}\left((a+\lambda_l)I_0(\lambda_l/(2a))+\lambda_l I_1(\lambda_l/(2a))\right),
-        \end{aligned}
-    \end{equation}
-    where $a=A\sigma_v^2 \ll \lambda_l$. From the above equations, we can obtain
-    \begin{equation}
-        \begin{aligned}
-        \frac{1}{{\rm CRLB}(\varphi)} & = -\mathbb{E}\left[\frac{\partial^2\mathcal{L}}{\partial\varphi^2}\right] \\
-        & =  -\frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] - \frac{a}{\lambda_l}\right) } \\
-        & \approx \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\frac{a}{\lambda_l}-g(\lambda_l, a)\right)^{+} },
-        \end{aligned}
-        \label{eqn:CRLB}
-    \end{equation}
-    where $(x)^{+}$ denotes $x \mathbbm{1}_{\{x \ge 0\}}$. We can also define the single-variable $g$ function for simplicity:
-    \begin{equation}
-        g(\gamma) = \frac{1}{4} \sqrt{\frac{\pi}{\gamma}}e^{-\gamma/2}\left((1+1/\gamma)I_0(\gamma/2) + I_1(\gamma/2)\right),
-    \end{equation}
-    where $\gamma_l = \lambda_l / a$ is the interferential SNR. It seems that the CRLB is independent of the true value of $\varphi$, and only relies on two intrinsic physical parameters: the interferential SNR $\gamma_l$ and the interferential contrast $K$. The parameter $K$ is defined as 
-    \begin{equation}
-        K = \frac{I_M - I_m}{I_M + I_m} = \frac{2\alpha\beta}{\alpha^2+\beta^2},
-    \end{equation}
-    satisfying $-1\leq K\leq 1$. Define the average interferential SNR $\bar{\gamma}$ to be the  average value of $\gamma_l, 0\leq l < L$:
-    \begin{equation}
-        \bar{\gamma} = \frac{1}{L}\sum_{l=0}^{L-1}{\gamma_l} = \frac{\alpha^2+\beta^2}{\sigma_v^2}.
-    \end{equation}
-    Thus, the CRLB can be expressed as 
-    \begin{equation}
-        \frac{1}{{\rm CRLB}(\varphi)} \approx K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}{ \sin^2(\psi_l+\varphi) \left(1/\gamma_l-g(\gamma_l)\right)^{+} },
-        \label{eqn:CRLB_simple}
-    \end{equation}
-    where $\gamma_l=\bar{\gamma}\left(1+K\cos(\psi_l+\varphi)\right)$ are solely determined by the average SNR $\bar{\gamma}$ and the interferential contrast $K$. The best prediction accuracy occurs when $\lvert K \rvert = 1$, i.e., the RIS-received signal from BS is as strong as that from UE. Note that in \eqref{eqn:CRLB_simple}, due to the symmetry of the $\sin^2(\cdot)$ function, the accuracy $1/{\rm CRLB}(\varphi)$ is only a function of $\bar{\gamma}$ and $\lvert K \rvert$. Thus, we can plot $1/{\rm CRLB}(\varphi)$ as a two-variable function:
+    The evaluation of CRLB in non-coherent parameter estimation was first formulated in \cite{jiang2016cramer}, where the authors introduced Gaussian approximation in order to obtain a simple closed-form CRLB expression. However, without Gaussian approximation techniques we have to deal with the operations of many Bessel functions, and thus the analysis becomes nearly intractable. In contrast, in this paper, this difficulty is overcomed by asymptotic expansion techniques (cite here). Though precise expression of CRLB is still not obtained, satisfactory asymtotic results are acquired. 
+    
+    
+    % TODO: Write a theorem here.
+    \begin{theorem}[Asymptotic Evaluation of Non-Central Chi-Squared CRLB]
+        Suppose the probabilistic model is specified by \eqref{eqn:sensor power}. Then the CRLB of this $L$-point phase estimation problem is given by 
+        \begin{equation}
+            \frac{1}{{\rm CRLB}(\varphi)}\approx K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}\sin^2(\psi_l+\varphi)(1/\gamma_l-g(\gamma_l))^{+},
+        \end{equation}
+        where $K=2\alpha\beta/(\alpha^2+\beta^2)$, $a=A\sigma_v^2$, $\gamma_l=\lambda_l/a$, $\bar{\gamma}$ is the arithmetic mean of all the $\gamma_l, 0\leq l<L$, and the function $g(\gamma)$ is defined as 
+        \begin{equation}
+            g(\gamma) = \frac{1}{4} \sqrt{\frac{\pi}{\gamma}}e^{-\gamma/2}\left((1+1/\gamma)I_0(\gamma/2) + I_1(\gamma/2)\right).
+        \end{equation}
+    \end{theorem}
+
+
+   The best prediction accuracy occurs when $\lvert K \rvert = 1$, i.e., the RIS-received signal from BS is as strong as that from UE. Note that in \eqref{eqn:CRLB_simple}, due to the symmetry of the $\sin^2(\cdot)$ function, the accuracy $1/{\rm CRLB}(\varphi)$ is only a function of $\bar{\gamma}$ and $\lvert K \rvert$. Thus, we can plot $1/{\rm CRLB}(\varphi)$ as a two-variable function:
     \begin{figure}[!h]
         \centering
         \myincludegraphics{figures/crlb.pdf}
@@ -451,8 +420,68 @@ where $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
 
 
 \section*{Acknowledgments}
+Thanks\dots 
 
-\section*{Appendix A\\ Expectation Evaluation}\label{appendix: expectation evaluation}
+\section*{Appendix A\\ Proof of Theorem 1}\label{appendix:proof of theorem1}
+\begin{IEEEproof}
+    In fact, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\hat{\varphi}$. Note that in \eqref{Second Derivative Likelihood} there are three types of expectations to be evaluated: $\mathbb{E}\left[P[l]\right]$, $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. The evaluation of these expectation integrals are partially based on the properties of the non-central chi-square distribution. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power} by the linearity of the expectation operation:
+    \begin{equation}
+        \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l,
+        \label{eqn:expectation of P_l}
+    \end{equation}
+    and, in fact, the expectation $\mathbb{E}\left[R(z_l) \sqrt{P[l]}\right]$ can be evaluated by calculating the derivative w.r.t $\lambda_l$ on both sides of the identity $\mathbb{E}_{\lambda_l, A\sigma_v^2}[e^{\lambda_l/(A\sigma_v^2)}]=e^{\lambda_l/(A\sigma_v^2)}$:
+    \begin{equation}
+        \begin{aligned}
+            \mathbb{E}\left[R(z_l) \sqrt{P[l]}\right] & = \int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x+\lambda_l}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x}\\
+            & = e^{-\lambda_l/(A\sigma_v^2)}\int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x} \\
+            & = e^{-\lambda_l/(A\sigma_v^2)} A\sigma_v^2 \sqrt{\lambda_l} \frac{\partial}{\partial\lambda_l} \int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_0\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right) {\rm d}x}\\
+            & = e^{-\lambda_l/(A\sigma_v^2)} A\sigma_v^2 \sqrt{\lambda_l} \frac{\partial}{\partial\lambda_l} \left(e^{\lambda_l/(A\sigma_v^2)}\right)\\
+            & = \sqrt{\lambda_l}.\\
+        \end{aligned}
+    \end{equation}
+    Note that, because of the definition of $z_l$ \eqref{eqn:def z_l}, the expectation $\mathbb{E}\left[R(z_l)P[l]/z_l\right]$ is, intrinsically, of the same form as the expectation $\mathbb{E}\left[R(z_l) \sqrt{P[l]}\right]$. The result is
+    \begin{equation}
+        \mathbb{E}\left[\frac{R(z_l)}{z_l} P[l]\right] = \frac{A\sigma_v^2}{2}.
+    \end{equation}
+    The third kind of expectation $\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right]$ is the trickiest to calculate. Although it has no closed-form expression, we evaluate it approximately by utilizing the asymptotic expansion $x(1-R^2(2\sqrt{x})) \approx \sqrt{x}/2$(cite here). Thus, by substituting $x=\lambda_lP[l]/a^2$ into the asymptotic expansion formula, we obtain 
+    \begin{equation}
+        \begin{aligned}
+            \mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] & \approx g(\lambda_l, a) \\ 
+            & \triangleq  \frac{1}{4}\sqrt{\frac{\pi a}{\lambda_l^3}}e^{-\lambda_l/(2a)}\left((a+\lambda_l)I_0(\lambda_l/(2a))+\lambda_l I_1(\lambda_l/(2a))\right),
+        \end{aligned}
+    \end{equation}
+    where $a=A\sigma_v^2 \ll \lambda_l$. From the above equations, we can obtain
+    \begin{equation}
+        \begin{aligned}
+        \frac{1}{{\rm CRLB}(\varphi)} & = -\mathbb{E}\left[\frac{\partial^2\mathcal{L}}{\partial\varphi^2}\right] \\
+        & =  -\frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] - \frac{a}{\lambda_l}\right) } \\
+        & \approx \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\frac{a}{\lambda_l}-g(\lambda_l, a)\right)^{+} },
+        \end{aligned}
+        \label{eqn:CRLB}
+    \end{equation}
+    where $(x)^{+}$ denotes $x \mathbbm{1}_{\{x \ge 0\}}$. From \eqref{eqn:CRLB}, we can further define the single-variable $g$ function for the simplicity of notations:
+    \begin{equation}
+        g(\gamma) = \frac{1}{4} \sqrt{\frac{\pi}{\gamma}}e^{-\gamma/2}\left((1+1/\gamma)I_0(\gamma/2) + I_1(\gamma/2)\right),
+    \end{equation}
+    where $\gamma_l = \lambda_l / a$ is the interferential SNR. It seems that the CRLB is approximately independent of the true value of $\varphi$, and only relies on two intrinsic physical parameters: the interferential SNR $\gamma_l$ and the interferential contrast $K$. The parameter $K$ is defined as 
+    \begin{equation}
+        K = \frac{I_M - I_m}{I_M + I_m} = \frac{2\alpha\beta}{\alpha^2+\beta^2},
+    \end{equation}
+    satisfying $-1\leq K\leq 1$. Define the average interferential SNR $\bar{\gamma}$ to be the  average value of $\gamma_l, 0\leq l < L$:
+    \begin{equation}
+        \bar{\gamma} = \frac{1}{L}\sum_{l=0}^{L-1}{\gamma_l} = \frac{\alpha^2+\beta^2}{\sigma_v^2}.
+    \end{equation}
+    Thus, the CRLB can be expressed as 
+    \begin{equation}
+        \frac{1}{{\rm CRLB}(\varphi)} \approx K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}{ \sin^2(\psi_l+\varphi) \left(1/\gamma_l-g(\gamma_l)\right)^{+} },
+        \label{eqn:CRLB_simple}
+    \end{equation}
+    where $\gamma_l=\bar{\gamma}\left(1+K\cos(\psi_l+\varphi)\right)$ are solely determined by the average SNR $\bar{\gamma}$ and the interferential contrast $K$. This completes the proof.
+
+\end{IEEEproof}
+
+
+\section*{Appendix B\\ Expectation Evaluation}\label{appendix: expectation evaluation}
     In order to evaluate the expectation $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$, we first introduce some preliminaries about the noncentral chi distribution $\nc_{\chi_k}(\lambda)$ with noncentrality parameter $\lambda>0$. The distribution $\nc_{\chi_k}(\lambda)$ is the distribution of the length of a $k$-dimensional standard normal distribution $\mathcal{N}({\bm \mu}, {\bm I}_k)$, with $\lambda = \Vert {\bm \mu} \Vert_2$. In particular, we are interested in the case where $k=2$, since that is the case on the complex plane. For  $k=2$, suppose $Y \sim \nc_{\chi_2}(m)$, then
     \begin{equation}
         \mathbb{E}\left[Y\right] = \sqrt{\frac{\pi}{2}}L_{1/2}(-m^2/2),
