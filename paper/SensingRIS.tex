@@ -165,28 +165,33 @@ xxx
 where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave departure angle $\alpha$ of the BS antenna array, and $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
 
 \subsubsection{Channel estimation}
-To accurately acquire the \ac{CSI} essential to beamforming design \eqref{traditional beamforming}, the user 
+Observe from \eqref{traditional beamforming} that, the estimation for the cascade channel ${\bm H} = {\rm diag}({\bm f}^{*})\bm G$ is enough for beamforming design.
+To accurately acquire this cascade channel, the user generally sends pilot signal $x$ to the BS under $P$ different RIS configurations which are the first $P$ columns of the DFT matrix $\bm F_{N,K}$. Due to the channel reciprocity, the received signal at the BS with the $p$-th RIS configuration $\bm \Theta_{p}$ can be written as \cite{atapattu2020reconfigurable}
+    \begin{equation}
+    \label{CE received signal}
+    \begin{aligned}
+            {\bm y}_{{\rm BS}, p} &={\bm G}^{T} {\bm \Theta}_p\bm f^{*} x+\bm n
+            \\&=\bm H^{T} {\bm \theta}_p x+\bm n,
+    \end{aligned}
+    \end{equation}
+    where $\bm n\sim \mathcal{CN}\left( \bm 0_{M}, \sigma_{n}^{2}\bm I_{M}\right)$ is the \ac{AWGN} at the receiver BS.
+Equivalently, \eqref{CE received signal} can be expressed as the matrix form
+    \begin{equation}
+    \label{eqn:MMSE_CE}
+        {\bm Y}_{\rm BS}=\bm H^{T} \bm F_{N,K}x + {\bm N},
+    \end{equation}
+    where ${\bm Y}_{\rm BS}=\left[\bm y_{{\rm BS}, 1},\cdots,\bm y_{{\rm BS}, P}\right]$ and $\bm N = \left[ \bm n_{1},\cdots,\bm n_{P}\right]$.
+With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estimation in RIS-assisted system can be formulated as 
+    \begin{equation}
+        \hat{\bm H} = \arg\max_{\bm H} \lVert {\bm Y}_{\rm BS} - {\bm H^{T}} {\bm F}_{N,K}\rVert_{F}^2.
+    \end{equation}
+    With the least-square criterion, we obtain
+    \begin{equation}
+        \hat{\bm H} = \frac{1}{P}{\bm F}_{N,K}^{*}{\bm Y}_{\rm BS}^{T},
+    \end{equation}
+    which provides a solution for channel estimation in this system.
 
-    Traditional channel estimation requires the UE to be the pilot transmitter. The signal model is 
-    \begin{equation}
-        {\bm y}_{{\rm BS}, p} = {\bm G}^{T} {\rm diag}({\bm f}^{*}) {\bm \theta}_p x+n, 
-    \end{equation}
-    where ${\bm \theta}_p \in \mathbb{C}^{N\times 1}$ is the $p$-th RIS phase vector, and ${\bm y}_{{\rm BS}, p}$ is the $p$-th  BS received vector. The RIS phase vectors ${\bm \theta}_p$ is designed to be the first $P$ columns of the DFT matrix. After gathering the $P$ received vectors during $P$ consecutive pilot slots and assuming $x=1$, the matrix identity is expressed as 
-    \begin{equation}
-        {\bm Y}_{\rm BS}={\bm G}^{T} {\rm diag}({\bm f}^{*}) {\bm \Theta} + {\bm Z}, 
-        \label{eqn:MMSE_CE}
-    \end{equation} 
-    where ${\bm Z}\in \mathbb{C}^{M\times P}$, with each matrix element ${\bm Z}_{i,j}\sim \CN(0,\sigma^2)$, and the thermal noise variance $\sigma^2=-174{\rm dBm/Hz}$. Substituting ${\bm \Theta} = {\bm F}_{N,K}$ into \eqref{eqn:MMSE_CE} and letting $\hat{\bm H} = {\bm G}^{\rm T}{\rm diag}({\bm f}^{*})$, then the MMSE channel estimation problem can be re-stated as 
-    \begin{equation}
-        \hat{\bm H} = \arg\max_{\bm H} \lVert {\bm Y}_{\rm BS} - {\bm H} {\bm F}_{N,K}\rVert_{F}^2,
-    \end{equation}
-    which is a least-square problem, and we know that this system is solved by 
-    \begin{equation}
-        \hat{\bm H} = \frac{1}{P}{\bm Y}{\bm F}_{N,K}^{H}.
-    \end{equation}
-    After obtaining $\hat{\bm H}$, we can optimize for ${\bm w}$ and ${\bm \theta}$ by iterative optimization.
-
-\subsection{Models for IRFs}
+\subsection{Signal Model for IRF}
 \label{Models for IRFs}
     Interference field at the $n$-th RIS element, with both of the  \ac{BS} and \ac{UE} transmitted symbols being $s=1$. Then the interference signal that appeared on each RIS element can be represented by its baseband equivalent signal
     \begin{equation}
