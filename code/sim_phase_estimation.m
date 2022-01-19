@@ -20,6 +20,7 @@ MSE_arr_LS = zeros(N_exp, N_scan);
 MSE_arr_VM = zeros(N_exp, N_scan);
 MSE_arr_Newton = zeros(N_exp, N_scan);
 CRLB = zeros(1, N_scan);
+CRLB_precise = zeros(1, N_scan);
     
 for idx_scan = 1:N_scan
     K = K_arr(idx_scan);
@@ -39,6 +40,7 @@ for idx_scan = 1:N_scan
     P = zeros(L, 1);
     varphi = 2*pi*rand();   % uniform (0, 2pi).
     CRLB(idx_scan) = get_CRLB(SensingRIS_param, varphi);
+    CRLB_precise(idx_scan) = get_precise_CRLB(SensingRIS_param, varphi);
     
     for idx = 1:N_exp
         % Generate power signals.
@@ -79,7 +81,7 @@ for idx_scan = 1:N_scan
     fprintf('std var LS  \t = %f rads\n', sqrt(mean(MSE_arr_LS(:,idx_scan))));
     fprintf('std var VM  \t = %f rads\n', sqrt(mean(MSE_arr_VM(:,idx_scan))));
     fprintf('std var Newton\t = %f rads\n', sqrt(mean(MSE_arr_Newton(:,idx_scan))));
-    fprintf('std var CRLB\t = %f rads\n', sqrt(CRLB(idx_scan)));
+    fprintf('std var CRLB\t = %f rads\n', sqrt(CRLB_precise(idx_scan)));
     fprintf('----------------------------------------------\n');
 end
 %% Plot the results.
@@ -97,12 +99,12 @@ figure('color',[1 1 1]); hold on;
 plot(K_arr, MSE_LS, 'bp-');
 plot(K_arr, MSE_VM, 'gs-');
 plot(K_arr, MSE_Newton, 'ro-');
-plot(K_arr, CRLB, 'ko-.');
-
+plot(K_arr, CRLB_precise, 'ko-.');
+plot(K_arr, CRLB, 'color', [228,0,127]/255, 'LineStyle', '--', 'marker', 'o');
 
 set(gca,'FontName','Times New Roman');
 grid on; box on;
-legend('LS', 'VM-EM', 'Newton-ML', 'CRLB');
+legend('LS', 'VM-EM', 'Newton-ML', 'CRLB', 'CRLB\_approx');
 % xlabel('$\bar{\gamma}$', 'interpreter', 'latex');
 xlabel('$K$', 'interpreter', 'latex');
 ylabel('E$\left(\hat{\varphi}-\varphi\right)^2$', 'interpreter', 'latex');

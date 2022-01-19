@@ -241,13 +241,14 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
         \setstretch{1.35}
         \begin{algorithmic}[1]
             \REQUIRE Number of RIS elements $N$, power signals detected on each RIS element $P_n(t)$.
-            \ENSURE RIS phase-shift matrix $\Theta$.
+            \ENSURE RIS phase-shift matrix ${\bm \Theta}$.
             \FOR{$n=1,2,\cdots,N$}
                 \STATE $\varphi_n \leftarrow$ estimate phase difference  $\arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{\rm T}\bm w\right)$ from $P_n(t)$
                 \STATE $\psi_{n} \leftarrow$ estimate phase-shift of $\bm g_{n}^{\rm T}\bm w$ from geometric parameters of BS and RIS
                 \STATE $\theta_n \leftarrow -\varphi_n - 2\psi_n$
             \ENDFOR
-            \STATE $\Theta \leftarrow \diag(\theta_1, \theta_2, \cdots, \theta_N)$
+            \STATE ${\bm \Theta} \leftarrow \diag(\theta_1, \theta_2, \cdots, \theta_N)$
+            \RETURN ${\bm \Theta}$
         \end{algorithmic}
     \end{algorithm}
     The overall channel estimation and beamforming procedure is described in {\bf Algorithm \ref{alg:IRF-Beamforming}}. Note that in each iteration of the algorithm, the data are unrelated to other iterations. Thus, we can perform the calculations for each phase-shift $\theta_n$ in parallel. For example, we can install an MCU for each of the elements on the RIS. Each MCU is only responsible for gathering the data from its own power sensor and adjusting the phase-shift of its own RIS element. All MCUs can work in parallel, thus the computational time is irrelevant to the number of RIS elements, resulting in an $\mathcal{O}(1)$-time RIS beamforming algorithm. 
@@ -338,11 +339,11 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     \begin{theorem}[Asymptotic Evaluation of Non-Central Chi-Squared CRLB]
         Suppose the probabilistic model is specified by \eqref{eqn:sensor power}. Then the CRLB of this $L$-point phase estimation problem is given by 
         \begin{equation}
-            \frac{1}{{\rm CRLB}(\varphi)}\approx K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}\sin^2(\psi_l+\varphi)(1/\gamma_l-g(\gamma_l))^{+},
+            \frac{1}{{\rm CRLB}(\varphi)}\approx K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}\sin^2(\psi_l+\varphi)(1/\gamma_l-\hat{g}(\gamma_l))^{+},
         \end{equation}
-        where $K=2\alpha\beta/(\alpha^2+\beta^2)$, $a=A\sigma_v^2$, $\gamma_l=\lambda_l/a$, and $\bar{\gamma}$ is the arithmetic mean of all the $\gamma_l, 0\leq l<L$. The function $g(\gamma)$ is defined as 
+        where $K=2\alpha\beta/(\alpha^2+\beta^2)$, $a=A\sigma_v^2$, $\gamma_l=\lambda_l/a$, and $\bar{\gamma}$ is the arithmetic mean of all the $\gamma_l, 0\leq l<L$. The function $\hat{g}(\gamma)$ is defined as 
         \begin{equation}
-            g(\gamma) = \frac{1}{4} \sqrt{\frac{\pi}{\gamma}}e^{-\gamma/2}\left((1+1/\gamma)I_0(\gamma/2) + I_1(\gamma/2)\right).
+            \hat{g}(\gamma) = \frac{1}{4} \sqrt{\frac{\pi}{\gamma}}e^{-\gamma/2}\left((1+1/\gamma)I_0(\gamma/2) + I_1(\gamma/2)\right).
             \label{eqn:definition g function}
         \end{equation}
     \end{theorem}
@@ -424,6 +425,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
                 \STATE $\hat{\varphi} \leftarrow \arg(z_\varphi)$
                 \STATE $\kappa \leftarrow |z_\varphi|$
             \ENDWHILE
+            \RETURN $\hat{\varphi}$
         \end{algorithmic}
     \end{algorithm}
 
@@ -453,10 +455,12 @@ Thanks\dots
             & = e^{-\lambda_l/(A\sigma_v^2)} A\sigma_v^2 \sqrt{\lambda_l} \frac{\partial}{\partial\lambda_l} \left(e^{\lambda_l/(A\sigma_v^2)}\right)\\
             & = \sqrt{\lambda_l}.\\
         \end{aligned}
+        \label{eqn:expectation_second_kind_1}
     \end{equation}
     Note that, because of the definition of $z_l$ \eqref{eqn:def z_l}, the expectation $\mathbb{E}\left[R(z_l)P[l]/z_l\right]$ is, intrinsically, of the same form as the expectation $\mathbb{E}\left[R(z_l) \sqrt{P[l]}\right]$. The result is
     \begin{equation}
         \mathbb{E}\left[\frac{R(z_l)}{z_l} P[l]\right] = \frac{A\sigma_v^2}{2}.
+        \label{eqn:expectation_second_kind_2}
     \end{equation}
     The third kind of expectation $\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right]$ is the trickiest to calculate. Although it has no closed-form expression, we evaluate it approximately by utilizing the asymptotic expansion $x(1-R^2(2\sqrt{x})) \approx \sqrt{x}/2$(cite here). Thus, by substituting $x=\lambda_lP[l]/a^2$ into the asymptotic expansion formula, we can further simplify the integrand of the expectation to be 
     \begin{equation}
@@ -466,26 +470,39 @@ Thanks\dots
         \end{aligned}
         \label{eqn:trickiest_expectation}
     \end{equation}
-    where $a=A\sigma_v^2 \ll \lambda_l$, $g(\lambda_l, a)$ is a two-variable function\footnote{In fact, the two-variable function $g(\lambda, a)$ can be further simplified into a single-variable function $g(\cdot). $}, and $I_\nu$ is the $\nu$-th order  modified Bessel function of the first kind. For detailed proof of the calculation process and error analysis of \eqref{eqn:trickiest_expectation}, please refer to Appendix B. Combining the above equations of expectations, we obtain
+    where $a=A\sigma_v^2 \ll \lambda_l$, $h(\lambda_l, a)$ is a two-variable function\footnote{In fact, the two-variable function $g(\lambda, a)$ can be further simplified into a single-variable function $g(\cdot). $}, and $I_\nu$ is the $\nu$-th order  modified Bessel function of the first kind. For detailed proof of the calculation process and error analysis of \eqref{eqn:trickiest_expectation}, please refer to {\bf Appendix B}. Combining the above equations of expectations \eqref{eqn:expectation of P_l}, \eqref{eqn:expectation_second_kind_1}, \eqref{eqn:expectation_second_kind_2} and \eqref{eqn:trickiest_expectation}, we obtain
     \begin{equation}
         \begin{aligned}
         \frac{1}{{\rm CRLB}(\varphi)} & = -\mathbb{E}\left[\frac{\partial^2\mathcal{L}}{\partial\varphi^2}\right] \\
-        & =  -\frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] - \frac{a}{\lambda_l}\right) } \\
-        & \approx \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\frac{a}{\lambda_l}-g(\lambda_l, a)\right)^{+} },
+        & \overset{(a)}{=}  -\frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] - \frac{a}{\lambda_l}\right) } \\
+        & \overset{(b)}{\approx} \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\frac{a}{\lambda_l}-\hat{g}(\lambda_l/a)\right)^{+} },
         \end{aligned}
         \label{eqn:CRLB}
     \end{equation}
-    where $(x)^{+}$ denotes $x \mathbbm{1}_{\{x \ge 0\}}$. The introduction of operation $(x)^{+}$ is due to the non-negativity of each of the $L$ CRLB components. Starting from  \eqref{eqn:CRLB}, we can further define the single-variable $g$ function \eqref{eqn:definition g function} for the simplicity of notations, and replace $g(\lambda_l/a)$ with $g(\gamma_l)$, where $\gamma_l = \lambda_l / a$ is the interferential SNR. It seems that the CRLB only relies on two intrinsic physical parameters: the interferential SNR $\gamma_l$, and the interferential contrast $K$(cite here). From the above intuitive thoughts, we define the parameter $K$ to be  
+    where $(x)^{+}$ denotes $x \mathbbm{1}_{\{x \ge 0\}}$, step $(a)$ comes from substituting these three types of expectation into \eqref{Second Derivative Likelihood}, and step $(b)$ comes from replacing the trickiest expectation by its approximation $\hat{g}$, which is defined in \eqref{eqn:definition g function}.  The introduction of operation $(x)^{+}$ is due to the non-negativity of each of the $L$ CRLB components. 
+    
+    Note that \eqref{eqn:CRLB} is only an approximated CRLB. The true value of CRLB can be described by the precise single-variable $g$ function 
+    \begin{equation}
+        \begin{aligned}
+            g(\gamma) &= \mathbb{E}_{\lambda_l, a}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] \\
+            & = \int_{0}^{+\infty}\gamma t \,\exp(-\gamma(1+t))\, I_0\left(2\gamma\sqrt{t}\right)\,\left(1-R^2\left(2\gamma\sqrt{t}\right)\right){\rm d}t,
+        \end{aligned}
+        \label{eqn:precise_g_function}
+    \end{equation}
+    which is the precise version of $\hat{g}$. By replacing $g(\lambda_l/a)$ with $g(\gamma_l)$ where $\gamma_l = \lambda_l / a$ being the interferential SNR, it seems that the CRLB only relies on two intrinsic physical parameters: the interferential SNR $\gamma_l$, and the interferential contrast $K$(cite here). From the above intuitive thoughts, we define the parameter $K$ to be  
     \begin{equation}
         K = \frac{I_M - I_m}{I_M + I_m} = \frac{2\alpha\beta}{\alpha^2+\beta^2},
     \end{equation}
-    where $K$ satisfies $-1\leq K\leq 1$. Define the average interferential SNR $\bar{\gamma}$ to be the arithmetic average of $\gamma_l, 0\leq l < L$:
+    and $K$ automatically satisfies $-1\leq K\leq 1$. Define the average interferential SNR $\bar{\gamma}$ to be the arithmetic average of $\gamma_l, 0\leq l < L$:
     \begin{equation}
         \bar{\gamma} = \frac{1}{L}\sum_{l=0}^{L-1}{\gamma_l} = \frac{\alpha^2+\beta^2}{\sigma_v^2}.
     \end{equation}
     Thus, the CRLB can be expressed as 
     \begin{equation}
-        \frac{1}{{\rm CRLB}(\varphi)} \approx K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}{ \sin^2(\psi_l+\varphi) \left(1/\gamma_l-g(\gamma_l)\right)^{+} },
+        \begin{aligned}
+            \frac{1}{{\rm CRLB}(\varphi)} &= K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}{ \sin^2(\psi_l+\varphi) \left(1/\gamma_l-g(\gamma_l)\right) }\\
+            & \approx K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}{ \sin^2(\psi_l+\varphi) \left(1/\gamma_l-\hat{g}(\gamma_l)\right)^{+} }
+        \end{aligned}
         \label{eqn:CRLB_simple}
     \end{equation}
     where the values $\gamma_l=\bar{\gamma}\left(1+K\cos(\psi_l+\varphi)\right)$ are jointly determined by both the average SNR $\bar{\gamma}$ and the interferential contrast $K$. This completes the proof.
@@ -527,7 +544,7 @@ Thanks\dots
         \begin{aligned}
         \mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l] & \approx \frac{1}{2}\frac{\sqrt{\lambda}}{a}\left(\frac{a}{\lambda}\right)^2 \sqrt{\frac{a}{2}} \sqrt{\frac{\pi}{2}} e^{-\gamma/2}\left[(1+\gamma)I_0(\gamma/2)+\gamma I_1(\gamma/2)\right] \\
         & = \frac{1}{4}\sqrt{\frac{\pi}{\gamma}}e^{-\gamma/2}\left[(1+\gamma^{-1})I_0(\gamma/2)+ I_1(\gamma/2)\right] \\
-        & := g(\gamma).
+        & := \hat{g}(\gamma).
         \end{aligned}
         \label{eqn:approx evaluation result}
     \end{equation}
@@ -539,36 +556,36 @@ Thanks\dots
     \begin{figure}[ht]
         \centering
         \myincludegraphics{figures/asymptotic_expansion.pdf}
-        \caption{The curve $x(1-R^2(2\sqrt{x}))-\sqrt{x}/2$, when $0\leq x\leq 5$.}
+        \caption{The curve $x(1-R^2(2\sqrt{x}))-\sqrt{x}/2$, when $0\leq x\leq 5$. We can see from the curve that the approximation error $\delta \leq 0.07$.}
         \label{fig:asymptotic_expansion}
     \end{figure}
     then we have 
     \begin{equation}
-        \lvert \mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l] - g(\gamma)\rvert \leq \frac{1}{\gamma^2} \delta. 
+        \left| g(\gamma) - \hat{g}(\gamma)\right| \leq \frac{1}{\gamma^2} \delta. 
     \end{equation}
-    We have discovered numerically from Fig.~\ref{fig:asymptotic_expansion} that $\delta \leq 0.07$, and that as $x\to \infty$, the approximation error tends to zero. Thus, \eqref{eqn:approx evaluation result} is a nearly perfect approximation when the interferential SNR $\gamma$ is large. To be more precise, the function $g(\gamma)$ has asymptotic expansion at $\gamma \to +\infty$
+    We have discovered numerically from Fig.~\ref{fig:asymptotic_expansion} that $\delta \leq 0.07$, and that as $x\to \infty$, the approximation error tends to zero. Thus, \eqref{eqn:approx evaluation result} is a nearly perfect approximation when the interferential SNR $\gamma$ is large. To be more precise, the function $\hat{g}(\gamma)$ has asymptotic expansion at $\gamma \to +\infty$
     \begin{equation}
-        g(\gamma) \sim \frac{1}{2}\left(\frac{1}{\gamma} + \frac{1}{4\gamma^2} + \mathcal{O}(\frac{1}{\gamma^3})\right).
+        \hat{g}(\gamma) \sim \frac{1}{2}\left(\frac{1}{\gamma} + \frac{1}{4\gamma^2} + \mathcal{O}(\frac{1}{\gamma^3})\right).
     \end{equation}
-    Thus, $1/\gamma - g(\gamma) \sim 1/2\,\Theta(1/\gamma)$, and the relative error of a single term in the CRLB expression is upper bounded by 
+    Thus, $1/\gamma - \hat{g}(\gamma) \sim 1/2\,\Theta(1/\gamma)$, and the relative error of a single term in the CRLB expression is upper bounded by 
     \begin{equation}
         \begin{aligned}
-        r & \leq \frac{\delta/\gamma^2}{\lvert \,\lvert 1/\gamma - g(\gamma)\rvert - \lvert g(\gamma) -  \mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]\rvert\,\rvert} \\
+        r & \leq \frac{\delta/\gamma^2}{\lvert \,\lvert 1/\gamma - \hat{g}(\gamma)\rvert - \lvert \hat{g}(\gamma) -  g(\gamma)\rvert\,\rvert} \\
         & \leq \frac{\delta/\gamma^2}{1/((2+\epsilon)\gamma) - \delta/\gamma^2} \\
         & = \frac{\delta}{\gamma/(2+\epsilon) - \delta}, \\
         \end{aligned}
     \end{equation}
     and this upper bound holds whenever $\gamma > (2+\epsilon)\delta$, and $\epsilon$ is chosen to satisfy 
     \begin{equation}
-        \frac{1}{\gamma} - g(\gamma) > \frac{1}{(2+\epsilon)\gamma}, \forall \gamma > (2+\epsilon)\delta,
+        \frac{1}{\gamma} - \hat{g}(\gamma) > \frac{1}{(2+\epsilon)\gamma}, \forall \gamma > (2+\epsilon)\delta,
     \end{equation}
     which is equivalent to 
     \begin{equation}
-        \epsilon > \frac{1}{1-\gamma g(\gamma)}-2, \forall \gamma > (2+\epsilon)\delta.
+        \epsilon > \frac{1}{1-\gamma \hat{g}(\gamma)}-2, \forall \gamma > (2+\epsilon)\delta.
     \end{equation}
-    Since the function $ 1/(1-\gamma g(\gamma))$ is decreasing on $\gamma>0$, the inequality is equivalent to 
+    Since the function $ 1/(1-\gamma \hat{g}(\gamma))$ is decreasing on $\gamma>0$, the inequality is equivalent to 
     \begin{equation}
-        \epsilon > \frac{1}{1-(2+\epsilon)\delta\, g((2+\epsilon)\delta)}-2.
+        \epsilon > \frac{1}{1-(2+\epsilon)\delta\, \hat{g}((2+\epsilon)\delta)}-2.
     \end{equation}
     In fact, choosing $\epsilon=4$ will satisfy all the conditions above when $\delta = 0.07$. So the relative error is upper bounded by 
     \begin{equation}
