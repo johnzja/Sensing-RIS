@@ -119,10 +119,24 @@ To obtain this beamforming gain, accurate \ac{CSI} should be acquired beforehand
 Although channel estimation has been well investigated in conventional systems, the additional employment of RIS brings about two new challenges \cite{weili2021channel}.
 Firstly, in contrast to traditional antenna array that has the ability of transmitting, receiving, or processing the pilot signals, RIS can just passively reflect the incident signal.
 Secondly, since the number of RIS elements is usually large, the dimensions of the channels increase sharply compared with conventional systems, which will also increase the pilot overhead for channel estimation.
-These two main challenges imply the necessity for leading new techniques into channel estimation for RIS-assisted communications.
+These two main challenges imply the necessity of leading new techniques into channel estimation for RIS-assisted communications.
 
 \subsection{Prior Contributions}
 \label{Prior Contributions}
+
+Generally, for RIS-assisted systems, channel estimation and beamforming are two separated procedures.
+Channel estimation is performed first, and the obtained \ac{CSI} is then utilized for beamforming.
+The efficacy of beamforming highly relies on the accuracy of channel estimation.
+
+To tackle the challenges mentioned above in channel estimation for RIS-assisted communications, several contributions have been made and can be generally divided into two broad categories.
+The first category fine-tunes the hardware architecture of RIS, which improves its ability in signal processing.
+For example, the authors of \cite{taha2021enabling} propose an architecture where sparse sensor units are employed on the surface.
+Each sensor unit has a dedicated \ac{RF} chain, and all these units are connected to a baseband controller for processing the received pilot signals.
+Another architecture utilize only one \ac{RF} chain, which also aims to have an estimate on the array gains of RIS \cite{alexandropoulos2020hardware}.
+In \cite{nguyen2021hybrid}, a hybrid relay-reflecting architecture is considered, where a few passive elements are replaced by the active relay elements.
+These active elements are then capable for channel estimation.
+
+The second category preserves the original hardware architecture of RIS, while conceives new frameworks or algorithms to deal with the specific challenges RIS brings about.
 
     In this paper, we introduce a new flavor of channel estimation and beamforming techniques in RIS-aided wireless communication systems. When equipped with a Sensing RIS \cite{ma2020smartsensing}, we can obtain CSI directly from the RIS power sensors, and immediately calculate the beamforming phases for each RIS element.
 
