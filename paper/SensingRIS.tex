@@ -116,6 +116,14 @@ The characteristics of low cost and power consumption provide RIS promising appl
 Specifically, RIS is a large-scale array composed of passive elements, which can introduce significant beamforming gain by appropriately imposing the phase shifts on the incident electromagnetic waves \cite{di2020smart}.
 To obtain this beamforming gain, accurate \ac{CSI} should be acquired beforehand, which makes channel estimation an essential problem for RIS-assisted communications \cite{wei2021channel}.
 
+Although channel estimation has been well investigated in conventional systems, the additional employment of RIS brings about two new challenges \cite{weili2021channel}.
+Firstly, in contrast to traditional antenna array that has the ability of transmitting, receiving, or processing the pilot signals, RIS can just passively reflect the incident signal.
+Secondly, since the number of RIS elements is usually large, the dimensions of the channels increase sharply compared with conventional systems, which will also increase the pilot overhead for channel estimation.
+These two main challenges imply the necessity for leading new techniques into channel estimation for RIS-assisted communications.
+
+\subsection{Prior Contributions}
+\label{Prior Contributions}
+
     In this paper, we introduce a new flavor of channel estimation and beamforming techniques in RIS-aided wireless communication systems. When equipped with a Sensing RIS \cite{ma2020smartsensing}, we can obtain CSI directly from the RIS power sensors, and immediately calculate the beamforming phases for each RIS element.
 
     There are five most significant benefits when using a Sensing-RIS system:
