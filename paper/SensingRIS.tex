@@ -120,7 +120,7 @@ Although channel estimation has been well investigated in conventional systems, 
 Firstly, in contrast to traditional antenna array that has the ability of transmitting, receiving, or processing the pilot signals, RIS can just passively reflect the incident signal.
 Secondly, since the number of RIS elements is usually large, the dimensions of the channels increase sharply compared with conventional systems, which will also increase the pilot overhead for channel estimation.
 These two main challenges imply the necessity of leading new techniques into channel estimation for RIS-assisted communications.
-123
+
 \subsection{Prior Contributions}
 \label{Prior Contributions}
 
@@ -137,6 +137,16 @@ In \cite{nguyen2021hybrid}, a hybrid relay-reflecting architecture is considered
 These active elements are then capable for channel estimation.
 
 The second category preserves the original hardware architecture of RIS, while conceives new frameworks or algorithms to deal with the specific challenges RIS brings about.
+Noticing the two-timescale channel property in the RIS-assisted system, the authors of \cite{Huchen} propose a framework that reduce the pilot overhead in the time-averaged sense.
+By exploiting the sparsity of channels in the angular domain, compressive sensing-based algorithms are developed with reduced pilot overhead \cite{wang2020compressed}.
+In \cite{kundu2021channel}, deep learning approaches are considered to improve the performance of estimation.
+
+In a nutshell, both the above two categories have two limitations that:
+\begin{enumerate}
+\item[1)]  Channel estimation only extracts the mathematical features of channels, while neglects their electromagnetic nature.
+\item[2)] The procedure of channel estimation and beamforming are separated, where redundant information is needlessly estimated.
+\end{enumerate}
+These limitations have caused that, the required pilot overhead for channel estimation is still at least proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,nguyen2021hybrid,Huchen,wang2020compressed,kundu2021channel}.
 
     In this paper, we introduce a new flavor of channel estimation and beamforming techniques in RIS-aided wireless communication systems. When equipped with a Sensing RIS \cite{ma2020smartsensing}, we can obtain CSI directly from the RIS power sensors, and immediately calculate the beamforming phases for each RIS element.
 
