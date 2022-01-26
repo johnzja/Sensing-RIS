@@ -147,6 +147,12 @@ In a nutshell, both the above two categories have two limitations that:
 \item[2)] The procedure of channel estimation and beamforming are separated, where redundant information is needlessly estimated.
 \end{enumerate}
 These limitations have caused that, the required pilot overhead for channel estimation is still at least proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,nguyen2021hybrid,Huchen,wang2020compressed,kundu2021channel}.
+This is unacceptable especially when the number of RIS elements is large (e.g. 256 \cite{dai2020reconfigurable}, 1100 \cite{pei2021ris}).
+Therefore, the question naturally arises as to: {\it Does there exist a dimension-independent approach where the required pilot overhead is independent of the number of RIS elements?}
+
+\subsection{Our Contributions}
+\label{Our Contributions}
+
 
     In this paper, we introduce a new flavor of channel estimation and beamforming techniques in RIS-aided wireless communication systems. When equipped with a Sensing RIS \cite{ma2020smartsensing}, we can obtain CSI directly from the RIS power sensors, and immediately calculate the beamforming phases for each RIS element.
 
