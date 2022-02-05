@@ -49,6 +49,7 @@ breaklinks=true}
 %\acrodef{RIS}[RIS]{reconfigurable intelligent surfaces}
 \acrodef{UE}[UE]{user equipment}
 \acrodef{BS}[BS]{base station}
+\acrodef{RIS}[RIS]{reconfigurable intelligent surface}
 \acrodef{DL}[DL]{downlink}
 \acrodef{TA}[TA]{transmit antenna}
 \acrodef{RA}[RA]{receive antenna}
@@ -279,48 +280,65 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
 
 \subsection{Signal Model for IRF}
 \label{Models for IRFs}
-    Interference field at the $n$-th RIS element, with both of the  \ac{BS} and \ac{UE} transmitted symbols being $s=1$. Then the interference signal that appeared on each RIS element can be represented by its baseband equivalent signal
+    Suppose two signals imping the RIS simultaneously, creating an interference field at the $n$-th RIS element, with both of the symbols transmitted by \ac{BS} and \ac{UE} being $s=1$. In order to perform channel estimation, we need to probe the power of the \ac{IRF}. Thus, the relationship between physical signal power and baseband equivalent signal power is re-stated here. Both of the two signals that appear on each RIS element, one from the \ac{BS} and the other from the \ac{UE}, can be represented by their baseband equivalent signals
     \begin{equation}
     \label{interference}
     E_{n,{\rm BB}}(t)=\bm g_{n}^{T}\bm w+f_{n}^{*}e^{{\rm j}\psi (t)}+v(t).
     \end{equation}
-    Thus, the corresponding passband electric field induced on each RIS element is represented by 
+    Furthermore, the corresponding physical passband electric field induced on each RIS element is represented by 
     \begin{equation}
         E_{n}(t) = \sqrt{2} {\rm Re}\left( E_{n,{\rm BB}}(t)e^{{\rm j}\omega_c t} \right),
+        \label{baseband-passband relationship}
     \end{equation}
-    where $\omega_c = 2\pi f_c$ denotes the carrier frequency, and the coefficient $\sqrt{2}$ ensures that the passband signal energy is equal to the baseband signal energy. 
-
-    Define $\alpha = \left\vert\bm g_{n}^{T}\bm w\right\vert$ and $\beta = \left\vert f_{n}^{*}\right \vert$, and define the phase to be estimated as $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$. Then, the power of interference field can be written as
+    where $\omega_c = 2\pi f_c$ denotes the carrier frequency, and the coefficient $\sqrt{2}$ ensures that the passband signal energy is equal to the baseband signal energy, i.e., 
+    \begin{equation}
+        \lVert E_{n, {\rm BB}}\rVert_2^2 = \lVert E_{n}\rVert_2^2
+    \end{equation}
+    Now we consider the superposition of the two signals. Due to the linearity of \eqref{baseband-passband relationship}, we can simply add up the two impinging baseband signals to represent the interference signal that appears at the RIS, i.e., 
+    \begin{equation}
+        E_{n,{\rm BB, IRF}}(t) = E_{n, {\rm BB, BS}}(t)+E_{n,{\rm BB, UE}}(t).
+    \end{equation}
+    By defining $\alpha = \left\vert\bm g_{n}^{T}\bm w\right\vert$, $\beta = \left\vert f_{n}^{*}\right \vert$, and the phase difference between the \ac{BS}-\ac{RIS} channel and the \ac{RIS}-\ac{UE} channel as $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, then the power of the interference field can be written as
     \begin{equation}
         \label{Power of Interference}
         \begin{aligned}
-            P(t)&=A \left| E_{n, {\rm BB}} (t)\right |^{2}+\zeta\\
+            P(t)&=A \left| E_{n, {\rm BB, IRF}} (t)\right |^{2}+\zeta\\
             &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{Sensor detection signal}}\\
             &~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{j\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
         \end{aligned}
     \end{equation}
-    where $v'\overset{\text{d}}{=}v\sim\mathcal{CN}\left(0,\sigma_{v}^{2}\right)$, and $\zeta$ is the signal processing noise after measuring the field power. 
+    where $v'\overset{\text{d}}{=}v\sim\mathcal{CN}\left(0,\sigma_{v}^{2}\right)$, and $\zeta$ is the noise introduced by digital signal processing after measuring the field power. The randomness of the observed signal and the interferential nature of the field give rise to the name \ac{IRF}. 
 
-    To estimate the phase $\varphi$, we need enough observations from the sensor-detected power signal $P(t)$. For simplicity and without loss of generality, we can assume $\psi(t)=\omega t$ and $\omega=\frac{2\pi}{T_{s}}$. Furthermore, assume that $L$ observations $P[l]=P(t_{l})$ at equally-spaced instants 
+    The phase difference $\varphi$ will play an important role in our following channel estimation. To estimate the phase difference $\varphi$, we need enough observations from the sensor-detected power signal $P(t)$. For simplicity and without loss of generality, we can assume $\psi(t)=\omega t$ and $\omega=\frac{2\pi}{T_{s}}$, where $T_s$ is the symbol period. Furthermore, assume that $L$ observations $P[l]=P(t_{l})$ at equally-spaced instants 
     \begin{equation}
         \label{observation time}
         t_{l}=\frac{l}{L}T_{s},~\forall l\in \left\{0,\cdots ,L-1\right\}
     \end{equation}
-    are used for estimation of $\varphi$.
+    are used for estimation of the phase difference $\varphi$.
 
 \section{Interference Random Field}
 \label{Interference Random Field}
-\subsection{How can IRF Perform Channel Estimation?}
-    It is widely known that most of the existing channel estimation methods employ the transceivers as the explorers of CSI. The transmitter emits EM waves, which imping the RIS, and the bounced-back waves enter the receiver, telling us what the channel is. It seems that we are using EM waves to probe the radio environment. However, for RIS-aided systems, the channel may have up to thousands of free parameters, which makes the probing process extremely inefficient, especially when the transceivers are only equipped with dozens of antennas. That's like shedding a few beams of light into a blackbox and trying to distinguish thousands of objects inside, which is intrinsically intricate. Apparently, a more reasonable way is just simply to place our probes inside the blackbox. That is why we want to attach power sensors to the RIS. 
+\subsection{Probe the Channel Directly on the RIS}
+    It is widely known that most of the existing channel estimation methods employ the transceivers as the explorers of CSI. The transmitter emits EM waves, which imping the RIS, and the bounced-back waves enter the receiver, telling us what the channel is. It seems that we are using EM waves to probe the radio environment. However, for RIS-aided systems, the channel may have up to thousands of free parameters, which makes the probing process extremely inefficient, especially when the transceivers are only equipped with dozens of antennas. This can be compared to shedding a few beams of light into a blackbox and trying to distinguish thousands of objects inside, which is almost impossible. Apparently, a more reasonable way is just simply to place our probes inside the blackbox. This idea motivates us to attach power sensors to the RIS. 
 
-    However, how can these low-cost power sensors obtain key information about the CSI? Take only one RIS element into consideration. If we allow the BS and UE to emit EM waves simultaneously, then interference will occur, and interference fringes will appear on the RIS. Thus, if we alter the phase at the UE, the interference fringes will change, allowing the power sensors on the RIS to obtain CSI. 
-    \begin{figure}[htbp]
+\subsection{Simultaneous Signaling and Interference Detection}
+    However, it seems impractical to use low-cost power sensors to obtain necessary information for RIS beamforming. Generally, power sensors are {\it noncoherent} devices, which means these sensors can only obtain the intensity of the signal, but they cannot detect the phase of the impinging signal, thus making beamforming impossible. Fortunately, the physical phenomenon {\it interference} makes it possible to convert phase difference into intensity difference, thus allowing {\it noncoherent} devices to perform {\it coherent} detection. Take only one RIS element into consideration.     \begin{figure}[htbp]
         \centering
         \myincludegraphics{figures/scheme.pdf}
         \caption{MISO communication scheme which is considered in this paper. Colorful shadings on the RIS represent the interference fringes; Yellow points on the RIS represent the power sensors.}
         \label{fig:scheme}
     \end{figure}
-    To further analyze the interference, we focus on the received field of the $n$-th RIS element. Note that the power of interference field measured at instant $t$, expressed by \eqref{Power of Interference}, exhibits a sinusoidal waveform. The phase of this sinusoidal waveform is uniquely determined by $\varphi$, i.e., the phase difference between the RIS-UE channel ${\bm f}_n^{*}$ and the BS-RIS channel ${\bm g}_n^{\rm T}{\bm w}$. Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. However, it is the phase sum of the RIS-UE channel and the BS-RIS channel that determines the optimal phase-shift of the $n$-th element. Given the phase difference, in order to acquire the phase sum, we only need to obtain one of the phases of these two channels to perform optimal RIS beamforming. Though generally it is difficult to obtain the BS-RIS channel and the RIS-UE channel, since the BS and RIS are installed at fixed locations, it is reasonable to assume that the BS-RIS channel is much more stable and predictable, compared to the RIS-UE counterpart. As a result, the phases of the BS-RIS link $\arg({\bm g}_n^{\rm T}{\bm w})$ can be assumed to be known in our algorithms. Due to the stability of this channel, the phases are mainly determined by geometric parameters, i.e., the location of the BS and RIS. 
+    Furthermore, if we allow the BS and UE to emit EM waves simultaneously, then the interference phenomenon will occur (see Fig.~\ref{fig:scheme}), and interference fringes will appear on the RIS. If we alter the phase at the UE, the interference fringes will change accordingly, allowing the power sensors on the RIS to obtain CSI. 
+
+    \begin{figure}[htbp]
+        \centering
+        \myincludegraphics{figures/phasor.pdf}
+        \caption{Phasor representation of the \ac{IRF} on each RIS element. Red vector represents the complex BS-RIS signal; Blue vector represents the complex UE-RIS signal; $\alpha$ and $\beta$ denote the amplitude of these signals respectively. In our signaling method, the BS transmits a fixed symbol $1$, while the UE transmits a rotating symbol $e^{{\rm j}\psi(t)}$, causing the output of the power sensor $P(t)$ to vary in a waveform that is similar to a sine curve.}
+        \label{fig:phasor}
+    \end{figure}
+    To further analyze the interference, we focus on the received field of the $n$-th RIS element. Note that the power of interference field measured at instant $t$, expressed by \eqref{Power of Interference}, exhibits a sinusoidal waveform (see Fig.~\ref{fig:phasor}). The phase of this sinusoidal waveform is uniquely determined by $\varphi$, i.e., the phase difference between the RIS-UE channel ${\bm f}_n^{*}$ and the BS-RIS channel ${\bm g}_n^{\rm T}{\bm w}$. Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. However, it is the phase sum of the RIS-UE channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*)$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we only need to obtain one of the phases of these two channels to perform optimal RIS beamforming. Though generally it is difficult to obtain the BS-RIS channel and the RIS-UE channel, since the BS and RIS are installed at fixed locations, it is reasonable to assume that the BS-RIS channel is much more stable and predictable, compared to the RIS-UE counterpart. As a result, the phases of the BS-RIS link $\arg({\bm g}_n^{\rm T}{\bm w})$ can be assumed to be known in our algorithms. Due to the stability of this channel, the phases are mainly determined by geometric parameters, i.e., the location of the BS and RIS. 
+
+    
 
 \section{Sensing RIS-Based Channel Estimation}
 \label{Sensing RIS-Based Channel Estimation}

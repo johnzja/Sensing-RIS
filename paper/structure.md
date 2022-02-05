@@ -20,7 +20,9 @@
    - RIS-Aided SISO System
      - Beamforming design
      - Channel estimation
-3. 信号发送/Signal Model for IRF
+3. 信号发送/Signal Model for IRF（目前文章中使用的标题：干涉随机场，Interference Random Field）
+   - IRF图解
+   - IRF如何辅助信道估计？
 4. Sensing RIS-based Channel Estimation
    - Hardware Architecture of Sensing RIS
    - 算法1：LS算法/算法2：精确度太低，MMSE算法/算法3：复杂度太高，von Mises-EM算法
