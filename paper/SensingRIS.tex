@@ -85,6 +85,7 @@ breaklinks=true}
 \def \VM {\mathcal{VM}}
 \def \re {\rm Re}
 \def \nc {\mathcal{NC}}
+\def \ch {\textcolor{red}{(cite here) }}
 
 \newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}   %Use Input in the format of Algorithm
@@ -300,7 +301,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     \end{equation}
     By defining $\alpha = \left\vert\bm g_{n}^{T}\bm w\right\vert$, $\beta = \left\vert f_{n}^{*}\right \vert$, and the phase difference between the \ac{BS}-\ac{RIS} channel and the \ac{RIS}-\ac{UE} channel as $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, then the power of the interference field can be written as
     \begin{equation}
-        \label{Power of Interference}
+        \label{eqn:power of interference}
         \begin{aligned}
             P(t)&=A \left| E_{n, {\rm BB, IRF}} (t)\right |^{2}+\zeta\\
             &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{Sensor detection signal}}\\
@@ -336,14 +337,35 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
         \caption{Phasor representation of the \ac{IRF} on each RIS element. Red vector represents the complex BS-RIS signal; Blue vector represents the complex UE-RIS signal; $\alpha$ and $\beta$ denote the amplitude of these signals respectively. In our signaling method, the BS transmits a fixed symbol $1$, while the UE transmits a rotating symbol $e^{{\rm j}\psi(t)}$, causing the output of the power sensor $P(t)$ to vary in a waveform that is similar to a sine curve.}
         \label{fig:phasor}
     \end{figure}
-    To further analyze the interference, we focus on the received field of the $n$-th RIS element. Note that the power of interference field measured at instant $t$, expressed by \eqref{Power of Interference}, exhibits a sinusoidal waveform (see Fig.~\ref{fig:phasor}). The phase of this sinusoidal waveform is uniquely determined by $\varphi$, i.e., the phase difference between the RIS-UE channel ${\bm f}_n^{*}$ and the BS-RIS channel ${\bm g}_n^{\rm T}{\bm w}$. Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. However, it is the phase sum of the RIS-UE channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*)$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we only need to obtain one of the phases of these two channels to perform optimal RIS beamforming. Though generally it is difficult to obtain the BS-RIS channel and the RIS-UE channel, since the BS and RIS are installed at fixed locations, it is reasonable to assume that the BS-RIS channel is much more stable and predictable, compared to the RIS-UE counterpart. As a result, the phases of the BS-RIS link $\arg({\bm g}_n^{\rm T}{\bm w})$ can be assumed to be known in our algorithms. Due to the stability of this channel, the phases are mainly determined by geometric parameters, i.e., the location of the BS and RIS. 
+    To further analyze the interference, we focus on the received field of the $n$-th RIS element. Note that the power of interference field measured at instant $t$, expressed by \eqref{eqn:power of interference}, exhibits a sinusoidal waveform (see Fig.~\ref{fig:phasor}). The phase of this sinusoidal waveform is uniquely determined by $\varphi$, i.e., the phase difference between the RIS-UE channel ${\bm f}_n^{*}$ and the BS-RIS channel ${\bm g}_n^{\rm T}{\bm w}$. Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. However, it is the phase sum of the RIS-UE channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*)$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we only need to obtain one of the phases of these two channels to perform optimal RIS beamforming. Though generally it is difficult to obtain the BS-RIS channel and the RIS-UE channel, since the BS and RIS are installed at fixed locations, it is reasonable to assume that the BS-RIS channel is much more stable and predictable, compared to the RIS-UE counterpart. As a result, the phases of the BS-RIS link $\arg({\bm g}_n^{\rm T}{\bm w})$ can be assumed to be known in our algorithms. Due to the stability of this channel, the phases are mainly determined by geometric parameters, i.e., the location of the BS and RIS. 
 
     
 
 \section{Sensing RIS-Based Channel Estimation}
 \label{Sensing RIS-Based Channel Estimation}
+In this section, we will first briefly introduce the hardware architecture required for detecting the \ac{IRF} in Subsection~\ref{Hardware Architecture of Sensing RIS}. Then, the core concept of IRF channel estimation and beamforming procedures will be introduced in Subsection~\ref{IRF Channel Estimation and Beamforming}. After that, three phase estimation algorithms will be described in Subsection~\ref{LS method}, \ref{ML method}, and \ref{von Mises-EM method} respectively, which constitute the kernel of the \ac{IRF} channel estimation and beamforming algorithm. 
 
-\subsection{IRF Channel Estimation and Beamforming}
+\subsection{Hardware Architecture of Sensing RIS} \label{Hardware Architecture of Sensing RIS}
+The basic hardware architecture is to equip each RIS reflecting element with a cost-efficient RF power sensor \cite{ma2020smartsensing}. Since all of the RIS elements can sense and adjust the phase independently from one another, low-cost Microcontroller Units (MCUs) can be attached locally to each RIS element to allow parallel computation of the optimal phases. However, for extremely large-scale RIS systems, sparse sensing and controlling may be preferred due to lower cost and lower hardware complexity. 
+
+\textcolor{red}{HERE: Add feasibility analysis for attaching power sensors to RIS. Including: (1) Are the signals strong enough to be detected? (2) Are the sensor devices fast enough to catch the IRF variations? (3) What are the typical technical parameters of these power-sensing devices, including the sampling rate, working bandwidth and sensitivity?}
+
+\subsection{IRF Channel Estimation and Beamforming} \label{IRF Channel Estimation and Beamforming}
+    In this subsection, we will thoroughly introduce the algorithms of utilizing \ac{IRF} for adjusting the phases of the RIS elements. The \ac{IRF} channel estimation and beamforming algorithm can be divided into three steps:
+    \begin{enumerate}
+        \item Simultaneous rotational signaling and power sensing; 
+        \item Phase estimation based on power data;
+        \item Integrate phase information and other CSI to perform beamforming. 
+    \end{enumerate} 
+    Since we all assume the modulation method to be OFDM, the first step (1) can be easily realized by transmitting a symbol $1$ on the zeroth subcarrier at BS, while transmitting a symbol $1$ on the $k$-th subcarrier at UE. Denote the OFDM symbol period to be $T_s$ (without cyclic prefix), then the equivalent IRF angular frequency $\omega$ is given by 
+    \begin{equation}
+        \omega = k \frac{2\pi}{T_s},
+    \end{equation}
+    which means the power signal experiences exactly $k$ sine-shaped periods during an OFDM symbol. For calculation simplicity, in this paper, we always assume $k=1$. In fact, for multi-user MISO systems, different $k$ values can be assigned to different users in order to enable channel estimation and beamforming design for several users within the same time slot. This can be done by Fourier analysis on the power signal $P(t)$ and extract phase angles for each user at distinct frequencies. 
+
+    The second step (2) is called phase estimation. This step is designed to extract the phase difference between the BS-RIS and RIS-UE channel. This is the key step of dimension-independent IRF channel estimation and beamforming, since this step can be done independently among all the RIS elements. 
+
+    The third step (3) is to utilize the phase information provided by step (2) and calculate the near-optimal phase shifts for each RIS element in order to perform beamforming. Step (2) and Step (3) are executed by processors, so we collect these two steps into pseudo codes shown in {\bf Algorithm~\ref{alg:IRF-Beamforming}}:
     \begin{algorithm}[H] 
         \caption{Near-optimal RIS Beamforming by IRF} \label{alg:IRF-Beamforming}
         \setstretch{1.35}
@@ -359,14 +381,14 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
             \RETURN ${\bm \Theta}$
         \end{algorithmic}
     \end{algorithm}
-    The overall channel estimation and beamforming procedure is described in {\bf Algorithm \ref{alg:IRF-Beamforming}}. Note that in each iteration of the algorithm, the data are unrelated to other iterations. Thus, we can perform the calculations in parallel for each phase-shift $\theta_n$. For example, we can install an MCU for each of the elements on the RIS. Each MCU is only responsible for gathering the data from its own power sensor and adjusting the phase-shift of its own RIS element. Since all MCUs can work in parallel, the computational time is independent of the number of RIS elements, resulting in an $\mathcal{O}(1)$-time RIS beamforming algorithm. 
+    Note that in each iteration $n$ of {\bf Algorithm~\ref{alg:IRF-Beamforming}}, the data $P_n(t)$ is independent of other iterations. Thus, we can perform the calculations in parallel for each phase-shift $\theta_n$. For example, we can install an MCU for each of the elements on the RIS. Each MCU is only responsible for gathering the data from its own power sensor and adjusting the phase-shift of its own RIS element. Since all MCUs can work in parallel, the computational time is independent of the number of RIS elements, resulting in an $\mathcal{O}(1)$-time RIS beamforming algorithm. 
 
-    The pilot overhead is also $\mathcal{O}(1)$. The reason is that, no matter how many RIS elements are employed, the IRF appears on them simultaneously. Thus, both the channel estimation and beamforming can be fulfilled within only one pilot symbol. 
+    The pilot overhead is also $\mathcal{O}(1)$. The reason is that, no matter how many RIS elements are employed, the IRF appears on them simultaneously. Thus, both the channel estimation and beamforming can be fulfilled within only one pilot symbol. This complexity is also independent of the RIS dimension $N$. 
 
-    However, the $\mathcal{O}(1)$ time complexity only holds when an MCU is installed for each RIS element. If all the RIS elements are collectively controlled by one processor, the computational time would be of order $\mathcal{O}(N)$, but the pilot overhead is still $\mathcal{O}(1)$. These conclusions of complexity can be easily extended to multi-RIS schemes, where multiple RISs are employed to serve a single user at the same time. The independent nature of IRF methods allows the RISs to work without the need to exchange data with the BS or other RISs. This property makes it much easier to integrate a new RIS into an existing communication system, which greately enhances the extendibility of the system. Specifically, the new RIS can start to work and strengthen the communication links immediately after its installation, just like a plug-and-play USB device. 
+    However, the $\mathcal{O}(1)$ time complexity only holds when an MCU is installed for each RIS element. If all the RIS elements are collectively controlled by one processor, the computational time would be of order $\mathcal{O}(N)$, but the pilot overhead is still $\mathcal{O}(1)$. These conclusions of complexity can be easily extended to multi-RIS schemes, where multiple RISs are employed to serve a single user at the same time. The independent nature of IRF methods allows the RISs to work without the need to exchange data with the BS or other RISs. This property makes it much easier to integrate a new RIS into an existing communication system, which greately enhances the extendibility of the system. Specifically, the new RIS can start to work and strengthen the communication links immediately after its installation and IRF procedures, just like a plug-and-play USB device. 
 
-\subsection{LS method}
-    The key challenge of the IRF channel estimation and beamforming is how to obtain the phase difference $\varphi$. Since the interferential power $P_n(t)$ exhibits a sinusoidal waveform, Fourier transforms can be applied to extract its phase. Apply $L$-point \ac{DFT} to the observed sensor detection signals $P[0],\cdots ,P[L-1]$, and we have
+\subsection{LS method}  \label{LS method}
+    The key challenge of the IRF channel estimation and beamforming is the phase estimation step, i.e., how to obtain the phase difference $\varphi$. Since the interferential power $P_n(t)$ exhibits a sinusoidal waveform, Fourier transforms can be applied to extract its phase. Apply $L$-point \ac{DFT} to the discrete-time  observed sensor detection signals $P[0],\cdots ,P[L-1]$, and we have
     \begin{equation}
         \label{DFT}
         p[l']=\sum\nolimits_{l=0}^{L-1}P[l]e^{-{\rm j}\frac{2\pi}{L}ll'},~\forall l'\in [L].
@@ -381,20 +403,20 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
         \label{LS estimate result}
         \hat{\varphi}=\arg\left(\frac{p[1]}{LA\alpha\beta}\right) = \arg\left(p[1]\right).
     \end{equation}
+    Note that this LS method simply ignores the non-Gaussian noise. For Gaussian noise, LS method is optimal. However, in fact, the noise in \eqref{eqn:power of interference} contains a squared term of a Gaussian noise, resulting the noise to be non-Gaussian. Thus, we further conceive an ML method, as described in the following Subsection~\ref{ML method}. 
 
-%% zja working below
-\subsection{ML method}
-    Suppose the noise field $v'(t)=v'_R(t) + jv'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_n(t)\right|^2$ is a noncentral chi-squared distribution with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
-                    \begin{subequations}
-\label{chi2 distribution mean values}
-\begin{align}
-\label{mu_n,R}
-\mu_{n,R} & = \alpha + \beta \cos(\psi(t)+\varphi),\\
-\label{mu_n,L}
-\mu_{n,I} & = \beta \sin(\psi(t)+\varphi).
-\end{align}
-\end{subequations}
-    Thus, the output of the power sensor is 
+\subsection{Newton-ML method}  \label{ML method}
+    Suppose the noise field $v'(t)=v'_R(t) + jv'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2$ is a noncentral chi-squared distribution \ch with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
+    \begin{subequations}
+    \label{chi2 distribution mean values}
+        \begin{align}
+        \label{mu_n,R}
+        \mu_{n,R} & = \alpha + \beta \cos(\psi(t)+\varphi),\\
+        \label{mu_n,L}
+        \mu_{n,I} & = \beta \sin(\psi(t)+\varphi).
+        \end{align}
+    \end{subequations}
+    Thus, according to \eqref{eqn:power of interference}, the output signal of the power sensor is given by 
     \begin{equation}
         P(t)  = A\left((v'_{R} + \mu_{n,R})^2 + (v'_{I} + \mu_{n,I})^2 \right)+ \zeta 
         \label{eqn:sensor power}
@@ -403,12 +425,12 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     \begin{equation}
         \lambda(t)  = A(\mu_{n,R}^2 + \mu_{n,I}^2) = A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right],
     \end{equation}
-    then the p.d.f of $s(t) := P(t)-\zeta$ is given by the zeroth-order modified Bessel function
+    then the p.d.f of $s(t)  := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2 = P(t)-\zeta$ is given by the zeroth-order modified Bessel function
     \begin{equation}
         f_{s(t)}(x) = \frac{1}{A\sigma_{v}^2} \exp\left(-\frac{x+\lambda(t)}{A\sigma_v^2}\right)I_{0}\left(\frac{\sqrt{\lambda(t) x}}{A\sigma_v^2/2}\right),\quad x \geq 0.
         \label{ML single observation}
     \end{equation}
-    In the following analysis, we assume that $\sigma_{\xi}^2 = 0$. If we have obtained observations $P[l], \forall l\in [L]$, then the log likelihood function is given by
+    In the following analysis, for the sake of simplicity, we always assume that $\sigma_{\zeta}^2 = 0$. Thus, if we have obtained observations $P[l], \forall l\in [0:L]$, then the log likelihood function of $\varphi$, given the observations $P[l], \forall l\in [0:L]$, is represented by
     \begin{equation}
         \mathcal{L}(P[0:L] | \varphi) = \sum_{l=0}^{L-1}\left[-\frac{P[l] + \lambda_l}{A\sigma_v^2} + \log I_0\left(\frac{\sqrt{P[l] \lambda_l}}{A\sigma_v^2/2}\right)\right] - L\log(A\sigma_v^2),
         \label{ML likelihood}
@@ -416,8 +438,9 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     where $\lambda_l := \lambda(t_l)$, and the derivative of \eqref{ML likelihood} is 
     \begin{equation}
         \frac{\partial \mathcal{L}(P[0:L] | \varphi)}{\partial \varphi} = \frac{2\alpha\beta}{\sigma_v^2}\sum_{l=0}^{L-1}\sin(\psi(t_l)+\varphi) \left[1 - R\left( \frac{\sqrt{P[l]\lambda_l}}{A\sigma_v^2/2} \right) \frac{\sqrt{P[l]}}{\sqrt{\lambda_l}}\right],
+        \label{eqn:First Derivative Likelihood}
     \end{equation}
-    where the function $R(z)$ is defined as $R(z) = I_1(z)/I_0(z)$. Since the derivative of the function $R(z)$ satisfies the property
+    where the function $R(z)$ is defined as $R(z) = I_1(z)/I_0(z)$. Since the derivative of the function $R(z)$ satisfies the property \ch
     \begin{equation}
         R'(z)=1-R^2(z)-\frac{1}{z}R(z),
     \end{equation}
@@ -434,21 +457,22 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
         z_l = \sqrt{P[l]\lambda(t_l)}/(A\sigma_v^2/2).
         \label{eqn:def z_l}
     \end{equation}
-    Then, we can perform the Newton iteration to obtain $\hat{\varphi}$, by iteratively using
+    Then, we can perform the Newton iteration to obtain $\hat{\varphi}$, by iteratively using the updating formula
     \begin{equation}
-        \hat{\varphi}^{(k+1)} = \hat{\varphi}^{(k)} - \frac{\mathcal{L}'(\hat{\varphi}^{(k)})}{\mathcal{L}''(\hat{\varphi}^{(k)})}.
+        \hat{\varphi}^{(k+1)} = \hat{\varphi}^{(k)} - \frac{\mathcal{L}'(\hat{\varphi}^{(k)})}{\mathcal{L}''(\hat{\varphi}^{(k)})},
+        \label{eqn:Newton-ML renewal formula}
     \end{equation}
+    where $\mathcal{L}'(\hat{\varphi}^{(k)})$ and $\mathcal{L}''(\hat{\varphi}^{(k)})$ are given by \eqref{eqn:First Derivative Likelihood} and \eqref{Second Derivative Likelihood} respectively. Note that during the calculation of \eqref{eqn:Newton-ML renewal formula}, $A, \sigma_v, \alpha, \beta$ and the received signal $P[l], \forall l\in [0:L]$ are all assumed to be known. Thus, in fact,  \eqref{eqn:First Derivative Likelihood} and \eqref{Second Derivative Likelihood} are functions of a single variable $\varphi$. 
 
-\subsection{von Mises-EM method}
-    We discover from our experiments that both the LS method and the Newton-ML method are close to the CRLB. Specifically, the Newton-ML method provides an almost optimal estimator for the phase difference $\varphi$ between the BS-RIS path and the RIS-User path. However, the computation of the Newton-ML estimator is quite complicated due to intensive calculation of modified Bessel functions. Now we introduce an iterative method for estimating $\varphi$ without any computation of special functions.
+\subsection{von Mises-EM method}    \label{von Mises-EM method}
+    We discover from our experiments that both the LS method and the Newton-ML method are close to the CRLB. Specifically, the Newton-ML method provides an almost optimal estimator for the phase difference $\varphi$ between the BS-RIS path and the RIS-UE path. However, the computation of the Newton-ML estimator is quite complicated due to intensive calculation of modified Bessel functions. Now we introduce an iterative method for estimating $\varphi$ without any computation of such special functions.
 
-    This algorithm is based on the Bayesian inference of von-Mises distributions. The von-Mises distribution $VM(\mu, \kappa)$ is a two-parameter distribution on $[0, 2\pi]$, with the probability density function given by 
+    This algorithm is based on the Bayesian inference of von Mises distributions \ch. The von Mises distribution $\VM(\mu, \kappa)$ is a two-parameter distribution on $[0, 2\pi]$, with the probability density function given by 
     \begin{equation}
         p(\theta|\mu, \kappa) = \frac{\exp(\kappa \cos(\theta - \mu))}{2\pi I_0(\kappa)}, 0\leq \theta \leq 2\pi,
     \end{equation}
-    where $\mu \in [0,2\pi]$ and $\kappa >0$ being the cyclic location parameter and the concentration parameter. The von-Mises distribution is closely related to the complex Gaussian distribution.
-    
-    \begin{lemma}[Bayesian estimation of von-Mises distribution]\label{lemma_1}
+    where $\mu \in [0,2\pi]$ and $\kappa >0$ being the cyclic location parameter and the concentration parameter. Note that the von Mises distribution is a distribution on a circle, thus it works as a perfect prior distribution of a phase estimation problem. More fortunately, the von Mises distribution is also closely related to the complex Gaussian distribution, thus implying the possibility of designing an iterative EM algorithm \ch based on the interactions between the von Mises distribution and the complex Gaussian noise distribution. The following two lemmas: {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}} reveal these interations. 
+    \begin{lemma}[Bayesian estimation of von Mises distribution]\label{lemma_1}
         Let $\theta \sim \VM(\mu, \kappa)$, and $z \sim \CN(e^{{\rm j}\theta}, \sigma^2)$. Then the posterior distribution $\theta | z$ is also a von-Mises distribution $\VM(\mu', \kappa')$ with parameters $\mu'$ and $\kappa'$ satisfying
         \begin{equation}
             \kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} + \frac{1}{\sigma^2/2}z.
@@ -468,12 +492,14 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
                 & = \exp\left( \re\left[ e^{{\rm j} \theta}\left(\kappa e^{-{\rm j}\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
             \end{aligned}
         \end{equation}
-        Since the density of von-Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{{\rm j} \theta}(\kappa e^{{\rm j} \mu})^* \right] \right)$, we can also parameterize the von-Mises distribution by a single complex parameter $\kappa e^{{\rm j}\mu}$. Thus, the above $p(\theta|z)$ is a von-Mises density with parameter $\kappa'e^{{\rm j}\mu'}$, satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} + 1/(\sigma^2/2)\,z$. This completes the proof.
+        Since the density of von Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{{\rm j} \theta}(\kappa e^{{\rm j} \mu})^* \right] \right)$, we can also parameterize the von-Mises distribution by a single complex parameter $\kappa e^{{\rm j}\mu}$. Thus, the above $p(\theta|z)$ is a von-Mises density with parameter $\kappa'e^{{\rm j}\mu'}$, satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} + 1/(\sigma^2/2)\,z$. This completes the proof.
     \end{IEEEproof}
-    From the above proof, we can also denote the von-Mises distribution $\VM(\mu, \kappa)$ as $\VM(\kappa e^{{\rm j}\mu})$. This representation is more convenient when manipulating the posterior distributions in Bayesian inference.
+    \begin{remark}
+        From the above proof, we can also denote the von Mises distribution $\VM(\mu, \kappa)$ as $\VM(\kappa e^{{\rm j}\mu})$. This representation is more convenient when manipulating the posterior distribution of an $\VM$ distribution in Bayesian inference.
+    \end{remark}
 
     \begin{lemma}[Noncentral $\CN$ posterior distribution on circle is $\VM$]\label{lemma_2}
-        Suppose $z \sim \CN(z_0, \sigma^2)$, where $z_0 \in \mathbbm{C}$, and a positive radius $r>0$. Then the posterior distribution of angle $\theta= \arg (z)$ on a circle $|z|=r$ obeys the von-Mises distribution
+        Suppose $z \sim \CN(z_0, \sigma^2)$, where $z_0 \in \mathbbm{C}$, and a positive radius $r>0$. Then the posterior distribution of angle $\theta= \arg (z)$, constrained on a circle $|z|=r$ obeys the von-Mises distribution
         \begin{equation}
             p(\theta |\, |z|=r) \sim \VM\left(\arg(z_0), \frac{r|z_0|}{\sigma^2/2}\right).
         \end{equation}
@@ -481,17 +507,17 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     \begin{IEEEproof}
         Trivial.
     \end{IEEEproof}
-    Combining the results of {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}}, we can construct the EM algorithm for estimating $\varphi$. Since the output of the power sensors $P[l]$ does not contain phase information, we can treat the phases as latent variables. Let $s_l = \sqrt{P[l]/A}$ be the noisy estimation for $|\alpha + \beta e^{{\rm j} (\varphi + \psi_l)} + v_l|$, and $\theta_l$ be the latent variables $\arg (\alpha + \beta e^{{\rm j} (\varphi + \psi_l)} + v_l)$. Since the noise $v_l \sim {\rm i.i.d.}\;\CN(0, \sigma_v^2)$, then from {\bf Lemma \ref{lemma_2}}, $\theta_l | s_l, \varphi \sim \VM(\arg(\alpha + \beta e^{{\rm j} (\varphi + \psi_l)}), s_l |\alpha + \beta e^{{\rm j} (\varphi + \psi_l)}|/(\sigma_v^2/2))$. Thus, we can infer the latent variables by ML estimation 
+    Combining the results of {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}}, we can then construct the EM algorithm for estimating $\varphi$. Since the output of the power sensors $P[l]$ does not contain phase information, we can treat the phases as latent variables. Let $s_l = \sqrt{P[l]/A}$ be the noisy estimation for $|\alpha + \beta e^{{\rm j} (\varphi + \psi_l)} + v_l|$, and $\theta_l$ be the latent variables $\arg (\alpha + \beta e^{{\rm j} (\varphi + \psi_l)} + v_l)$. Since the noise $v_l \sim {\rm i.i.d.}\;\CN(0, \sigma_v^2)$, then from {\bf Lemma \ref{lemma_2}}, $\theta_l | s_l, \varphi \sim \VM(\arg(\alpha + \beta e^{{\rm j} (\varphi + \psi_l)}), s_l |\alpha + \beta e^{{\rm j} (\varphi + \psi_l)}|/(\sigma_v^2/2))$. Thus, we can infer the latent variables by ML estimation 
     \begin{equation}
-        \hat{\theta}_{l, {\rm ML}} | s_l, \varphi = \arg(\alpha + \beta e^{{\rm j} (\varphi + \psi_l)})
+        \hat{\theta}_{l, {\rm ML}} | s_l, \varphi = \arg(\alpha + \beta e^{{\rm j} (\varphi + \psi_l)}).
         \label{eqn:E-step}
     \end{equation}
     After inferring the latent variables $\hat{\theta}_{l, {\rm ML}}$, we can update the estimation of $\varphi$ using Bayesian rule in {\bf Lemma \ref{lemma_1}}
     \begin{equation}
-        \varphi | s_l, \theta_l \sim \VM\left( \kappa e^{{\rm j} \mu} + \frac{1}{\beta\sigma_v^2/2}\sum_{l=0}^{L-1}{\left(s_l e^{{\rm j}\theta_l}-\alpha\right)e^{-{\rm j} \psi_l}}\right)
+        \varphi | s_l, \theta_l \sim \VM\left( \kappa e^{{\rm j} \mu} + \frac{\beta}{\sigma_v^2/2}\sum_{l=0}^{L-1}{\left(s_l e^{{\rm j}\theta_l}-\alpha\right)e^{-{\rm j} \psi_l}}\right).
         \label{eqn:M-step}
     \end{equation}
-    Performing E-step with \eqref{eqn:E-step} and M-step with \eqref{eqn:M-step} alternately, then the estimation precision for $\varphi$ can be iteratively improved. Note that although the modified Bessel functions appear in the density function of von-Mises distribution, the bother is avoided in the von Mises-EM algorithm.
+    Performing E-step with \eqref{eqn:E-step} and M-step with \eqref{eqn:M-step} alternately, then the estimation precision for $\varphi$ can be iteratively improved. Note that although the modified Bessel functions appear in the density function of von Mises distribution, the bother is avoided in the von Mises-EM algorithm. The pseudo code of von Mises-EM algorithm is collected in {\bf Algorithm \ref{alg:VM-EM}}.
 
     \begin{algorithm}[H] 
         \caption{von Mises-EM phase estimation} \label{alg:VM-EM}
@@ -505,7 +531,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
             \WHILE {$\hat{\varphi}$ not convergence}
                 \STATE $\mu_l \leftarrow \alpha + \beta e^{{\rm j} (\hat{\varphi}+\psi_l)}, \forall l=0,1,\cdots,L-1$
                 \STATE $w_l \leftarrow s_l e^{{\rm j} \arg(\mu_l)} - \alpha, \forall l=0,1,\cdots,L-1$
-                \STATE $z_\varphi \leftarrow \kappa e^{{\rm j} \hat{\varphi}} + \left( \sum_{l=0}^{L-1}{w_l e^{-{\rm j} \psi_l}}\right) / (\beta \sigma_v^2/2)$
+                \STATE $z_\varphi \leftarrow \kappa e^{{\rm j} \hat{\varphi}} + \beta \left( \sum_{l=0}^{L-1}{w_l e^{-{\rm j} \psi_l}}\right) / (\sigma_v^2/2)$
                 \STATE $\hat{\varphi} \leftarrow \arg(z_\varphi)$
                 \STATE $\kappa \leftarrow |z_\varphi|$
             \ENDWHILE
@@ -517,7 +543,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     
 \section{Performance Analysis}
 \label{Performance Analysis}
-    The evaluation of CRLB in non-coherent parameter estimation was first formulated in \cite{jiang2016cramer}, where the authors introduced Gaussian approximation in order to obtain a simple closed-form CRLB expression. However, without Gaussian approximation techniques we have to deal with the operations of many Bessel functions, and thus the analysis becomes nearly intractable. In contrast, in this paper, this difficulty is overcomed by asymptotic expansion techniques (cite here). Though precise expression of CRLB is still not obtained, satisfactory asymtotic results are acquired. 
+    The evaluation of CRLB in non-coherent parameter estimation was first formulated in \cite{jiang2016cramer}, where the authors introduced Gaussian approximation in order to obtain a simple closed-form CRLB expression. However, without Gaussian approximation techniques we have to deal with the operations of many Bessel functions, and thus the analysis becomes nearly intractable. In contrast, in this paper, this difficulty is overcomed by asymptotic expansion techniques \ch. Though precise expression of CRLB is still not obtained, satisfactory asymtotic results are acquired. 
     
     
     % TODO: Write a theorem here.

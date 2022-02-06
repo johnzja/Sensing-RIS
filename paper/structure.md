@@ -25,7 +25,9 @@
    - IRF如何辅助信道估计？
 4. Sensing RIS-based Channel Estimation
    - Hardware Architecture of Sensing RIS
-   - 算法1：LS算法/算法2：精确度太低，MMSE算法/算法3：复杂度太高，von Mises-EM算法
+   - 算法1：LS算法，精确度太低
+   - 算法2：复杂度太高，MMSE算法
+   - 算法3：von Mises-EM算法
    - MISO系统到MIMO系统的扩展方法（各种扩展的讨论）
 5. Performance Analysis
    - CRLB

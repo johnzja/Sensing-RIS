@@ -34,7 +34,7 @@ function varphi = EM_von_mises(P, SensingRIS_param)
         % Estimate varphi by Bayesian rule.
         obs_points = s .* exp(1j*thetas_mu) - alpha;    % subtract the mean.
         % scatter(real(obs_points), imag(obs_points));
-        cv_varphi = varphi_kappa*exp(1j*varphi_est) + sum(obs_points.*exp(-1j*psi_arr))/(beta*sigma_v^2/2);
+        cv_varphi = varphi_kappa*exp(1j*varphi_est) + beta*sum(obs_points.*exp(-1j*psi_arr))/(sigma_v^2/2);
 
         varphi_est = angle(cv_varphi);
         varphi_kappa = abs(cv_varphi);
