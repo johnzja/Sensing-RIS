@@ -63,6 +63,7 @@ breaklinks=true}
 \acrodef{MISO}[MISO]{multiple-input single-output}
 \acrodef{CSI}[CSI]{channel state information}
 \acrodef{CRLB}[CRLB]{Cramer-Rao Lower Bound}
+\acrodef{UPA}[UPA]{uniform planar array}
 
 \def \H {^H}
 \def \opt {^{\text{opt}}}
@@ -191,7 +192,7 @@ Finally, in Section~\ref{Conclusion}, we provide our conclusions followed by pro
 
 \textit{Notation:} $\mathbb C, \mathbb R,$ and $\mathbb R_+$ denote the set of
 complex, real, and positive real numbers, respectively;
-$[L]$ represents the set of integers $\{1,2,\cdots,L\}$;
+$[L]$ represents the set of integers $\{0,1,\cdots,L-1\}$;
 $\bm A^{-1}, \bm A^*,\bm A^T,$ and $\bm A^H$ denote the inverse, conjugate, transpose, and conjugate transpose of matrix $\bm A$, respectively; 
 $\Vert\bm x\Vert_{2}$ is the $\ell_{2}$-norm of vector $\bm x$; 
 $\left\langle\bm x\right\rangle$ is the normalized vector of $\bm x$, i.e., $\left\langle\bm x\right\rangle=\bm x/\Vert\bm x\Vert_{2}$;
@@ -276,6 +277,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     With the least-square criterion, we obtain
     \begin{equation}
         \hat{\bm H} = \frac{1}{P}{\bm F}_{N,K}^{*}{\bm Y}_{\rm BS}^{T},
+        \label{eqn:MMSE-CE}
     \end{equation}
     which provides a solution for channel estimation in this system.
 
@@ -406,7 +408,7 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
     Note that this LS method simply ignores the non-Gaussian noise. For Gaussian noise, LS method is optimal. However, in fact, the noise in \eqref{eqn:power of interference} contains a squared term of a Gaussian noise, resulting the noise to be non-Gaussian. Thus, we further conceive an ML method, as described in the following Subsection~\ref{ML method}. 
 
 \subsection{Newton-ML method}  \label{ML method}
-    Suppose the noise field $v'(t)=v'_R(t) + jv'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2$ is a noncentral chi-squared distribution \ch with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
+    Suppose the noise field $v'(t)=v'_R(t) + {\rm j}v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2$ is a noncentral chi-squared distribution \ch with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
     \begin{subequations}
     \label{chi2 distribution mean values}
         \begin{align}
@@ -521,7 +523,7 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
     Performing E-step with \eqref{eqn:E-step} and M-step with \eqref{eqn:M-step} alternately, then the estimation precision for $\varphi$ can be iteratively improved. Note that although the modified Bessel functions appear in the density function of von Mises distribution, the bother is avoided in the von Mises-EM algorithm. The pseudo code of von Mises-EM algorithm is collected in {\bf Algorithm \ref{alg:VM-EM}}.
 
     \begin{algorithm}[H] 
-        \caption{von Mises-EM phase estimation} \label{alg:VM-EM}
+        \caption{von Mises-EM phase estimation (VM-EM algorithm)} \label{alg:VM-EM}
         \setstretch{1.35}
         \begin{algorithmic}[1]
             \REQUIRE Incident wave intensity $\alpha$, $\beta$; sensor data $P[l]$; amplification factor $A$ and noise variance $\sigma_v^2$; predefined phase shifts $\psi_l$.
@@ -633,6 +635,40 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
 
 \section{Simulation Results}
 \label{Simulation Results}
+In this section, we will present our simulation results. In Subsection 1, we will show the performance comparison of the phase estimation algorithms. In Subsection 2, we will show the comparison of our \ac{IRF} method and other RIS-aided channel estimation and beamforming algorithms. 
+
+\subsection{Phase Estimation Algorithms} 
+    In Section~\ref{Sensing RIS-Based Channel Estimation}, we have already introduced three phase estimation algorithms: LS, Newton-ML and VM-EM. Now we compare the performance of these algorithms together with the CRLB derived in Section~\ref{Performance Analysis}.  
+    \begin{figure}[htbp]
+        \centering
+        \myincludegraphics{data/pe_K.pdf}
+        \caption{Performance comparison of phase estimation algorithms. $x$-axis represents the interferential contrast $K$; $y$-axis represents the MSE of the estimators.}
+        \label{fig:phase estimation_K}
+    \end{figure}
+    % Insert the comparison figure w.r.t \bar{\gamma}.
+    \begin{figure}[htbp]
+        \centering
+        \myincludegraphics{data/pe_gamma.pdf}
+        \caption{Performance comparison of phase estimation algorithms. $x$-axis represents the average interferential SNR $\bar{\gamma}$; $y$-axis represents the MSE of the estimators.}
+        \label{fig:phase estimation_gamma}
+    \end{figure}
+    In the simulations for phase estimation algorithms in Fig.~\ref{fig:phase estimation_K}, the amplification factor $A$ is fixed to be $1$; $L=2^8=256$, and $\sigma_\zeta=0.05$; The interferential SNR $\bar{\gamma}=2$. The CRLB and CRLB-approx curves are calculated according to \eqref{eqn:precise_CRLB} and \eqref{eqn:asymptotic CRLB}, respectively. For Newton-ML algorithm, the Newton iteration is performed 4 times according to \eqref{eqn:Newton-ML renewal formula}. For VM-EM algorithm, the iteration number is also fixed to 4. The random variable $\varphi$ under estimation is drawn from a uniform distribution on $[0,2\pi]$. In the simulations in Fig.~\ref{fig:phase estimation_gamma}, all the simulation parameters, except for $K$ and $\bar{\gamma}$ are the same with Fig.~\ref{fig:phase estimation_K}. And $K=0.6$.  
+
+    From Fig.~\ref{fig:phase estimation_K} and Fig.~\ref{fig:phase estimation_gamma} we discover that the VM-EM algorithm has comparable performance with the Newton-ML algorithm, but the computational cost is significantly lower, since {\bf Algorithm \ref{alg:VM-EM}} does not include the evaluation of the complicated modified Bessel functions. Both the Newton-ML and VM-EM algorithms are close to CRLB, and both of them outperform the simple LS algorithm. The CRLB approximation is also satisfactory under a wide range of $K$ and $\bar{\gamma}$. 
+
+\subsection{Achievable Spectral Efficiency under IRF}
+    \begin{figure}[htbp]
+        \centering
+        \myincludegraphics{data/rate.pdf}
+        \caption{Performance curve of the achievable spectral efficiency against the BS transmitted power.}
+        \label{fig:rate}
+    \end{figure}
+    All our simulation data are acquired under $P_{\rm UE}=300 \,{\rm mW}$, $n_0=-174\,{\rm dBm/Hz}$, subcarrier bandwidth ${\rm BW} = 180\,{\rm kHz}$, thermal noise at the receiver $\sigma^2 = {\rm BW}\times n_0$, $\sigma_v^2=100\,{\rm MHz}\times n_0$, and the BS-RIS and RIS-UE channels are all assumed to be Rician fading with 1 LOS path and 4 NLOS paths. The LOS path has, on average, $\kappa$ times more energy than the NLOS paths together, and $\kappa=2$. Both the BS and the RIS are equipped with $\lambda/2$-spaced uniform planar arrays (UPAs), while the UE has a single antenna. The BS is located at a distance that is drawn from a uniform distribution between $20\,{\rm m}$ and $100\,{\rm m}$, and the angle of the BS is uniformly distributed. The UE appears uniformly from $10\,{\rm m}$ to $100\,{\rm m}$, and the angle distribution of the UE is also uniform. The size of the RIS is set to be $40\times 30$, and that of the BS antenna is $4\times 2$. For IRF methods, 3 pilots are used for CSI acquisition. However, for MMSE methods, the number of pilots is $N=40\times 30$. 
+
+    We compare our proposed \ac{IRF} channel estimation and beamforming method with classical MMSE algorithm and other idealized settings in Fig.~\ref{fig:rate}. The black dashed line ``Oracle'' assumes perfectly-known CSI, thus perfect iterative beamforming can be performed. In the MMSE method, we first utilize \eqref{eqn:MMSE-CE} to obtain estimates for the cascaded channel \cite{wei2021channel}, and then perform iterative RIS beamforming based on the estimated channel. In addition, we also consider the randomly-phased RIS scheme as a benchmark.  
+
+    Fig.~\ref{fig:rate} shows the performance curve of the achievable spectral efficiency against the BS transmitted power. From this figure, we can conclude that the proposed IRF method is nearly optimal, under extremely low pilot overhead. The proposed IRF method is even close to the oracle scheme, and has satisfactory performance among a wide range of the BS transmitted power. 
+
 
 
 \section{Conclusion}
@@ -641,11 +677,6 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
 
 
 \appendices
-
-
-\section*{Acknowledgments}
-Thanks\dots 
-
 % Non-central Chi-Squared distribution. 
 \section*{Appendix A\\ Proof of Theorem 1}\label{appendix:proof of theorem1}
 \begin{IEEEproof}
@@ -819,13 +850,6 @@ Thanks\dots
 \bibliography{SensingRIS, IEEEabrv}
 
 \end{document}
-
-
-
-
-
-
-
 
 
 

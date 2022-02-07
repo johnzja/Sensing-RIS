@@ -8,14 +8,15 @@ A = 1;
 L = 2^8;
 f_psi = 1/Ts;       % Frequency offset w.r.t carrier-freq.
 sigma_zeta  = 0.05;
-N_exp = 2000;       % Number of numerical experiments.
+N_exp = 4000;       % Number of numerical experiments.
 
 % Scan parameters.
 K = 0.6;
 gamma_bar = 2;
 N_scan = 9;        % # Scan points.
 
-K_arr = linspace(0.1,1,N_scan);
+% K_arr = linspace(0.2,0.5,N_scan);
+gamma_bar_arr = linspace(1, 5, N_scan);
 MSE_arr_LS = zeros(N_exp, N_scan);
 MSE_arr_VM = zeros(N_exp, N_scan);
 MSE_arr_Newton = zeros(N_exp, N_scan);
@@ -23,7 +24,8 @@ CRLB = zeros(1, N_scan);
 CRLB_precise = zeros(1, N_scan);
     
 for idx_scan = 1:N_scan
-    K = K_arr(idx_scan);
+    % K = K_arr(idx_scan);
+    gamma_bar = gamma_bar_arr(idx_scan);
     beta    = (1-sqrt(1-K^2))/K;
     sigma_v = sqrt((alpha^2+beta^2)/gamma_bar);
 
@@ -68,7 +70,7 @@ for idx_scan = 1:N_scan
         MSE_arr_VM(idx, idx_scan) = ((delta - round(delta))*(2*pi))^2;
 
         % Estimate varphi by Newton-Raphson method.
-        for k = 1:3
+        for k = 1:4
             [logL, dlogL, d2logL] = calc_likelihood(P, varphi_hat, SensingRIS_param);
             varphi_hat = varphi_hat - dlogL/d2logL;
         end
@@ -96,16 +98,16 @@ set(0,'DefaultAxesFontSize',12);
 set(0,'DefaultLineLineWidth',1.4);
 set(0,'defaultfigurecolor','w');
 figure('color',[1 1 1]); hold on;
-plot(K_arr, MSE_LS, 'bp-');
-plot(K_arr, MSE_VM, 'gs-');
-plot(K_arr, MSE_Newton, 'ro-');
-plot(K_arr, CRLB_precise, 'ko-.');
-plot(K_arr, CRLB, 'color', [228,0,127]/255, 'LineStyle', '--', 'marker', 'o');
+plot(gamma_bar_arr, MSE_LS, 'bp-');
+plot(gamma_bar_arr, MSE_VM, 'gs-');
+plot(gamma_bar_arr, MSE_Newton, 'ro-');
+plot(gamma_bar_arr, CRLB_precise, 'ko-.');
+plot(gamma_bar_arr, CRLB, 'color', [228,0,127]/255, 'LineStyle', '--', 'marker', 'o');
 
 set(gca,'FontName','Times New Roman');
 grid on; box on;
-legend('LS', 'VM-EM', 'Newton-ML', 'CRLB', 'CRLB\_approx');
-% xlabel('$\bar{\gamma}$', 'interpreter', 'latex');
-xlabel('$K$', 'interpreter', 'latex');
+legend('LS', 'VM-EM', 'Newton-ML', 'CRLB', 'CRLB-approx');
+xlabel('$\bar{\gamma}$', 'interpreter', 'latex');
+% xlabel('$K$', 'interpreter', 'latex');
 ylabel('E$\left(\hat{\varphi}-\varphi\right)^2$', 'interpreter', 'latex');
 

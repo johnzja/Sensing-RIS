@@ -35,7 +35,7 @@ sigma_noise = sqrt(P_noise);
 RIS_conf.sigma_v = sqrt(PSD_noise * 100e6);     % 100M BW for IRF-sensing elements.
     
 N_sim = 200;
-rng(0);
+
 Pt_BS_range = logspace(-1,1, 10);
 SE = zeros(length(Pt_BS_range), 4);
 
@@ -45,19 +45,20 @@ parfor idx_scan = 1:length(Pt_BS_range)
     
     L1 = 4;         % Number of BS-RIS NLOS paths.
     L2 = 4;         % Number of RIS-UE NLOS paths.
-    kappa = 0.8;    % LOS ratio.
+    kappa = 2;    % LOS ratio.
     Np = N;         % Number of pilots in traditional beamforming.
     
-    BS_conf = struct()
-    BS_conf.My = M;             % Assume the BS is equipped with lambda/2 ULA.
-    BS_conf.Mz = 1;
-    BS_conf.M = BS_conf.My*BS_conf.Mz;
-    BS_conf.Pt_BS = Pt_BS;
-    BS_conf.Pt_UE = Pt_UE;
+    BS_conf         = struct()
+    BS_conf.My      = M;            % Assume the BS is equipped with lambda/2 ULA.
+    BS_conf.Mz      = 1;
+    BS_conf.M       = BS_conf.My*BS_conf.Mz;
+    BS_conf.Pt_BS   = Pt_BS;
+    BS_conf.Pt_UE   = Pt_UE;
     BS_conf.sigma_noise = sigma_noise;
 
     %% Run simulations.
     Rates = zeros(N_sim, 4);
+    rng(0);
     for idx_sim =  1:N_sim
         [R_BS, theta_BS, psi_BS] = randPos(R_BS_range, theta_BS_range, psi_BS_range);
         pos_BS = R_BS*[cos(psi_BS)*cos(theta_BS), cos(psi_BS)*sin(theta_BS), sin(psi_BS)];
@@ -102,8 +103,9 @@ parfor idx_scan = 1:length(Pt_BS_range)
     SE(idx_scan, :) = R;
     fprintf('Pt_{BS} = %f \n', Pt_BS);
 end
-disp('sim complete. Files saved at data/');
-save('data/IRF_sim.mat', 'Pt_BS_range', 'SE', 'M', 'Pt_UE', 'RIS_conf');
+disp('sim complete. Files saved at data/.');
+save('data/IRF_sim.mat', 'Pt_BS_range', 'SE', 'M', 'Pt_UE', 'RIS_conf', 'sigma_noise', 'N_sim');
+
 
 %% Analyze the data.
 load('data/IRF_sim.mat');
@@ -114,12 +116,12 @@ set(0,'DefaultTextFontSize',14);
 set(0,'DefaultAxesFontSize',12);
 set(0,'DefaultLineLineWidth',1.4);
 set(0,'defaultfigurecolor','w');
+
 figure('color',[1 1 1]); hold on;
 plot(dbP, SE(:,1), 'color', [1, 0, 0.9], 'LineStyle', '-', 'marker', 'x');
 plot(dbP, SE(:,2), 'color', [0, 0, 1], 'LineStyle', '-', 'marker', 'x');
 plot(dbP, SE(:,3), 'ro-');
 plot(dbP, SE(:,4), 'ko-.');
-
 
 set(gca,'FontName','Times New Roman');
 grid on; box on;

@@ -19,3 +19,6 @@ paper/*.out
 
 # Data storage.
 code/data/
+paper/data/
+
+
