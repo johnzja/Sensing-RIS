@@ -477,7 +477,7 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
 \subsection{von Mises-EM method}    \label{von Mises-EM method}
     We discover from our experiments that both the LS method and the Newton-ML method are close to the CRLB. Specifically, the Newton-ML method provides an almost optimal estimator for the phase difference $\varphi$ between the BS-RIS path and the RIS-UE path. However, the computation of the Newton-ML estimator is quite complicated due to intensive calculation of modified Bessel functions. Now we introduce an iterative method for estimating $\varphi$ without any computation of such special functions.
 
-    This algorithm is based on the Bayesian inference of von Mises distributions \ch. The von Mises distribution $\VM(\mu, \kappa)$ is a two-parameter distribution on $[0, 2\pi]$, with the probability density function given by 
+    This algorithm is based on the Bayesian inference of von Mises distributions \cite{mardia1976bayesian}. The von Mises distribution $\VM(\mu, \kappa)$ is a two-parameter distribution on $[0, 2\pi]$, with the probability density function given by 
     \begin{equation}
         p(\theta|\mu, \kappa) = \frac{\exp(\kappa \cos(\theta - \mu))}{2\pi I_0(\kappa)}, 0\leq \theta \leq 2\pi,
     \end{equation}
@@ -552,7 +552,7 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
 \section{Performance Analysis}
 \label{Performance Analysis}
 \subsection{The CRLB}
-    In the previous section, we have introduced several phase estimation methods. A natural question is how accurate can these phase estimators be. From \eqref{eqn:sensor power}, we can discover that the phase estimation is, in fact, a probabilistic parameter estimation problem, where the distributions of the observable variables are controlled by the parameter $\varphi$. Thus, the ``best'' squared error of any unbiased estimator is lower-bounded by the CRLB \ch 
+    In the previous section, we have introduced several phase estimation methods. A natural question is how accurate can these phase estimators be. From \eqref{eqn:sensor power}, we can discover that the phase estimation is, in fact, a probabilistic parameter estimation problem, where the distributions of the observable variables are controlled by the parameter $\varphi$. Thus, the ``best'' squared error of any unbiased estimator is lower-bounded by the CRLB \cite{casella2021statistical} 
     \begin{equation}
         \mathbb{E}\left(\hat{\varphi}-\varphi\right)^2 \geq {\rm CRLB}(\varphi) = -\frac{1}{\mathbb{E}_{x\sim p_\varphi}\left[\frac{\partial^2}{\partial\varphi^2}\log p_{\varphi}(x)\right]},
         \label{eqn:CRLB definition}
@@ -761,17 +761,17 @@ In this section, we will present our simulation results. In Subsection 1, we wil
     % where $a=A\sigma_v^2 \ll \lambda_l$, $h(\lambda_l, a)$ is a two-variable function\footnote{In fact, the two-variable function $g(\lambda, a)$ can be further simplified into a single-variable function $g(\cdot). $}, and $I_\nu$ is the $\nu$-th order  modified Bessel function of the first kind. For detailed proof of the calculation process and error analysis of \eqref{eqn:trickiest_expectation}, please refer to {\bf Appendix B}. 
 
 
-    In order to evaluate the expectation $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$, we first introduce some preliminaries about the noncentral chi distribution $\nc_{\chi_k}(\lambda)$ with noncentrality parameter $\lambda>0$ \ch. The distribution $\nc_{\chi_k}(\lambda)$ is the law of the length (2-norm) of a $k$-dimensional standard normal distribution $\mathcal{N}({\bm \mu}, {\bm I}_k)$, with $\lambda = \Vert {\bm \mu} \Vert_2$. Specifically, we are interested in the case where $k=2$, since this is the case of the 2-dimensional complex plane. For  $k=2$, let $Y \sim \nc_{\chi_2}(m)$, then we have \ch
+    In order to evaluate the expectation $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$, we first introduce some preliminaries about the noncentral chi distribution $\nc_{\chi_k}(\lambda)$ with noncentrality parameter $\lambda>0$ \ch. The distribution $\nc_{\chi_k}(\lambda)$ is the law of the length (2-norm) of a $k$-dimensional standard normal distribution $\mathcal{N}({\bm \mu}, {\bm I}_k)$, with $\lambda = \Vert {\bm \mu} \Vert_2$. Specifically, we are interested in the case where $k=2$, since this is the case of the 2-dimensional complex plane. For  $k=2$, let $Y \sim \nc_{\chi_2}(m)$, then we have \cite{park1961moments}
     \begin{equation}
         \mathbb{E}\left[Y\right] = \sqrt{\frac{\pi}{2}}L_{1/2}(-m^2/2),
         \label{eqn:noncentral chi mean}
     \end{equation}
-    where $L_{1/2}$ denotes the generalized Laguerre function \ch of order $1/2$. The function $L_{1/2}(x)$ has explicit expression 
+    where $L_{1/2}$ denotes the generalized Laguerre function  of order $1/2$. The function $L_{1/2}(x)$ has explicit expression 
     \begin{equation}
         L_{1/2}(x) = e^{x/2}\left[(1-x)I_0\left(-\frac{x}{2}\right)-xI_1\left(-\frac{x}{2}\right) \right],
         \label{eqn:Laguerre half order}
     \end{equation}
-    where $I_\nu$ is the $\nu$-th order  modified Bessel function of the first kind \ch. Recall that the asymptotic expansion holds for large $x$:
+    where $I_\nu(\cdot)$ is the $\nu$-th order  modified Bessel function of the first kind. Recall that the asymptotic expansion holds for large $x$:
     \begin{equation}
         x(1-R^2(2\sqrt{x})) \sim \sqrt{x}/2,
         \label{eqn:asym_expansion}
