@@ -100,7 +100,7 @@ breaklinks=true}
 \begin{document}
 \title{Sensing RIS: Enabling Dimension-Independent CSI Acquisition for Beamforming}
 \author{{Jieao Zhu, Kunzan Liu, Zhongzhichao Wan, and Linglong Dai
-\vspace*{-1em}}
+\vspace*{-3em}}
 \thanks{All authors are with the Beijing National Research Center for Information Science and Technology (BNRist) as well as the Department of Electronic Engineering, Tsinghua University, Beijing 100084, China (e-mails: \{zja21, lkz18, wzzc20\}@mails.tsinghua.edu.cn, daill@tsinghua.edu.cn).}
 %\thanks{Corresponding author: Linglong Dai.}
 }
@@ -108,12 +108,20 @@ breaklinks=true}
 \maketitle
 
 \begin{abstract}
-xxx
+Reconfigurable intelligent surface (RIS) has been envisioned as a revolutionary paradigm for future wireless communications.
+However, the RIS's disability of processing signals and the increased dimensions of channels have brought new challenges to RIS-assisted system, which greatly increase the number of pilot overhead required for channel estimation.
+To tackle this problem, several contributions that fine-tune the hardware architecture of RIS or develop algorithms to exploit the channels' mathematical properties have been made, where the required pilot overhead is reduced to be proportional to the number of RIS elements.
+In this paper, we propose a dimension-independent channel state information (CSI) acquisition approach, that the required pilot overhead is independent of the number of RIS elements.
+Specifically, in contrast to traditional signal transmission framework, where signals transmitted from the base station (BS) and the users occupy different time slots, we propose a novel framework that signals are transmitted from the BS and the user simultaneously during CSI acquisition.
+Under this framework, we reveal the phenomenon that an electromagnetic interference random field (IRF) will occur on RIS, where we employ sensing RIS to capture its feature.
+Moreover, we develop three algorithms for parameter estimation in this system, and also derive the Cramer-Rao lower bound (CRLB) and its asymptotic expression.
+Simulation results verify that our proposed signal transmission framework and the corresponding algorithms can achieve dimension-independent CSI acquisition for beamforming.
 \end{abstract}
 
 \begin{IEEEkeywords}
-xxx
+Reconfigurable intelligent surface (RIS), channel estimation, interference random field (IRF).
 \end{IEEEkeywords}
+
 \section{Introduction}
 Reconfigurable intelligent surface (RIS) has been envisioned as a revolutionary paradigm for future wireless communications.
 The characteristics of low cost and power consumption provide RIS promising applications in overcoming blockages, improving capacity, and reducing transmit power \cite{basar2019wireless,huang2020improvingcapacity,wu2019intelligent}.
@@ -161,7 +169,7 @@ To circumvent the problem of massive pilot overhead required for channel estimat
 Specifically, the contributions of this paper can be summarized as follows.
     \begin{itemize}
         \item %We propose a novel signal transmission framework in RIS-assisted system, and reveal the corresponding phenomenon of electromagnetic interference.
-        In contrast to traditional signal transmission framework, where signals are transmitted from the \ac{BS} and the users occupy different time slots, we propose a novel framework that signals are transmitted from the \ac{BS} and the user simultaneously during CSI acquisition.
+        In contrast to traditional signal transmission framework, where signals transmitted from the \ac{BS} and the users occupy different time slots, we propose a novel framework that signals are transmitted from the \ac{BS} and the user simultaneously during CSI acquisition.
         Under this framework, we reveal the phenomenon that electromagnetic interference will occur on RIS, which we name as the \ac{IRF}.
         \item
         To exploit this \ac{IRF}, we employ sensing RIS developed from smart sensing metasurface to capture the features of \ac{IRF}.
@@ -190,18 +198,17 @@ In Section~\ref{Performance Analysis}, we derive the \ac{CRLB} and its asymptoti
 In Section~\ref{Simulation Results}, simulation results are provided for quantifying the performance of our proposed sensing RIS-based channel estimation as a dimension-independent approach.
 Finally, in Section~\ref{Conclusion}, we provide our conclusions followed by promising future research ideas.
 
-\textit{Notation:} $\mathbb C, \mathbb R,$ and $\mathbb R_+$ denote the set of
-complex, real, and positive real numbers, respectively;
-$[L]$ represents the set of integers $\{0,1,\cdots,L-1\}$;
+\textit{Notation:} $\mathbb C$ and $\mathbb R$ denote the set of complex and real numbers, respectively;
+$[L]$ represents the set of integers $\{1,2,\cdots,L\}$;
 $\bm A^{-1}, \bm A^*,\bm A^T,$ and $\bm A^H$ denote the inverse, conjugate, transpose, and conjugate transpose of matrix $\bm A$, respectively; 
-$\Vert x\Vert_{2}$ is the $\mathcal{L}_{2}$-norm of the function $x(\cdot)$; 
+$\Vert \bm x\Vert_{2}$ is the $\mathcal{L}_{2}$-norm of the vector $\bm x$; 
 %$\left\langle\bm x\right\rangle$ is the normalized vector of $\bm x$, i.e., $\left\langle\bm x\right\rangle=\bm x/\Vert\bm x\Vert_{2}$;
 $\text{arg}(x)$ and $\text{exp}(x)$ denote the phase angle and exponential representation of each element of the complex scalar $x$, respectively;
 $\vert x\vert$ denotes the amplitude
 of a complex scalar $x$; 
 $\text{diag}(\cdot )$ is the diagonal operation;
-$\mathcal{CN}\left(\mu, \sigma^2 \right)$ represents the complex univariate Gaussian distribution with the mean $\mu$ and the variance $\sigma^2$;
-$\VM(\mu, \kappa)$ denotes the von Mises distribution with circular mean $\mu$ and centrality $\kappa$.
+$\mathcal{CN}\left(\mu, \sigma^2 \right)$ represents the complex Gaussian distribution with the mean $\mu$ and the variance $\sigma^2$;
+$\VM(\mu, \kappa)$ denotes the von Mises distribution with circular mean $\mu$ and centrality $\kappa$;
 %$\bm 0_{L}$ denotes the $L\times 1$ zero vector;
 $\bm I_{L}$ denotes the $L\times L$ identity matrix;
 % $\bm \psi_{\text{max}}(\bm A)$ is the eigenvector of matrix
@@ -209,7 +216,7 @@ $\bm I_{L}$ denotes the $L\times L$ identity matrix;
 %$\wedge$ and $\vee$ denote logical conjunction and logical
 %disjunction, respectively.
 $x_{\rm BB}(t)$ denotes the baseband representation of a passband signal $x(t)$;
-$I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind, evaluated at complex argument $z$. 
+$I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind. 
 
 
 \section{System Model}  \label{System Model}
@@ -261,10 +268,7 @@ Observe from \eqref{traditional beamforming} that, the estimation for the cascad
 To accurately acquire this cascade channel, the user generally sends pilot signal $x$ to the BS under $P$ different RIS configurations which are the first $P$ columns of the DFT matrix $\bm F_{N,K}$. Due to the channel reciprocity, the received signal at the BS with the $p$-th RIS configuration $\bm \Theta_{p}$ can be written as \cite{atapattu2020reconfigurable}
     \begin{equation}
     \label{CE received signal}
-    \begin{aligned}
-            {\bm y}_{{\rm BS}, p} &={\bm G}^{T} {\bm \Theta}_p\bm f^{*} x+\bm n
-            \\&=\bm H^{T} {\bm \theta}_p x+\bm n,
-    \end{aligned}
+            {\bm y}_{{\rm BS}, p} =\bm H^{T} {\bm \theta}_p x+\bm n,
     \end{equation}
     where $\bm n\sim \mathcal{CN}\left( \bm 0_{M}, \sigma_{n}^{2}\bm I_{M}\right)$ is the \ac{AWGN} at the receiver BS.
 Equivalently, \eqref{CE received signal} can be expressed as the matrix form
@@ -328,7 +332,8 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     It is widely known that most of the existing channel estimation methods employ the transceivers as the explorers of CSI. The transmitter emits EM waves, which imping the RIS, and the bounced-back waves enter the receiver, telling us what the channel is. It seems that we are using EM waves to probe the radio environment. However, for RIS-aided systems, the channel may have up to thousands of free parameters, which makes the probing process extremely inefficient, especially when the transceivers are only equipped with dozens of antennas. This can be compared to shedding a few beams of light into a blackbox and trying to distinguish thousands of objects inside, which is almost impossible. Apparently, a more reasonable way is just simply to place our probes inside the blackbox. This idea motivates us to attach power sensors to the RIS. 
 
 \subsection{Simultaneous Signaling and Interference Detection}
-    However, it seems impractical to use low-cost power sensors to obtain necessary information for RIS beamforming. Generally, power sensors are {\it noncoherent} devices, which means these sensors can only obtain the intensity of the signal, but they cannot detect the phase of the impinging signal, thus making beamforming impossible. Fortunately, the physical phenomenon {\it interference} makes it possible to convert phase difference into intensity difference, thus allowing {\it noncoherent} devices to perform {\it coherent} detection. Take only one RIS element into consideration.     \begin{figure}[htbp]
+    However, it seems impractical to use low-cost power sensors to obtain necessary information for RIS beamforming. Generally, power sensors are {\it noncoherent} devices, which means these sensors can only obtain the intensity of the signal, but they cannot detect the phase of the impinging signal, thus making beamforming impossible. Fortunately, the physical phenomenon {\it interference} makes it possible to convert phase difference into intensity difference, thus allowing {\it noncoherent} devices to perform {\it coherent} detection. Take only one RIS element into consideration.     
+    \begin{figure}[htbp]
         \centering
         \myincludegraphics{figures/scheme.pdf}
         \caption{MISO communication scheme which is considered in this paper. Colorful shadings on the RIS represent the interference fringes; Yellow points on the RIS represent the power sensors.}
