@@ -1,4 +1,5 @@
 \documentclass[12pt,draftclsnofoot,journal,onecolumn]{IEEEtran}
+% documentclass[journal, twocolumn]{IEEEtran}
 \usepackage{amsfonts}
 \usepackage{amsmath,amssymb}
 \usepackage{acronym}  % make an acronym
@@ -92,6 +93,7 @@ breaklinks=true}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}   %Use Input in the format of Algorithm
 \renewcommand{\algorithmicensure}{\textbf{Output:}}  %UseOutput in the format of Algorithm
 \newcommand{\myincludegraphics}[2][width=12cm]{\includegraphics[#1]{#2}}
+% 12cm for onecolumn,
 
 \ifCLASSINFOpdf
 \else
@@ -207,8 +209,9 @@ $\text{arg}(x)$ and $\text{exp}(x)$ denote the phase angle and exponential repre
 $\vert x\vert$ denotes the amplitude
 of a complex scalar $x$; 
 $\text{diag}(\cdot )$ is the diagonal operation;
-$\mathcal{CN}\left(\mu, \sigma^2 \right)$ represents the complex Gaussian distribution with the mean $\mu$ and the variance $\sigma^2$;
-$\VM(\mu, \kappa)$ denotes the von Mises distribution with circular mean $\mu$ and centrality $\kappa$;
+$\mathcal{CN}\left(\mu, \sigma^2 \right)$, $\mu\in \mathbb C$ represents the complex univariate Gaussian distribution with the mean $\mu$ and the variance $\sigma^2$;
+$\VM(\mu, \kappa)$, $\mu\in [0,2\pi]$ denotes the von Mises distribution with circular mean $\mu$ and centrality $\kappa$.
+$\nc_{\chi_k^2}(\lambda, \sigma^2)$ and $\nc_{\chi_k}(\lambda)$ are the degree-$k$ non-central chi-squared distribution with  non-centrality parameter $\lambda$ and variance parameter $\sigma^2$, and the non-central chi distribution with non-centrality parameter $\lambda$, respectively.   
 %$\bm 0_{L}$ denotes the $L\times 1$ zero vector;
 $\bm I_{L}$ denotes the $L\times L$ identity matrix;
 % $\bm \psi_{\text{max}}(\bm A)$ is the eigenvector of matrix
@@ -301,9 +304,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
         \label{baseband-passband relationship}
     \end{equation}
     where $\omega_c = 2\pi f_c$ denotes the carrier frequency, and the coefficient $\sqrt{2}$ ensures that the passband signal energy is equal to the baseband signal energy, i.e., 
-    \begin{equation}
-        \lVert E_{n, {\rm BB}}\rVert_2^2 = \lVert E_{n}\rVert_2^2
-    \end{equation}
+    $\lVert E_{n, {\rm BB}}\rVert_2^2 = \lVert E_{n}\rVert_2^2$. 
     Now we consider the superposition of the two signals. Due to the linearity of \eqref{baseband-passband relationship}, we can simply add up the two impinging baseband signals to represent the interference signal that appears at the RIS, i.e., 
     \begin{equation}
         E_{n,{\rm BB, IRF}}(t) = E_{n, {\rm BB, BS}}(t)+E_{n,{\rm BB, UE}}(t).
@@ -423,7 +424,7 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
     Note that this LS method simply ignores the non-Gaussian noise. For Gaussian noise, LS method is optimal. However, in fact, the noise in \eqref{eqn:power of interference} contains a squared term of a Gaussian noise, resulting the noise to be non-Gaussian. Thus, we further conceive an ML method, as described in the following Subsection~\ref{ML method}. 
 
 \subsection{Newton-ML method}  \label{ML method}
-    Suppose the noise field $v'(t)=v'_R(t) + {\rm j}v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2$ is a noncentral chi-squared distribution \ch with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
+    Suppose the noise field $v'(t)=v'_R(t) + {\rm j}v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2$ is a non-central chi-squared distribution $\nc_{\chi_2^2}(A(\mu_{n,R}^2+\mu_{n,I}^2),  A\sigma_v^2/2)$ \ch with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
     \begin{subequations}
     \label{chi2 distribution mean values}
         \begin{align}
@@ -442,12 +443,12 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
     \begin{equation}
         \lambda(t)  = A(\mu_{n,R}^2 + \mu_{n,I}^2) = A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right],
     \end{equation}
-    then the p.d.f of $s(t)  := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2 = P(t)-\zeta$ is given by the zeroth-order modified Bessel function
+    then, according to the definition of the $\nc_{\chi_2^2}$, the p.d.f of $s(t)  := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2 = P(t)-\zeta$ is given by the zeroth-order modified Bessel function
     \begin{equation}
         f_{s(t)}(x) = \frac{1}{A\sigma_{v}^2} \exp\left(-\frac{x+\lambda(t)}{A\sigma_v^2}\right)I_{0}\left(\frac{\sqrt{\lambda(t) x}}{A\sigma_v^2/2}\right),\quad x \geq 0.
         \label{ML single observation}
     \end{equation}
-    In the following analysis, for the sake of simplicity, we always assume that $\sigma_{\zeta}^2 = 0$. Thus, if we have obtained observations $P[l], \forall l\in [0:L]$, then the log likelihood function of $\varphi$, given the observations $P[l], \forall l\in [0:L]$, is represented by
+    In the following analysis, for the sake of simplicity, we always assume that $\sigma_{\zeta}^2 = 0$. Thus, if we have obtained observations $P[l], \forall l\in [0:L]$ at instants $t_l$, then the log likelihood function of $\varphi$, given the observations $P[l], \forall l\in [0:L]$, is represented by
     \begin{equation}
         \mathcal{L}(P[0:L] | \varphi) = \sum_{l=0}^{L-1}\left[-\frac{P[l] + \lambda_l}{A\sigma_v^2} + \log I_0\left(\frac{\sqrt{P[l] \lambda_l}}{A\sigma_v^2/2}\right)\right] - L\log(A\sigma_v^2),
         \label{ML likelihood}
@@ -579,10 +580,10 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
             \frac{1}{{\rm CRLB}(\varphi)} = K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}\sin^2(\psi_l+\varphi)\left(1/\gamma_l-g(\gamma_l)\right),
             \label{eqn:precise_CRLB}
         \end{equation}
-        where $K=2\alpha\beta/(\alpha^2+\beta^2)$, $a=A\sigma_v^2$, $\gamma_l=\lambda_l/a$, and $\bar{\gamma}$ is the arithmetic mean of all the $\gamma_l, 0\leq l<L$. The function $g(\gamma)$ is defined as 
+        where $K=2\alpha\beta/(\alpha^2+\beta^2)$, $a=A\sigma_v^2$, $\gamma_l=\lambda_l/a=\left(\alpha^2+\beta^2+2\alpha\beta \cos(\psi_l+\varphi)\right)/\sigma_v^2$, and $\bar{\gamma}$ is the arithmetic mean of all the $\gamma_l, 0\leq l<L$. The function $g(\gamma)$ is defined as 
         \begin{equation}
             \begin{aligned}
-                g(\gamma) &= \mathbb{E}_{\lambda_l, a}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] \\
+                g(\gamma) &= \mathbb{E}_{x\sim \nc_{\chi_2^2}(\lambda, a)}\left[\left(1-R^2\left(\frac{\sqrt{\lambda x}}{a/2}\right)\right)\frac{x}{\lambda}\right] \\
                 & = \int_{0}^{+\infty}\gamma t \, \exp(-\gamma(1+t))\, I_0\left(2\gamma\sqrt{t}\right)\,\left(1-R^2\left(2\gamma\sqrt{t}\right)\right){\rm d}t,
             \end{aligned}
             \label{eqn:precise_g_function}
@@ -728,8 +729,8 @@ In this section, we will present our simulation results. In Subsection 1, we wil
     It is not trivial to observe that the two-variable function $g(\lambda_l, a)$ is, in fact, a single-variable function $g(\gamma_l)$, with $\gamma_l=\lambda_l/a$. Let $x=\lambda_l t$, and write down the integral expression of \eqref{eqn:two-variable g function}, we obtain 
     \begin{equation}
         \begin{aligned}
-        g(\lambda_l, a) & = \int_{0}^{+\infty} t(1-R^2(2\gamma\sqrt{t})) \frac{\lambda_l}{a} \exp\left(\frac{\lambda_l + \lambda_l t}{a}\right) I_0\left(2\gamma\sqrt{t}\right){\rm d}t \\
-        & = \int_{0}^{+\infty}\gamma t \, \exp(-\gamma(1+t))\, I_0\left(2\gamma\sqrt{t}\right)\,\left(1-R^2\left(2\gamma\sqrt{t}\right)\right){\rm d}t \\
+        g(\lambda_l, a) & = \int_{0}^{+\infty} t(1-R^2(2\gamma_l\sqrt{t})) \frac{\lambda_l}{a} \exp\left(\frac{\lambda_l + \lambda_l t}{a}\right) I_0\left(2\gamma_l\sqrt{t}\right){\rm d}t \\
+        & = \int_{0}^{+\infty}\gamma_l t \, \exp(-\gamma_l(1+t))\, I_0\left(2\gamma_l\sqrt{t}\right)\,\left(1-R^2\left(2\gamma_l\sqrt{t}\right)\right){\rm d}t \\
         & = g(\gamma_l).
         \end{aligned}
         \label{eqn:proof precise g function}
