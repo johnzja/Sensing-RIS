@@ -293,7 +293,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
 
 \subsection{Signal Model for IRF}
 \label{Models for IRFs}
-    Suppose two signals imping the RIS simultaneously, creating an interference field at the $n$-th RIS element, with both of the symbols transmitted by \ac{BS} and \ac{UE} being $s=1$. In order to perform channel estimation, we need to probe the power of the \ac{IRF}. Thus, the relationship between physical signal power and baseband equivalent signal power is re-stated here. Both of the two signals that appear on each RIS element, one from the \ac{BS} and the other from the \ac{UE}, can be represented by their baseband equivalent signals
+    Suppose two signals imping the RIS simultaneously, creating an interference field \cite{louradour1993interference} at the $n$-th RIS element, with both of the symbols transmitted by \ac{BS} and \ac{UE} being $s=1$. In order to perform channel estimation, we need to probe the power of the \ac{IRF}. Thus, the relationship between physical signal power and baseband equivalent signal power is re-stated here. Both of the two signals that appear on each RIS element, one from the \ac{BS} and the other from the \ac{UE}, can be represented by their baseband equivalent signals
     \begin{equation}
     \label{interference}
     E_{n,{\rm BB}}(t)=\bm g_{n}^{T}\bm w+f_{n}^{*}e^{{\rm j}\psi (t)}+v(t).
@@ -315,7 +315,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
         \begin{aligned}
             P(t)&=A \left| E_{n, {\rm BB, IRF}} (t)\right |^{2}+\zeta\\
             &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{Sensor detection signal}}\\
-            &~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{j\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
+            &~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{{\rm j}\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
         \end{aligned}
     \end{equation}
     where $v'\overset{\text{d}}{=}v\sim\mathcal{CN}\left(0,\sigma_{v}^{2}\right)$, and $\zeta$ is the noise introduced by digital signal processing after measuring the field power. The randomness of the observed signal and the interferential nature of the field give rise to the name \ac{IRF}. 
@@ -340,7 +340,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
         \caption{MISO communication scheme which is considered in this paper. Colorful shadings on the RIS represent the interference fringes; Yellow points on the RIS represent the power sensors.}
         \label{fig:scheme}
     \end{figure}
-    Furthermore, if we allow the BS and UE to emit EM waves simultaneously, then the interference phenomenon will occur (see Fig.~\ref{fig:scheme}), and interference fringes will appear on the RIS. If we alter the phase at the UE, the interference fringes will change accordingly, allowing the power sensors on the RIS to obtain CSI. 
+    Furthermore, if we allow the BS and UE to emit EM waves simultaneously, then the interference phenomenon will occur (see Fig.~\ref{fig:scheme}), and interference fringes \cite{louradour1993interference} will appear on the RIS. If we alter the phase at the UE, the interference fringes will change accordingly, allowing the power sensors on the RIS to obtain CSI. 
 
     \begin{figure}[htbp]
         \centering
@@ -414,7 +414,7 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
     Specifically, we have the complex amplitude of the first harmonics $p[1]$ as 
     \begin{equation}
         \label{DFT l=1}
-        p[1]=\sum\nolimits_{l=0}^{L-1}A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\frac{2\pi}{L}l+\varphi\right)\right]e^{-j\frac{2\pi}{L}l}=LA\alpha\beta  e^{j\varphi}.
+        p[1]=\sum\nolimits_{l=0}^{L-1}A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\frac{2\pi}{L}l+\varphi\right)\right]e^{-{\rm j}\frac{2\pi}{L}l}=LA\alpha\beta  e^{{\rm j}\varphi}.
     \end{equation}
     Then, the phase $\varphi$ can be estimated as
     \begin{equation}
@@ -424,7 +424,7 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
     Note that this LS method simply ignores the non-Gaussian noise. For Gaussian noise, LS method is optimal. However, in fact, the noise in \eqref{eqn:power of interference} contains a squared term of a Gaussian noise, resulting the noise to be non-Gaussian. Thus, we further conceive an ML method, as described in the following Subsection~\ref{ML method}. 
 
 \subsection{Newton-ML method}  \label{ML method}
-    Suppose the noise field $v'(t)=v'_R(t) + {\rm j}v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2$ is a non-central chi-squared distribution $\nc_{\chi_2^2}(A(\mu_{n,R}^2+\mu_{n,I}^2),  A\sigma_v^2/2)$ \ch with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
+    Suppose the noise field $v'(t)=v'_R(t) + {\rm j}v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2$ is a non-central chi-squared distribution $\nc_{\chi_2^2}(A(\mu_{n,R}^2+\mu_{n,I}^2),  A\sigma_v^2/2)$ \cite{krishnan1967noncentral} with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
     \begin{subequations}
     \label{chi2 distribution mean values}
         \begin{align}
@@ -458,7 +458,7 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
         \frac{\partial \mathcal{L}(P[0:L] | \varphi)}{\partial \varphi} = \frac{2\alpha\beta}{\sigma_v^2}\sum_{l=0}^{L-1}\sin(\psi(t_l)+\varphi) \left[1 - R\left( \frac{\sqrt{P[l]\lambda_l}}{A\sigma_v^2/2} \right) \frac{\sqrt{P[l]}}{\sqrt{\lambda_l}}\right],
         \label{eqn:First Derivative Likelihood}
     \end{equation}
-    where the function $R(z)$ is defined as $R(z) = I_1(z)/I_0(z)$. Since the derivative of the function $R(z)$ satisfies the property \ch
+    where the function $R(z)$ is defined as $R(z) = I_1(z)/I_0(z)$. Since the derivative of the function $R(z)$ satisfies the property \cite{silverman1972special}
     \begin{equation}
         R'(z)=1-R^2(z)-\frac{1}{z}R(z),
         \label{eqn:R function derivative property}
@@ -490,7 +490,7 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
     \begin{equation}
         p(\theta|\mu, \kappa) = \frac{\exp(\kappa \cos(\theta - \mu))}{2\pi I_0(\kappa)}, 0\leq \theta \leq 2\pi,
     \end{equation}
-    where $\mu \in [0,2\pi]$ and $\kappa >0$ being the cyclic location parameter and the concentration parameter. Note that the von Mises distribution is a distribution on a circle, thus it works as a perfect prior distribution of a phase estimation problem. More fortunately, the von Mises distribution is also closely related to the complex Gaussian distribution, thus implying the possibility of designing an iterative EM algorithm \ch based on the interactions between the von Mises distribution and the complex Gaussian noise distribution. The following two lemmas: {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}} reveal these interations. 
+    where $\mu \in [0,2\pi]$ and $\kappa >0$ being the cyclic location parameter and the concentration parameter. Note that the von Mises distribution is a distribution on a circle, thus it works as a perfect prior distribution of a phase estimation problem. More fortunately, the von Mises distribution is also closely related to the complex Gaussian distribution, thus implying the possibility of designing an iterative EM algorithm \cite{casella2021statistical} based on the interactions between the von Mises distribution and the complex Gaussian noise distribution. The following two lemmas: {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}} reveal these interations. 
     \begin{lemma}[Bayesian estimation of von Mises distribution]\label{lemma_1} \mbox{}\par
         Let $\theta \sim \VM(\mu, \kappa)$, and $z \sim \CN(e^{{\rm j}\theta}, \sigma^2)$. Then the posterior distribution $\theta | z$ is also a von-Mises distribution $\VM(\mu', \kappa')$ with parameters $\mu'$ and $\kappa'$ satisfying
         \begin{equation}
@@ -570,7 +570,7 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
 
     The evaluation of CRLB in non-coherent parameter estimation was first formulated in \cite{jiang2016cramer}, where the authors introduced Gaussian approximation in order to obtain a simple closed-form CRLB expression. Unfortunately, this approximation only holds for very large non-centrality parameter $\lambda$, i.e., large interferential SNR $\gamma$. Thus, precise CRLB analysis is required in our \ac{IRF} methods. However, without Gaussian approximation techniques, fatal complexity about Bessel functions will occur, making the analysis nearly intractable. 
 
-    To overcome this difficulty, we first perform precise analysis, and then approximated asymptotic analysis. The difficulty of manipulating Bessel functions is tackled by asymptotic expansion techniques \ch. Satisfactory asymtotic results are acquired in the absence of precise closed-form expression of CRLB. These results will be introduced in the following subsection.  
+    To overcome this difficulty, we first perform precise analysis, and then approximated asymptotic analysis. The difficulty of manipulating Bessel functions is tackled by asymptotic expansion techniques \cite{silverman1972special}. Satisfactory asymtotic results are acquired in the absence of precise closed-form expression of CRLB. These results will be introduced in the following subsection.  
     %In the following two subsections, {\bf Theorem \ref{thm:precise CRLB}} reveals  
     
 \subsection{Precise CRLB}
@@ -694,7 +694,7 @@ In this section, we will present our simulation results. In Subsection 1, we wil
     Thus, the \ac{IRF} method has a promising future in high-frequency large-scale systems. 
     
     For the future work, the spatial interferential fringes on the Sensing RIS may be exploited to recover the CSI at a higher precision, and the data obtained by the power sensors may be utilized to perform joint channel estimation and beamforming together with traditional methods. 
-    In addition, different interferential frequencies can be assigned to different users to perform multi-user CSI acquisition and beamforming within a single time slot, but the waveforms may be re-designed to avoid interference among users. 
+    In addition, different interferential frequencies can be assigned to different users to perform multi-user CSI acquisition and beamforming within a single time slot, but the waveforms may be re-designed to avoid interference among users. Based on IRF, the phase estimation can also assist traditional channel estimation in MIMO systems. 
 
 
 \appendices
@@ -748,7 +748,7 @@ In this section, we will present our simulation results. In Subsection 1, we wil
     where step $(a)$ comes from substituting these three types of expectation into \eqref{Second Derivative Likelihood}, and step $(b)$ comes from replacing the trickiest expectation by the definition of the function $g(\cdot)$ in \eqref{eqn:precise_g_function}.  
     %The introduction of operation $(x)^{+}$ is due to the non-negativity of each of the $L$ CRLB components. 
     
-    Note that the precise value of CRLB can be determined by the precise single-variable $g$ function \eqref{eqn:precise_g_function}, whose variable $\gamma_l = \lambda_l / a$ is the interferential SNR. After further derivations, it can be observed from the expressions that the CRLB only relies on two intrinsic physical parameters: the interferential SNR $\gamma_l$, and the interferential contrast $K$  \ch, which coincides with the physical intuition. Imitating the notations in optics, we define the parameter $K$ to be  
+    Note that the precise value of CRLB can be determined by the precise single-variable $g$ function \eqref{eqn:precise_g_function}, whose variable $\gamma_l = \lambda_l / a$ is the interferential SNR. After further derivations, it can be observed from the expressions that the CRLB only relies on two intrinsic physical parameters: the interferential SNR $\gamma_l$, and the interferential contrast $K$ \cite{louradour1993interference}, which coincides with the physical intuition. Imitating the notations in optics, we define the parameter $K$ to be  
     \begin{equation}
         K = \frac{I_M - I_m}{I_M + I_m} = \frac{2\alpha\beta}{\alpha^2+\beta^2},
     \end{equation}
@@ -763,7 +763,7 @@ In this section, we will present our simulation results. In Subsection 1, we wil
     where the values $\gamma_l=\bar{\gamma}\left(1+K\cos(\psi_l+\varphi)\right)$ are jointly determined by both the average interferential SNR $\bar{\gamma}$ and the interferential contrast $K$. This completes the proof.
 
 \section*{Appendix B\\Proof of Theorem 2}
-    Since the precise expression of $g(\gamma)$ in \eqref{eqn:precise_g_function} is difficult to calculate, we evaluate it approximately by utilizing the asymptotic expansion $x(1-R^2(2\sqrt{x})) \approx \sqrt{x}/2$ \ch. According to the definition, evaluating $g(\gamma)$ is the same as evaluating $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$. 
+    Since the precise expression of $g(\gamma)$ in \eqref{eqn:precise_g_function} is difficult to calculate, we evaluate it approximately by utilizing the asymptotic expansion $x(1-R^2(2\sqrt{x})) \approx \sqrt{x}/2$ \cite{silverman1972special}. According to the definition, evaluating $g(\gamma)$ is the same as evaluating $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$. 
     % Thus, by substituting $x=\lambda_lP[l]/a^2$ into the asymptotic expansion formula, we can further simplify the integrand of the expectation to be 
     % \begin{equation}
     %     \begin{aligned}
@@ -775,7 +775,7 @@ In this section, we will present our simulation results. In Subsection 1, we wil
     % where $a=A\sigma_v^2 \ll \lambda_l$, $h(\lambda_l, a)$ is a two-variable function\footnote{In fact, the two-variable function $g(\lambda, a)$ can be further simplified into a single-variable function $g(\cdot). $}, and $I_\nu$ is the $\nu$-th order  modified Bessel function of the first kind. For detailed proof of the calculation process and error analysis of \eqref{eqn:trickiest_expectation}, please refer to {\bf Appendix B}. 
 
 
-    In order to evaluate the expectation $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$, we first introduce some preliminaries about the noncentral chi distribution $\nc_{\chi_k}(\lambda)$ with noncentrality parameter $\lambda>0$ \ch. The distribution $\nc_{\chi_k}(\lambda)$ is the law of the length (2-norm) of a $k$-dimensional standard normal distribution $\mathcal{N}({\bm \mu}, {\bm I}_k)$, with $\lambda = \Vert {\bm \mu} \Vert_2$. Specifically, we are interested in the case where $k=2$, since this is the case of the 2-dimensional complex plane. For  $k=2$, let $Y \sim \nc_{\chi_2}(m)$, then we have \cite{park1961moments}
+    In order to evaluate the expectation $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$, we first introduce some preliminaries about the noncentral chi distribution $\nc_{\chi_k}(\lambda)$ with noncentrality parameter $\lambda>0$ \cite{krishnan1967noncentral}. The distribution $\nc_{\chi_k}(\lambda)$ is the law of the length (2-norm) of a $k$-dimensional standard normal distribution $\mathcal{N}({\bm \mu}, {\bm I}_k)$, with $\lambda = \Vert {\bm \mu} \Vert_2$. Specifically, we are interested in the case where $k=2$, since this is the case of the 2-dimensional complex plane. For  $k=2$, let $Y \sim \nc_{\chi_2}(m)$, then we have \cite{park1961moments}
     \begin{equation}
         \mathbb{E}\left[Y\right] = \sqrt{\frac{\pi}{2}}L_{1/2}(-m^2/2),
         \label{eqn:noncentral chi mean}
@@ -818,7 +818,7 @@ In this section, we will present our simulation results. In Subsection 1, we wil
     Finally, substituting the approximation \eqref{eqn:approx evaluation result} into the precise CRLB \eqref{eqn:precise_CRLB} yields the conclusion \eqref{eqn:asymptotic CRLB}, which completes the proof. Note that the operation $(x)^+$ in \eqref{eqn:asymptotic CRLB} ensures that each term of the CRLB is non-negative. 
 
 \section*{Appendix C\\ Proof of Theorem 3}
-    Since the only imprecise step of the above derivation is the asymptotic expansion, the approximation error of the expectation can be upper bounded by the asymptotic expansion error. Assume that the asymptotic expansion error does not exceeds $\delta$, i.e.,
+    Since the only imprecise step of the above derivation is the asymptotic expansion, the approximation error of the expectation can be upper-bounded by the asymptotic expansion error. Assume that the asymptotic expansion error does not exceeds $\delta$, i.e.,
     \begin{equation}
         \lvert x(1-R^2(2\sqrt{x}))-\sqrt{x}/2 \rvert \leq \delta,
         \label{eqn:asymptotic error}
