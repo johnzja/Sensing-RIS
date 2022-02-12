@@ -201,7 +201,7 @@ In Section~\ref{Simulation Results}, simulation results are provided for quantif
 Finally, in Section~\ref{Conclusion}, we provide our conclusions followed by promising future research ideas.
 
 \textit{Notation:} $\mathbb C$ and $\mathbb R$ denote the set of complex and real numbers, respectively;
-$[L]$ represents the set of integers $\{1,2,\cdots,L\}$;
+$[L]$ represents the set of integers $\{0,1,\cdots,L-1\}$;
 $\bm A^{-1}, \bm A^*,\bm A^T,$ and $\bm A^H$ denote the inverse, conjugate, transpose, and conjugate transpose of matrix $\bm A$, respectively; 
 $\Vert \bm x\Vert_{2}$ is the $\mathcal{L}_{2}$-norm of the vector $\bm x$; 
 %$\left\langle\bm x\right\rangle$ is the normalized vector of $\bm x$, i.e., $\left\langle\bm x\right\rangle=\bm x/\Vert\bm x\Vert_{2}$;
@@ -223,22 +223,24 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
 
 
 \section{System Model}  \label{System Model}
-    In this section, we will first specify the system model of the RIS-assisted \ac{MISO} system, and introduce traditional approaches for the corresponding beamforming design and channel estimation in Subsection~\ref{MISO case}. Then, the signal model of the \ac{IRF} on the RIS will be introduced in Subsection~\ref{Models for IRFs}.
+    In this section, we will first specify the system model of the RIS-assisted \ac{MISO} system.
+    Then, we will introduce traditional approaches for the corresponding beamforming design and channel estimation in Subsection~\ref{Beamforming design} and \ref{Channel Estimation}, respectively.
 
-    \subsection{RIS-Aided MISO System}  \label{MISO case}
+   % \subsection{RIS-Aided MISO System}  \label{MISO case}
         Let us consider a RIS-aided MISO system, where an $N$-element RIS is employed for enhancing the transmission from an $M$-antenna \ac{BS} to a single-antenna user. Assume furthermore that the phase-shift of RIS's each element can be continuously and independently controlled \cite{wu2019intelligent}. Then, the RIS precoding matrix can be represented by
         \begin{equation}
             \label{RIS}
             \bm \Theta = \diag \left(\bm \theta\right )=\diag \left(\left[\theta_{1},\cdots ,\theta_{N}\right]^{T}\right),
         \end{equation}
-        where $\theta_i (i\in[N])$ denotes the phase-shift of the $i$-th RIS element, satisfying $\lvert \theta_i\rvert=1$. Therefore, the signal received by the user can be written as 
+        where $\theta_n (n\in[N])$ denotes the phase-shift of the $n$-th RIS element, satisfying $\lvert \theta_n\rvert=1$. Therefore, the signal received by the user can be written as 
         \begin{equation}
             \label{Signal model}
             y=\bm f^{H} \bm\Theta \bm G \bm w s+z,
         \end{equation}
-        where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with power constraint $\left\Vert \bm w\right \Vert_{2}^{2}\leq P_{\text{max}}$; $s$ denotes the normalized transmitted symbol; $z\sim \mathcal{CN}\left(0,\sigma_{z}^{2}\right)$ denotes the \ac{AWGN} introduced at the receiver user. To focus on RIS precoding, other possible links are neglected in this paper.
+        where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with power constraint $\left\Vert \bm w\right \Vert_{2}^{2}\leq P_{\text{max}}$; $s$ denotes the normalized transmitted symbol; $z\sim \mathcal{CN}\left(0,\sigma_{z}^{2}\right)$ denotes the \ac{AWGN} introduced at the receiver user. To focus on RIS beamforming, other possible links are neglected in this paper.
         
-        \subsubsection{Beamforming design}
+        \subsection{Beamforming Design}
+        \label{Beamforming design}
         Based on the received signal \eqref{Signal model}, we can formulate the \ac{SNR} maximization problem for designing the beamforming vector $\bm w$ and precoding matrix $\bm \Theta$, i.e.,
         \begin{subequations}
 \label{optimization}
@@ -266,7 +268,8 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
 \end{subequations}
 where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave departure angle $\alpha$ of the BS antenna array, and $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
 
-\subsubsection{Channel estimation}
+\subsection{Channel Estimation}
+\label{Channel Estimation}
 Observe from \eqref{traditional beamforming} that, the estimation for the cascade channel ${\bm H} = {\rm diag}({\bm f}^{*})\bm G$ is enough for beamforming design.
 To accurately acquire this cascade channel, the user generally sends pilot signal $x$ to the BS under $P$ different RIS configurations which are the first $P$ columns of the DFT matrix $\bm F_{N,K}$. Due to the channel reciprocity, the received signal at the BS with the $p$-th RIS configuration $\bm \Theta_{p}$ can be written as \cite{atapattu2020reconfigurable}
     \begin{equation}
@@ -290,6 +293,9 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
         \label{eqn:MMSE-CE}
     \end{equation}
     which provides a solution for channel estimation in this system.
+
+\section{Interference Random Field}
+\label{Interference Random Field}
 
 \subsection{Signal Model for IRF}
 \label{Models for IRFs}
@@ -327,8 +333,6 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     \end{equation}
     are used for estimation of the phase difference $\varphi$.
 
-\section{Interference Random Field}
-\label{Interference Random Field}
 \subsection{Probe the Channel Directly on the RIS}
     Most of the existing channel estimation methods use the transceivers to obtain  CSI. 
     Specially-designed electromagnetic waves are emitted by the transmitter, which imping the RIS, and the bounced-back waves enter the receiver, carrying information about the channel. 
