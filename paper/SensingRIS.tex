@@ -101,7 +101,7 @@ breaklinks=true}
 \hyphenation{op-tical net-works semi-conduc-tor}
 \begin{document}
 \title{Sensing RIS: Enabling Dimension-Independent CSI Acquisition for Beamforming}
-\author{{Jieao Zhu, Kunzan Liu, Zhongzhichao Wan, and Linglong Dai
+\author{{Jieao Zhu, Kunzan Liu, Zhongzhichao Wan, and Linglong Dai, {\textit{Fellow, IEEE}}
 \vspace*{-3em}}
 \thanks{All authors are with the Beijing National Research Center for Information Science and Technology (BNRist) as well as the Department of Electronic Engineering, Tsinghua University, Beijing 100084, China (e-mails: \{zja21, lkz18, wzzc20\}@mails.tsinghua.edu.cn, daill@tsinghua.edu.cn).}
 %\thanks{Corresponding author: Linglong Dai.}
@@ -340,7 +340,11 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     However, for RIS-aided systems, the channel may have up to thousands of free parameters, which makes the probing process extremely inefficient, especially when the transceivers are only equipped with dozens of antennas. This can be compared to shedding a few beams of light into a blackbox and trying to distinguish thousands of objects inside, which is almost impossible. Apparently, a more reasonable way is just simply to place our probes inside the blackbox. This idea motivates us to attach power sensors to the RIS. 
 
 \subsection{Simultaneous Signaling and Interference Detection}
-    However, it seems impractical to use simple low-cost power sensors to obtain enough information for RIS beamforming. Generally, power sensors are {\it noncoherent} devices, which means they can only obtain the intensity of the signal without the phase, thus making beamforming impossible. Fortunately, the physical phenomenon {\it interference} makes it possible to convert phase difference into intensity difference, allowing {\it noncoherent} devices to perform {\it coherent} detection. To clarify this idea, we take only one RIS element into consideration.     
+    However, it seems impractical to use simple low-cost power sensors to obtain enough information for RIS beamforming. 
+    Generally, power sensors are {\it noncoherent} devices, which means they can only obtain the intensity of the signal without the phase. 
+    The lack of phase information makes beamforming impossible. 
+    Fortunately, the physical phenomenon {\it interference} makes it possible to convert phase difference into intensity difference, allowing {\it noncoherent} devices to perform {\it coherent} detection. 
+    To clarify this idea, we take only one RIS element into consideration.     
     \begin{figure}[htbp]
         \centering
         \myincludegraphics{figures/scheme.pdf}
@@ -355,7 +359,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
         \caption{Phasor representation of the \ac{IRF} on each RIS element. Red vector represents the complex BS-RIS signal; Blue vector represents the complex UE-RIS signal; $\alpha$ and $\beta$ denote the amplitude of these signals respectively. In our signaling method, the BS transmits a fixed symbol $1$, while the UE transmits a rotating symbol $e^{{\rm j}\psi(t)}$, causing the output of the power sensor $P(t)$ to vary in a waveform that is similar to a sine curve.}
         \label{fig:phasor}
     \end{figure}
-    To further analyze the interference, we focus on the received field of the $n$-th RIS element. Note that the power of interference field measured at instant $t$, expressed by \eqref{eqn:power of interference}, exhibits a sinusoidal waveform (see Fig.~\ref{fig:phasor}). The phase of this sinusoidal waveform is uniquely determined by $\varphi$.
+    To further analyze the interference, we focus on the received field of the $n$-th RIS element. Note that the power of interference field measured at instant $t$, expressed by \eqref{eqn:power of interference}, exhibits a sinusoidal waveform (see Fig.~\ref{fig:phasor}) in the time domain. The phase of this sinusoidal waveform is uniquely determined by $\varphi$.
     Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. However, it is the phase sum of the RIS-UE channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*)$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we only need to obtain one of the phases of these two channels to perform optimal RIS beamforming. Though generally it is difficult to obtain the BS-RIS channel and the RIS-UE channel, since the BS and RIS are installed at fixed locations, it is reasonable to assume that the BS-RIS channel is much more stable and predictable, compared to the RIS-UE counterpart. As a result, the phases of the BS-RIS link $\arg({\bm g}_n^{\rm T}{\bm w})$ can be assumed to be known in our algorithms. Due to the stability of this channel, the phases are mainly determined by geometric parameters, i.e., the location of the BS and RIS. 
 
     
@@ -365,9 +369,11 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
 In this section, we will first briefly introduce the hardware architecture required for detecting the \ac{IRF} in Subsection~\ref{Hardware Architecture of Sensing RIS}. Then, the core concept of IRF channel estimation and beamforming procedures will be introduced in Subsection~\ref{IRF Channel Estimation and Beamforming}. After that, three phase estimation algorithms will be described in Subsection~\ref{LS method}, \ref{ML method}, and \ref{von Mises-EM method} respectively, which constitute the kernel of the \ac{IRF} channel estimation and beamforming algorithm. 
 
 \subsection{Hardware Architecture of Sensing RIS} \label{Hardware Architecture of Sensing RIS}
-The basic hardware architecture is to equip each RIS reflecting element with a cost-efficient RF power sensor \cite{ma2020smartsensing}. Since all of the RIS elements can sense and adjust the phase independently from one another, low-cost Microcontroller Units (MCUs) can be attached locally to each RIS element to allow parallel computation of the optimal phases. However, for extremely large-scale RIS systems, sparse sensing and controlling may be preferred due to lower cost and lower hardware complexity. 
+The basic hardware architecture in Fig.~\ref{fig:hardware} is to equip each RIS reflecting element with a cost-efficient RF power sensor \cite{ma2020smartsensing}. 
+Since all of the RIS elements can sense and adjust the phase independently from one another, low-cost Microcontroller Units (MCUs) can be attached locally to each RIS element to allow parallel computation of the optimal phases. 
+However, for extremely large-scale RIS systems, sparse sensing and controlling may be preferred to reduce cost and hardware complexity. 
 
-\textcolor{red}{HERE: Add feasibility analysis for attaching power sensors to RIS. Including: (1) Are the signals strong enough to be detected? (2) Are the sensor devices fast enough to catch the IRF variations? (3) What are the typical technical parameters of these power-sensing devices, including the sampling rate, working bandwidth and sensitivity?}
+% \textcolor{red}{HERE: Add feasibility analysis for attaching power sensors to RIS. Including: (1) Are the signals strong enough to be detected? (2) Are the sensor devices fast enough to catch the IRF variations? (3) What are the typical technical parameters of these power-sensing devices, including the sampling rate, working bandwidth and sensitivity?}
 
     \begin{figure}[htbp]
         \centering
@@ -388,11 +394,14 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
     \begin{equation}
         \omega = k \frac{2\pi}{T_s},
     \end{equation}
-    which means the power signal experiences exactly $k$ sine-shaped periods during an OFDM symbol. For calculation simplicity, in this paper, we always assume $k=1$. In fact, for multi-user MISO systems, different $k$ values can be assigned to different users in order to enable channel estimation and beamforming design for several users within the same time slot. This can be done by Fourier analysis on the power signal $P(t)$ and extracting phase angles for each user at distinct frequencies. 
+    which means the power signal experiences exactly $k$ sine-shaped periods during an OFDM symbol. For calculation simplicity, in this paper, we always assume $k=1$. In fact, for multi-user MISO\footnote{In this paper, we consider UE with a single antenna, but the number of antennas at BS is not restricted. Furthermore, for MIMO systems, since UE is equipped with multi-antennas, phase-tuning simply for constructive interference at UE is sub-optimal. Thus, IRF methods should be further improved to fully harness the multi-antenna space-multiplexing gains.} systems, different $k$ values can be assigned to different users in order to enable channel estimation and beamforming design for several users within the same time slot. 
+    This can be done by Fourier analysis on the power signal $P(t)$ and extracting phase angles for each user at distinct frequencies. 
 
-    The second step (2) is called phase estimation. This step is designed to extract the phase difference $\varphi$ between the BS-RIS and RIS-UE channel. This is the key step of dimension-independent IRF channel estimation and beamforming, since this step can be done independently among all the RIS elements. 
+    The second step (2) is called phase estimation. This step is designed to extract the phase difference $\varphi$ between the BS-RIS and RIS-UE channel. 
+    This is the key step of dimension-independent IRF channel estimation and beamforming, since this step can be done independently among all the RIS elements. 
 
-    The third step (3) is to utilize the phase information provided by step (2) and calculate the near-optimal phase shifts for each RIS element in order to perform beamforming. Step (2) and Step (3) are executed by processors, so we collect these two steps into pseudo codes shown in {\bf Algorithm~\ref{alg:IRF-Beamforming}}:
+    The third step (3) is to utilize the phase information provided by step (2) and calculate the near-optimal phase shifts for each RIS element in order to perform beamforming. 
+    Step (2) and Step (3) are executed by processors, so we collect these two steps into pseudo codes shown in {\bf Algorithm~\ref{alg:IRF-Beamforming}}:
     \begin{algorithm}[H] 
         \caption{Near-optimal RIS Beamforming by IRF} \label{alg:IRF-Beamforming}
         \setstretch{1.35}
@@ -548,7 +557,7 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
         \varphi | s_l, \theta_l \sim \VM\left( \kappa e^{{\rm j} \mu} + \frac{\beta}{\sigma_v^2/2}\sum_{l=0}^{L-1}{\left(s_l e^{{\rm j}\theta_l}-\alpha\right)e^{-{\rm j} \psi_l}}\right).
         \label{eqn:M-step}
     \end{equation}
-    Performing E-step with \eqref{eqn:E-step} and M-step with \eqref{eqn:M-step} alternately, then the estimation precision for $\varphi$ can be iteratively improved. Note that although the modified Bessel functions appear in the density function of von Mises distribution, the bother is avoided in the von Mises-EM algorithm. The pseudo code of von Mises-EM algorithm is collected in {\bf Algorithm \ref{alg:VM-EM}}\footnote{We need the interferential parameters $\alpha$ and $\beta$, which are channel gains that can be directly measured without interference signaling of the BS and the user. }.
+    Performing E-step with \eqref{eqn:E-step} and M-step with \eqref{eqn:M-step} alternately, then the estimation precision for $\varphi$ can be iteratively improved. Note that although the modified Bessel functions appear in the density function of von Mises distribution, the bother is avoided in the von Mises-EM algorithm. The pseudo code of von Mises-EM algorithm\footnote{We need the interferential parameters $\alpha$ and $\beta$, which are channel gains that can be directly measured within two time slots, without simultaneous signaling of the BS and the user. } is collected in {\bf Algorithm \ref{alg:VM-EM}}.
 
     \begin{algorithm}[htbp] 
         \caption{von Mises-EM phase estimation (VM-EM algorithm)} \label{alg:VM-EM}
@@ -661,7 +670,7 @@ The basic hardware architecture is to equip each RIS reflecting element with a c
 
 \section{Simulation Results}
 \label{Simulation Results}
-In this section, we will present our simulation results. In Subsection \ref{Phase Estimation Algorithms}, we will show the performance comparison of the phase estimation algorithms. In Subsection \ref{Achievable Spectral Efficiency under IRF}, we will show the comparison of our \ac{IRF} method and other RIS-aided channel estimation and beamforming algorithms. 
+In this section, we will present our simulation results. In Subsection \ref{Phase Estimation Algorithms}, we will show the performance comparison of the phase estimation algorithms. In Subsection \ref{Achievable Spectral Efficiency under IRF}, we will show the achievable rate comparison of our \ac{IRF} method and other RIS-aided channel estimation and beamforming algorithms. 
 
 \subsection{Phase Estimation Algorithms} \label{Phase Estimation Algorithms}
     In Section~\ref{Sensing RIS-Based Channel Estimation}, we have already introduced three phase estimation algorithms: LS, Newton-ML and VM-EM. Now we compare the performance of these algorithms together with the CRLB derived in Section~\ref{Performance Analysis}.  
@@ -702,12 +711,14 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     In this paper, we introduced a dimension-independent CSI acquisition method for Sensing RIS-assisted MISO wireless communication systems. 
     Combined with our proposed VM-EM phase estimation algorithm, the pilot overhead of our CSI acquisition method is made independent of the number of RIS elements with low computational cost, enabling the implementation of extremely large-scale RISs to achieve significant beamforming gain. 
     Both CRLB analysis and simulation results verified the near-optimality of our VM-EM algorithm. 
-    Furthermore, due to the local property of our \ac{IRF}-based CSI acquisition method and the simultaneous property of the signaling protocol, the near-field effect cannot corrupt the precision of the CSI, and the double-fading effect of RIS during channel estimation is automatically avoided. 
+    Furthermore, due to the independent property of our \ac{IRF}-based CSI acquisition method, the near-field effect cannot corrupt the precision of the CSI. 
+    Also due to the simultaneous signaling protocol, the double-fading effect of RIS during channel estimation is automatically avoided. 
     Thus, the \ac{IRF} method has a promising future in high-frequency large-scale systems. 
     
     For the future work, the spatial interferential fringes on the Sensing RIS may be exploited to recover the CSI at a higher precision, and the data obtained by the power sensors may be utilized to perform joint channel estimation and beamforming together with traditional methods. 
-    In addition, different interferential frequencies can be assigned to different users to perform multi-user CSI acquisition and beamforming within a single time slot, but the waveforms may be re-designed to avoid interference among users. Based on IRF, the phase estimation can also assist traditional channel estimation in MIMO systems. 
-
+    In addition, different interferential frequencies can be assigned to different users to perform multi-user CSI acquisition within a single time slot, but the waveforms should be re-designed to avoid interference among users. 
+    Furthermore, when equipped with a Sensing RIS, the phase estimation of IRF can also assist traditional channel estimation in MIMO systems. 
+% This is the end of the "Conclusion" part. 
 
 \appendices
 % Non-central Chi-Squared distribution. 
@@ -835,17 +846,17 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \lvert x(1-R^2(2\sqrt{x}))-\sqrt{x}/2 \rvert \leq \delta,
         \label{eqn:asymptotic error}
     \end{equation}
-    \begin{figure}[ht]
-        \centering
-        \myincludegraphics{figures/asymptotic_expansion.pdf}
-        \caption{The curve $x(1-R^2(2\sqrt{x}))-\sqrt{x}/2$, when $0\leq x\leq 5$. We can see from the curve that the approximation error $\delta \leq 0.07$.}
-        \label{fig:asymptotic_expansion}
-    \end{figure}
+    % \begin{figure}[ht]
+    %     \centering
+    %     \myincludegraphics{figures/asymptotic_expansion.pdf}
+    %     \caption{The curve $x(1-R^2(2\sqrt{x}))-\sqrt{x}/2$, when $0\leq x\leq 5$. We can see from the curve that the approximation error $\delta \leq 0.07$.}
+    %     \label{fig:asymptotic_expansion}
+    % \end{figure}
     then we have 
     \begin{equation}
         \left| g(\gamma) - \hat{g}(\gamma)\right| \leq \frac{1}{\gamma^2} \delta. 
     \end{equation}
-    We have discovered numerically from Fig.~\ref{fig:asymptotic_expansion} that $\delta \leq 0.07$, and that as $x\to \infty$, the approximation error tends to zero. Thus, \eqref{eqn:approx evaluation result} is a nearly perfect approximation when the interferential SNR $\gamma$ is large. To be more precise, the function $\hat{g}(\gamma)$ has asymptotic expansion at $\gamma \to +\infty$
+    It can be discovered numerically that $\delta \leq 0.07$, and that as $x\to \infty$, the approximation error tends to zero. Thus, \eqref{eqn:approx evaluation result} is a nearly perfect approximation when the interferential SNR $\gamma$ is large. To be more precise, the function $\hat{g}(\gamma)$ has asymptotic expansion at $\gamma \to +\infty$
     \begin{equation}
         \hat{g}(\gamma) \sim \frac{1}{2}\left(\frac{1}{\gamma} + \frac{1}{4\gamma^2} + \mathcal{O}(\frac{1}{\gamma^3})\right).
     \end{equation}
