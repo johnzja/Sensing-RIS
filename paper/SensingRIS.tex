@@ -339,24 +339,35 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     These methods all use electromagnetic waves to probe the radio environment. 
     However, for RIS-aided systems, the channel may have up to thousands of free parameters, which makes the probing process extremely inefficient, especially when the transceivers are only equipped with dozens of antennas. This can be compared to shedding a few beams of light into a blackbox and trying to distinguish thousands of objects inside, which is almost impossible. Apparently, a more reasonable way is just simply to place our probes inside the blackbox. This idea motivates us to attach power sensors to the RIS. 
 
-\subsection{Simultaneous Signaling and Interference Detection}
+\subsection{Simultaneous Rotational Signaling and Interference Detection}
     However, it seems impractical to use simple low-cost power sensors to obtain enough information for RIS beamforming. 
     Generally, power sensors are {\it noncoherent} devices, which means they can only obtain the intensity of the signal without the phase. 
     The lack of phase information makes beamforming impossible. 
     Fortunately, the physical phenomenon {\it interference} makes it possible to convert phase difference into intensity difference, allowing {\it noncoherent} devices to perform {\it coherent} detection. 
     To clarify this idea, we take only one RIS element into consideration.     
-    \begin{figure}[htbp]
+    % \begin{figure}[htbp]
+    %     \centering
+    %     \myincludegraphics{figures/scheme.pdf}
+    %     \caption{MISO communication scheme which is considered in this paper. Colorful shadings on the RIS represent the interference fringes; Yellow points on the RIS represent the power sensors.}
+    %     \label{fig:scheme}
+    % \end{figure}
+    % If we allow the BS and UE to emit EM waves simultaneously, then the interference phenomenon will occur (see Fig.~\ref{fig:scheme}), and interference fringes \cite{louradour1993interference} will appear on the RIS. Then, if we alter the phase at the UE, the interference fringes will change accordingly, allowing the power sensors on the RIS to obtain CSI. 
+    \begin{figure}[!t]
         \centering
-        \myincludegraphics{figures/scheme.pdf}
-        \caption{MISO communication scheme which is considered in this paper. Colorful shadings on the RIS represent the interference fringes; Yellow points on the RIS represent the power sensors.}
-        \label{fig:scheme}
+        \myincludegraphics{data/protocol.pdf} 
+        \caption{Simultaneous rotational signaling scheme. The IRF power is the instantaneous total power of the the BS-RIS signal and the user-RIS signal. }
+        \label{fig:protocol}
     \end{figure}
-    If we allow the BS and UE to emit EM waves simultaneously, then the interference phenomenon will occur (see Fig.~\ref{fig:scheme}), and interference fringes \cite{louradour1993interference} will appear on the RIS. Then, if we alter the phase at the UE, the interference fringes will change accordingly, allowing the power sensors on the RIS to obtain CSI. 
+    If we allow the BS and UE to transmit electromagnetic waves simultaneously, then the interference phenomenon will occur on each RIS element. 
+    However, equal carrier frequencies of BS and UE create stable interference fringes \cite{louradour1993interference} on the RIS, which do not carry information about the channel. 
+    In contrast, a rotational symbol at UE results in a slightly higher carrier frequency, making the IRF power to vary in time. 
+    Thus, CSI can be drawn from the varying IRF power signal received by Sensing RIS. 
+    In Fig.~\ref{fig:protocol}, where a power sensor is attached to each RIS element to detect the power of \ac{IRF}, the composite power waveform detected by the power sensor enables our algorithm to obtain CSI. 
 
-    \begin{figure}[htbp]
+    \begin{figure}[!t]
         \centering
         \myincludegraphics{figures/phasor.pdf}
-        \caption{Phasor representation of the \ac{IRF} on each RIS element. Red vector represents the complex BS-RIS signal; Blue vector represents the complex UE-RIS signal; $\alpha$ and $\beta$ denote the amplitude of these signals respectively. In our signaling method, the BS transmits a fixed symbol $1$, while the UE transmits a rotating symbol $e^{{\rm j}\psi(t)}$, causing the output of the power sensor $P(t)$ to vary in a waveform that is similar to a sine curve.}
+        \caption{Phasor representation of the \ac{IRF} on each RIS element. Red vector represents the complex BS-RIS signal; Blue vector represents the complex user-RIS signal; $\alpha$ and $\beta$ denote the amplitude of these signals respectively. In our signaling method, the BS transmits a fixed symbol $1$, while the UE transmits a rotating symbol $e^{{\rm j}\psi(t)}$, causing the output of the power sensor $P(t)$ to vary in a waveform that is similar to a sine curve.}
         \label{fig:phasor}
     \end{figure}
     To further analyze the interference, we focus on the received field of the $n$-th RIS element. Note that the power of interference field measured at instant $t$, expressed by \eqref{eqn:power of interference}, exhibits a sinusoidal waveform (see Fig.~\ref{fig:phasor}) in the time domain. The phase of this sinusoidal waveform is uniquely determined by $\varphi$.
