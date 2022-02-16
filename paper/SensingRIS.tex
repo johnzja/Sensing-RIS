@@ -85,7 +85,7 @@ breaklinks=true}
 \def \arg {\text{arg}}
 \def \CN {\mathcal{CN}}
 \def \VM {\mathcal{VM}}
-\def \re {\rm Re}
+\def \re {\text{Re}}
 \def \nc {\mathcal{NC}}
 \def \ch {\textcolor{red}{(cite here) }}
 
@@ -126,7 +126,7 @@ Reconfigurable intelligent surface (RIS), channel estimation, interference rando
 
 \section{Introduction}
 Reconfigurable intelligent surface (RIS) has been envisioned as a revolutionary paradigm for future wireless communications.
-The characteristics of low cost and power consumption provide RIS with promising applications in overcoming blockages, improving capacity, and reducing transmit power \cite{basar2019wireless,huang2020improvingcapacity,wu2019intelligent}.
+The characteristics of low cost and power consumption provide RIS with promising applications in overcoming blockages, improving capacity, and reducing transmit power \cite{basar2019wireless,liu2021compact,wu2019intelligent}.
 Specifically, RIS is a large-scale array composed of passive elements, which can achieve significant beamforming gain by appropriately imposing the phase shifts on the incident electromagnetic waves \cite{di2020smart}.
 To achieve this beamforming gain, accurate \ac{CSI} should be acquired beforehand, which makes channel estimation an essential problem for RIS-assisted communications \cite{wei2021channel}.
 
@@ -384,7 +384,7 @@ In this section, we will first briefly introduce the hardware architecture requi
 
 \subsection{Hardware Architecture of Sensing RIS} \label{Hardware Architecture of Sensing RIS}
 The basic hardware architecture in Fig.~\ref{fig:hardware} is to equip each RIS reflecting element with a cost-efficient RF power sensor \cite{ma2020smartsensing}. 
-Since all of the RIS elements can sense and adjust the phase independently from one another, low-cost Microcontroller Units (MCUs) can be attached locally to each RIS element to allow parallel computation of the optimal phases. 
+Since all of the RIS elements can sense and adjust the phase independently from one another, low-cost microcontroller units (MCUs) can be attached locally to each RIS element to allow parallel computation of the optimal phases. 
 However, for extremely large-scale RIS systems, sparse sensing and controlling may be preferred to reduce cost and hardware complexity. 
 
 % \textcolor{red}{HERE: Add feasibility analysis for attaching power sensors to RIS. Including: (1) Are the signals strong enough to be detected? (2) Are the sensor devices fast enough to catch the IRF variations? (3) What are the typical technical parameters of these power-sensing devices, including the sampling rate, working bandwidth and sensitivity?}
@@ -538,21 +538,8 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
             \kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} + \frac{1}{\sigma^2/2}z.
         \end{equation}
     \end{lemma}
-    \begin{IEEEproof}
-        Since $z=z_r + {\rm j} z_i \sim \CN(e^{{\rm j} \theta}, \sigma^2)$, the conditional density for $z|\theta$ is given by 
-        \begin{equation}
-            p(z|\theta) = \frac{1}{\sigma^2}\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right)
-        \end{equation}
-        The posterior density $p(\theta | z) \propto p(\theta)p(z|\theta)$. Thus
-        \begin{equation}
-            \begin{aligned}
-                p(\theta|z) & \propto \exp(\kappa \cos(\theta - \mu))\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right) \\
-                & \propto \exp\left( \kappa \cos(\theta - \mu) + \frac{2}{\sigma^2}(z_r \cos\theta + z_i\sin\theta) \right) \\
-                & \propto \exp\left( \re\left[ \kappa e^{{\rm j} (\theta - \mu)} + \frac{1}{\sigma^2/2}z^{*} e^{{\rm j} \theta} \right] \right) \\
-                & = \exp\left( \re\left[ e^{{\rm j} \theta}\left(\kappa e^{-{\rm j}\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
-            \end{aligned}
-        \end{equation}
-        Since the density of von Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{{\rm j} \theta}(\kappa e^{{\rm j} \mu})^* \right] \right)$, we can also parameterize the von-Mises distribution by a single complex parameter $\kappa e^{{\rm j}\mu}$. Thus, the above $p(\theta|z)$ is a von-Mises density with parameter $\kappa'e^{{\rm j}\mu'}$, satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} + 1/(\sigma^2/2)\,z$. This completes the proof.
+        \begin{IEEEproof}
+        See {\bf Appendix \ref{Proof of Lemma 1}}. 
     \end{IEEEproof}
     \begin{remark}
         From the above proof, we can also denote the von Mises distribution $\VM(\mu, \kappa)$ as $\VM(\kappa e^{{\rm j}\mu})$. This representation is more convenient when manipulating the posterior distribution of an $\VM$ distribution in Bayesian inference.
@@ -565,7 +552,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         \end{equation}
     \end{lemma}
     \begin{IEEEproof}
-        Writing down the density $p(z)$ and replacing $z$ by $r e^{{\rm j} \theta}$ give rise to the conclusion immediately. 
+        Replacing $z$ by $r e^{{\rm j} \theta}$ give rise to the conclusion immediately. 
     \end{IEEEproof}
     Combining the results of {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}}, we can then construct the EM algorithm for estimating $\varphi$. Since the output of the power sensors $P[l]$ does not contain phase information, we can treat the phases as latent variables. Let $s_l = \sqrt{P[l]/A}$ be the noisy estimation for $|\alpha + \beta e^{{\rm j} (\varphi + \psi_l)} + v_l|$, and $\theta_l$ be the latent variables $\arg (\alpha + \beta e^{{\rm j} (\varphi + \psi_l)} + v_l)$ that are not observable. 
     Since the noise $v_l \sim {\rm i.i.d.}\;\CN(0, \sigma_v^2)$, then from {\bf Lemma \ref{lemma_2}}, $\theta_l | s_l, \varphi \sim \VM(\arg(\alpha + \beta e^{{\rm j} (\varphi + \psi_l)}), s_l |\alpha + \beta e^{{\rm j} (\varphi + \psi_l)}|/(\sigma_v^2/2))$. Thus, we can infer the latent variables by ML estimation 
@@ -641,7 +628,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         The function $R(\cdot)$ is defined the same as in \eqref{eqn:R function derivative property}. Also note that the CRLB of the phase estimation problem is completely determined by the two parameters $K$ and $\bar{\gamma}$. 
     \end{theorem}
     \begin{IEEEproof}
-        See {\bf Appendix A}. 
+        See {\bf Appendix \ref{appendix:proof of theorem1}}. 
     \end{IEEEproof}
 
     In analogy to optics, the parameter $K$ in \eqref{eqn:precise_CRLB} is called the interferential contrast. And the parameter $\bar{\gamma}$ is the average interferential SNR, since $\gamma_l=\lambda_l/a = (\mu_{n,R}^2+\mu_{n,I}^2)/\sigma_v^2$ is the ratio of the noiseless power signal and the noise power. Thus, the CRLB expression \eqref{eqn:precise_CRLB} has strong physical meanings. However, this precise CRLB expression is difficult to evaluate due to the sophisticated evaluation of integral in \eqref{eqn:precise_g_function}, hence it is more feasible to obtain a simpler approximated CRLB with closed-form expression. 
@@ -660,7 +647,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         \end{equation}
     \end{theorem}
     \begin{IEEEproof}
-        See {\bf Appendix B}. 
+        See {\bf Appendix \ref{Proof of Theorem 2}}. 
     \end{IEEEproof}
     \begin{remark}
         The asymptotic result of CRLB still relies only on two parameters $K$ and $\bar{\gamma}$. But the calculation is much simpler compared to the precise CRLB. 
@@ -691,7 +678,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         \end{equation}
     \end{theorem}
     \begin{IEEEproof}
-        See {\bf Appendix C}. 
+        See {\bf Appendix \ref{Proof of Theorem 3}}. 
     \end{IEEEproof}
 
 
@@ -736,21 +723,38 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
 
 \section{Conclusion}
 \label{Conclusion}
-    In this paper, we introduced a dimension-independent CSI acquisition method for Sensing RIS-assisted MISO wireless communication systems. 
+    In this paper, we introduced a dimension-independent CSI acquisition method for sensing RIS-assisted MISO wireless communication systems. 
     Combined with our proposed VM-EM phase estimation algorithm, the pilot overhead of our CSI acquisition method is made independent of the number of RIS elements with low computational cost, enabling the implementation of extremely large-scale RISs to achieve significant beamforming gain. 
     Both CRLB analysis and simulation results verified the near-optimality of our VM-EM algorithm. 
     Furthermore, due to the independent property of our \ac{IRF}-based CSI acquisition method, the near-field effect cannot corrupt the precision of the CSI. 
-    Also due to the simultaneous signaling protocol, the double-fading effect of RIS \cite{zhang2021active} during channel estimation is automatically avoided. 
+    Also due to the simultaneous signaling protocol, the “multiplicative fading” effect of RIS \cite{zhang2021active,liu2021active} during channel estimation is automatically avoided. 
     Thus, the \ac{IRF} method has a promising future in high-frequency large-scale systems. 
     
-    For the future work, the spatial interferential fringes on the Sensing RIS may be exploited to recover the CSI at a higher precision, and the data obtained by the power sensors may be utilized to perform joint channel estimation and beamforming together with traditional methods. 
+    For the future work, the spatial interferential fringes on the sensing RIS may be exploited to recover the CSI at a higher precision, and the data obtained by the power sensors may be utilized to perform joint channel estimation and beamforming together with traditional methods. 
     In addition, different interferential frequencies can be assigned to different users to perform multi-user CSI acquisition within a single time slot, but the waveforms should be re-designed to avoid interference among users. 
     Furthermore, when equipped with a Sensing RIS, the phase estimation of IRF can also assist traditional channel estimation in MIMO systems. 
 % This is the end of the "Conclusion" part. 
 
 \appendices
 % Non-central Chi-Squared distribution. 
-\section*{Appendix A\\ Proof of Theorem 1}\label{appendix:proof of theorem1}
+\section{Proof of \textbf{Lemma 1}}
+\label{Proof of Lemma 1}
+        Since $z=z_r + {\rm j} z_i \sim \CN(e^{{\rm j} \theta}, \sigma^2)$, the conditional density for $z|\theta$ is given by 
+        \begin{equation}
+            p(z|\theta) = \frac{1}{\sigma^2}\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right)
+        \end{equation}
+        The posterior density $p(\theta | z) \propto p(\theta)p(z|\theta)$. Thus
+        \begin{equation}
+            \begin{aligned}
+                p(\theta|z) & \propto \exp(\kappa \cos(\theta - \mu))\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right) \\
+                & \propto \exp\left( \kappa \cos(\theta - \mu) + \frac{2}{\sigma^2}(z_r \cos\theta + z_i\sin\theta) \right) \\
+                & \propto \exp\left( \re\left[ e^{{\rm j} \theta}\left(\kappa e^{-{\rm j}\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
+            \end{aligned}
+        \end{equation}
+        Since the density of von Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{{\rm j} \theta}(\kappa e^{{\rm j} \mu})^* \right] \right)$, we can also parameterize the von-Mises distribution by a single complex parameter $\kappa e^{{\rm j}\mu}$. Thus, the above $p(\theta|z)$ is a von-Mises density with parameter $\kappa'e^{{\rm j}\mu'}$, satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} + 1/(\sigma^2/2)\,z$. This completes the proof.
+
+
+\section{Proof of \textbf{Theorem 1}}\label{appendix:proof of theorem1}
     According to the definition of CRLB \eqref{eqn:CRLB definition}, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\varphi$. Note that in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[P[l]\right]$, $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power} by the linearity of the expectation operation:
     \begin{equation}
         \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l,
@@ -813,7 +817,8 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     \end{equation}
     where the values $\gamma_l=\bar{\gamma}\left(1+K\cos(\psi_l+\varphi)\right)$ are jointly determined by both the average interferential SNR $\bar{\gamma}$ and the interferential contrast $K$. This completes the proof.
 
-\section*{Appendix B\\Proof of Theorem 2}
+\section{Proof of \textbf{Theorem 2}}
+\label{Proof of Theorem 2}
     Since the precise expression of $g(\gamma)$ in \eqref{eqn:precise_g_function} is difficult to calculate, we evaluate it approximately by utilizing the asymptotic expansion $x(1-R^2(2\sqrt{x})) \approx \sqrt{x}/2$ \cite{silverman1972special}. According to the definition, evaluating $g(\gamma)$ is the same as evaluating $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$. 
     % Thus, by substituting $x=\lambda_lP[l]/a^2$ into the asymptotic expansion formula, we can further simplify the integrand of the expectation to be 
     % \begin{equation}
@@ -868,7 +873,8 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     \end{equation}
     Finally, substituting the approximation \eqref{eqn:approx evaluation result} into the precise CRLB \eqref{eqn:precise_CRLB} yields the conclusion \eqref{eqn:asymptotic CRLB}, which completes the proof. Note that the operation $(x)^+$ in \eqref{eqn:asymptotic CRLB} ensures that each term of the CRLB is non-negative. 
 
-\section*{Appendix C\\ Proof of Theorem 3}
+\section{Proof of \textbf{Theorem 3}}
+\label{Proof of Theorem 3}
     Since the only imprecise step of the above derivation is the asymptotic expansion, the approximation error of the expectation can be upper-bounded by the asymptotic expansion error. Assume that the asymptotic expansion error does not exceeds $\delta$, i.e.,
     \begin{equation}
         \lvert x(1-R^2(2\sqrt{x}))-\sqrt{x}/2 \rvert \leq \delta,
@@ -898,11 +904,11 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     \end{equation}
     and this upper bound holds whenever $\gamma > (2+\epsilon)\delta$, and $\epsilon$ is chosen to satisfy 
     \begin{equation}
-        \frac{1}{\gamma} - \hat{g}(\gamma) > \frac{1}{(2+\epsilon)\gamma}, \forall \gamma > (2+\epsilon)\delta,
+        \frac{1}{\gamma} - \hat{g}(\gamma) > \frac{1}{(2+\epsilon)\gamma}, \quad\forall \gamma > (2+\epsilon)\delta,
     \end{equation}
     which is equivalent to 
     \begin{equation}
-        \epsilon > \frac{1}{1-\gamma \hat{g}(\gamma)}-2, \forall \gamma > (2+\epsilon)\delta.
+        \epsilon > \frac{1}{1-\gamma \hat{g}(\gamma)}-2,\quad \forall \gamma > (2+\epsilon)\delta.
     \end{equation}
     Since the function $ 1/(1-\gamma \hat{g}(\gamma))$ is decreasing on $\gamma>0$, the inequality is equivalent to 
     \begin{equation}
@@ -910,7 +916,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     \end{equation}
     In fact, choosing $\epsilon=4$ will satisfy all the conditions above when $\delta = 0.07$. So the relative error is upper bounded by 
     \begin{equation}
-        r \leq \frac{0.07}{\gamma/6 - 0.07}, \forall \gamma > 0.42.
+        r \leq \frac{0.07}{\gamma/6 - 0.07},\quad \forall \gamma > 0.42.
     \end{equation}
     We can easily see from the above inequality that this approximation becomes arbitrarily good when $\gamma\to\infty$, and the decreasing rate is of order $\mathcal{O}(1/\gamma)$. This completes the proof. 
 
