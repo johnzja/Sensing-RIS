@@ -19,7 +19,8 @@ end
     sine_squared = sin(psi_arr + varphi).^2;
     a = A*sigma_v^2;
     lambda = A*(alpha^2 + beta^2 + 2*alpha*beta*cos(psi_arr + varphi));
-    gamma = lambda / a;     % Interference-SNR.
+    gamma = lambda / a;     % interferential-SNR.
+
     % Replace the g function with the exact value.
     tmp = zeros(size(gamma));
     for idx = 1:length(gamma)
