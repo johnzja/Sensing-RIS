@@ -130,30 +130,30 @@ The characteristics of low cost and power consumption provide RIS with promising
 Specifically, RIS is a large-scale array composed of passive elements, which can achieve significant beamforming gain by appropriately imposing the phase shifts on the incident electromagnetic waves \cite{di2020smart}.
 To achieve this beamforming gain, accurate \ac{CSI} should be acquired beforehand, which makes channel estimation an essential problem for RIS-assisted communications \cite{wei2021channel}.
 
-Although channel estimation has been well investigated in conventional systems, the additional employment of RIS brings about two challenges \cite{weili2021channel}.
-Firstly, in contrast to traditional antenna array capable of transmitting, receiving, and processing the pilot signals, RIS can only passively reflect the incident signal.
-Secondly, since the number of RIS elements is usually large, the dimension of the channels increase sharply compared with conventional systems, which will also increase the pilot overhead for channel estimation.
+Although channel estimation has been well investigated in conventional communication systems, the additional employment of RIS brings about two challenges \cite{weili2021channel}.
+Firstly, in contrast to traditional antenna array capable of transmitting, receiving, and processing the signals, RIS can only passively reflect the incident signals.
+Secondly, since the number of RIS elements is usually large, the dimensions of the channels increase sharply compared with conventional systems, which results in unacceptably high pilot overhead for channel estimation.
 These two main challenges imply the necessity of leading new techniques into channel estimation for RIS-assisted communications.
 
 \subsection{Prior Works}
 \label{Prior Works}
-
+% Add here
 Generally, for RIS-assisted systems, channel estimation and beamforming are two separated procedures.
 Channel estimation is performed first, and then the obtained \ac{CSI} is utilized for beamforming.
-The efficacy of beamforming highly relies on the accuracy of channel estimation.
+The beamforming gain highly relies on the channel estimation accuracy.
 
-To tackle the challenges mentioned above in channel estimation for RIS-assisted communications, there exist several works, which can be generally divided into two broad categories.
-The first category fine-tunes the hardware architecture of RIS, which improves its ability in signal processing.
-For example, the authors of \cite{taha2021enabling} have proposed an architecture where sparse sensor units are employed on the surface.
-Each sensor unit has a dedicated \ac{RF} chain, and all these units are connected to a baseband controller for processing the received pilot signals.
-Another architecture utilize only one \ac{RF} chain, which also aims to have an estimate on the array gains of RIS \cite{alexandropoulos2020hardware}.
-In \cite{nguyen2021hybrid}, a hybrid relay-reflecting architecture is considered, where a few passive elements are replaced by the active relay elements.
-These active elements are then capable for channel estimation.
+To tackle the challenges mentioned above in channel estimation for RIS-assisted communications, some solutions have been recently proposed, which can be generally divided into two categories.
+The first category modifies the hardware architecture of RIS, which enables a little bit of signal processing capability.
+For example, the authors of \cite{taha2021enabling} have proposed an architecture where several RF chains are connected to part of the RIS elements, and baseband controllers are employed to process the received pilot signals for channel estimation.
+Another architecture utilizes only one \ac{RF} chain, which also aims to have an estimate on the array gains of RIS \cite{alexandropoulos2020hardware}. % Add evaluations.
+In \cite{nguyen2021hybrid}, a hybrid relay-reflecting architecture is considered, where a few passive RIS elements are replaced by the active relay devices.
+These active elements are then capable of channel estimation.
 
-The second category preserves the original hardware architecture of RIS, while conceives new frameworks or algorithms to exploit the specific features that RIS brings about.
-Exploiting the two-timescale channel property in the RIS-assisted system, the authors of \cite{Huchen} propose a framework that reduces the pilot overhead in the time-averaged sense.
+The second category preserves the original hardware architecture of RIS, while conceives new algorithms to exploit the specific features that RIS brings about.
+Exploiting the two-timescale channel property in the RIS-assisted system, the authors of \cite{Huchen} propose a two-timescale channel estimation algorithm that reduces the pilot overhead in the time-averaged sense.
 In other works \cite{wang2020compressed,wei2021channel}, by exploiting the sparsity of channels in the angular domain, compressive sensing-based algorithms are developed with reduced pilot overhead.
 In \cite{kundu2021channel}, deep learning approaches are considered to improve the performance of estimation.
+% multi-user relevance. 
 
 In a nutshell, both the above two categories have two limitations that:
 \begin{enumerate}
