@@ -132,8 +132,8 @@ To achieve this beamforming gain, accurate \ac{CSI} should be acquired beforehan
 
 Although channel estimation has been well investigated in conventional communication systems, the additional employment of RIS brings about two challenges \cite{weili2021channel}.
 Firstly, in contrast to traditional antenna array capable of transmitting, receiving, and processing the signals, RIS can only passively reflect the incident signals.
-Secondly, since the number of RIS elements is usually large, the dimensions of the channels increase sharply compared with conventional systems, which results in unacceptably high pilot overhead for channel estimation.
-These two main challenges imply the necessity of leading new techniques into channel estimation for RIS-assisted communications.
+Secondly, since the number of RIS elements is usually large, the dimensions of the channels increase sharply compared with conventional communication systems, which results in unacceptably high pilot overhead for channel estimation.
+These two main challenges result in the urge need of new channel estimation techniques for RIS-assisted communications.
 
 \subsection{Prior Works}
 \label{Prior Works}
@@ -145,7 +145,7 @@ The beamforming gain highly relies on the channel estimation accuracy.
 To tackle the challenges mentioned above in channel estimation for RIS-assisted communications, some solutions have been recently proposed, which can be generally divided into two categories.
 The first category modifies the hardware architecture of RIS, which enables a little bit of signal processing capability.
 For example, the authors of \cite{taha2021enabling} have proposed an architecture where several RF chains are connected to part of the RIS elements, and baseband controllers are employed to process the received pilot signals for channel estimation.
-Another architecture utilizes only one \ac{RF} chain, which also aims to have an estimate on the array gains of RIS \cite{alexandropoulos2020hardware}. % Add evaluations.
+Another architecture utilizes only one \ac{RF} chain, which also aims to have an estimate on the array gains of RIS \cite{alexandropoulos2020hardware}. % Add evaluations and comments for these methods. 
 In \cite{nguyen2021hybrid}, a hybrid relay-reflecting architecture is considered, where a few passive RIS elements are replaced by the active relay devices.
 These active elements are then capable of channel estimation.
 
@@ -153,7 +153,7 @@ The second category preserves the original hardware architecture of RIS, while c
 Exploiting the two-timescale channel property in the RIS-assisted system, the authors of \cite{Huchen} propose a two-timescale channel estimation algorithm that reduces the pilot overhead in the time-averaged sense.
 In other works \cite{wang2020compressed,wei2021channel}, by exploiting the sparsity of channels in the angular domain, compressive sensing-based algorithms are developed with reduced pilot overhead.
 In \cite{kundu2021channel}, deep learning approaches are considered to improve the performance of estimation.
-% multi-user relevance. 
+% Multi-user relevance, two-timescale channel property & channel sparsity. 
 
 %% Re-interpret. All the above methods require channel matrix first. The channel matrix is at least of size O(N). 
 In a nutshell, both the above two categories have two limitations:
@@ -621,7 +621,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         \begin{equation}
             \begin{aligned}
                 g(\gamma) &= \mathbb{E}_{x\sim \nc_{\chi_2^2}(\lambda, a)}\left[\left(1-R^2\left(\frac{\sqrt{\lambda x}}{a/2}\right)\right)\frac{x}{\lambda}\right] \\
-                & = \int_{0}^{+\infty}\gamma t \, \exp(-\gamma(1+t))\, I_0\left(2\gamma\sqrt{t}\right)\,\left(1-R^2\left(2\gamma\sqrt{t}\right)\right){\rm d}t.
+                & = \int_{0}^{+\infty}\gamma t \, {\rm exp}(-\gamma(1+t))\, I_0\left(2\gamma\sqrt{t}\right)\,\left(1-R^2\left(2\gamma\sqrt{t}\right)\right){\rm d}t.
             \end{aligned}
             \label{eqn:precise_g_function}
         \end{equation}
@@ -667,7 +667,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     \begin{figure}[!t]
         \centering
         \myincludegraphics{data/CRLB.pdf}
-        \caption{Precise $1/{\rm CRLB}(\varphi)$ as a two-variable function of $K$ and $\bar{\gamma}$, calculated from \eqref{eqn:precise_CRLB}. The larger the value of reciprocal CRLB, the more precise the estimator can be. }
+        \caption{Precise $1/{\rm CRLB}(\varphi)$ as a two-variable function of $K$ and $\bar{\gamma}$, calculated from \eqref{eqn:precise_CRLB}. The larger the value of reciprocal CRLB, the more precise an unbiased estimator can be. }
         \label{fig:CRLB two variable}
     \end{figure}
     The best prediction accuracy occurs when $\lvert K \rvert = 1$, i.e., the RIS-received signal from BS is as strong as that from the user. 
@@ -675,8 +675,8 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
 
     However, error analysis is vital to any kind of approximated analysis. Fortunately, our asymptotic expansion technique allows very good approximation, which is verified in the following {\bf Theorem 3}. 
 
-    \begin{theorem}[CRLB Approximation by Asymptotic Expansion is Asymptotically Optimal]
-        The relative error $r$ of the approximation in \eqref{eqn:asymptotic CRLB} decreases at a rate that is inverse proportional to the interferential SNR $\gamma$, i.e.,
+    \begin{theorem}[CRLB Approximation by Asymptotic Expansion is Asymptotically Optimal] \label{thm_error_analysis}
+        The relative error $r$ of \eqref{eqn:definition g function}, as an approximation of \eqref{eqn:precise_CRLB}, decreases at a rate that is inverse proportional to the interferential SNR $\gamma$, i.e.,
         \begin{equation}
             r=\frac{\left|\hat{g}(\gamma)-g(\gamma)\right|}{g(\gamma)} = \mathcal{O}\left(\frac{1}{\gamma}\right).
         \end{equation}
@@ -684,6 +684,9 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     \begin{IEEEproof}
         See {\bf Appendix \ref{Proof of Theorem 3}}. 
     \end{IEEEproof}
+    \begin{remark}
+        From {\bf Theorem \ref{thm_error_analysis}} we can also conclude that the relative error of \eqref{eqn:asymptotic CRLB} is also of order $\mathcal{O}(1/\bar{\gamma})$. 
+    \end{remark}
 
 
 \section{Simulation Results}
