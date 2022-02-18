@@ -155,8 +155,9 @@ In other works \cite{wang2020compressed,wei2021channel}, by exploiting the spars
 In \cite{kundu2021channel}, deep learning approaches are considered to improve the performance of estimation.
 % Multi-user relevance, two-timescale channel property & channel sparsity. 
 
-%% Re-interpret. All the above methods require channel matrix first. The channel matrix is at least of size O(N). 
-In a nutshell, both the above two categories have two limitations:
+%% Re-interpret. All the above methods require channel matrix first. The channel matrix is at least of size O(N). Usually...
+Unfortunately, classical channel estimation and beamforming procedures result in an unavoidable drawback in pilot overhead, especially when extremely large-scale RISs are employed. This is because all the above methods adopt separated channel estimation and beamforming, thus forcing the channel estimation step to obtain the full channel matrix, which is at least of size $\mathcal{O}(N)$. 
+% In a nutshell, both the above two categories have two limitations:
 \begin{enumerate}
 \item[1)]  Channel estimation only extracts the mathematical features of channels, while neglects their electromagnetic nature.
 \item[2)] The procedure of channel estimation and beamforming are separated, where redundant information is needlessly estimated.
