@@ -133,7 +133,7 @@ To achieve this beamforming gain, accurate \ac{CSI} should be acquired beforehan
 Although channel estimation has been well investigated in conventional communication systems, the additional employment of RIS brings about two challenges \cite{weili2021channel}.
 Firstly, in contrast to traditional antenna array capable of transmitting, receiving, and processing the signals, RIS can only passively reflect the incident signals.
 Secondly, since the number of RIS elements is usually large, the dimensions of the channels increase sharply compared with conventional communication systems, which results in unacceptably high pilot overhead for channel estimation.
-These two main challenges result in the urge need of new channel estimation techniques for RIS-assisted communications.
+These two main challenges result in the urge need of new channel estimation techniques for beamforming in RIS-assisted communications.
 
 \subsection{Prior Works}
 \label{Prior Works}
@@ -144,48 +144,45 @@ The beamforming gain highly relies on the channel estimation accuracy.
 
 To tackle the challenges mentioned above in channel estimation for RIS-assisted communications, some solutions have been recently proposed, which can be generally divided into two categories.
 The first category modifies the hardware architecture of RIS, which enables a little bit of signal processing capability.
-For example, the authors of \cite{taha2021enabling} have proposed an architecture where several RF chains are connected to part of the RIS elements, and baseband controllers are employed to process the received pilot signals for channel estimation.
-Another architecture utilizes only one \ac{RF} chain, which also aims to have an estimate on the array gains of RIS \cite{alexandropoulos2020hardware}. % Add evaluations and comments for these methods. 
-In \cite{nguyen2021hybrid}, a hybrid relay-reflecting architecture is considered, where a few passive RIS elements are replaced by the active relay devices.
-These active elements are then capable of channel estimation.
+For example, by sparsely replacing some of the RIS elements with active sensors capable of baseband processing, the authors of \cite{taha2021enabling} proposed a compressive sensing and deep learning-based channel estimation scheme with negligible pilot overhead. 
+To further reduce the number of active sensors, in \cite{alexandropoulos2020hardware} the authors proposed an alternating direction method-based channel estimation procedure with a single \ac{RF} chain by the help of an extended analog combiner \cite{vlachos2019wideband}. Since RF chains have been attached to RIS for channel sensing in these works, they can also be modified to perform signal relay. In \cite{nguyen2021hybrid}, a hybrid relay-reflecting architecture is considered, where a few passive RIS elements are replaced by the active amplify-and-forward relay modules. These active modules are then capable of channel estimation. 
 
 The second category preserves the original hardware architecture of RIS, while conceives new algorithms to exploit the specific features that RIS brings about.
-Exploiting the two-timescale channel property in the RIS-assisted system, the authors of \cite{Huchen} propose a two-timescale channel estimation algorithm that reduces the pilot overhead in the time-averaged sense.
+Exploiting the two-timescale channel property in the RIS-assisted system, the authors of \cite{Huchen} proposed a two-timescale channel estimation algorithm that reduces the pilot overhead in the time-averaged sense.
 In other works \cite{wang2020compressed,wei2021channel}, by exploiting the sparsity of channels in the angular domain, compressive sensing-based algorithms are developed with reduced pilot overhead.
-In \cite{kundu2021channel}, deep learning approaches are considered to improve the performance of estimation.
+In \cite{wang2020channel}, based on the shared reflected channels among multi-users, the authors proposed a three-phase channel estimation framework to further reduce the pilot overhead. 
+% In \cite{kundu2021channel}, deep learning approaches are considered to improve the performance of estimation.
 % Multi-user relevance, two-timescale channel property & channel sparsity. 
 
 %% Re-interpret. All the above methods require channel matrix first. The channel matrix is at least of size O(N). Usually...
-Unfortunately, classical channel estimation and beamforming procedures result in an unavoidable drawback in pilot overhead, especially when extremely large-scale RISs are employed. This is because all the above methods adopt separated channel estimation and beamforming, thus forcing the channel estimation step to obtain the full channel matrix, which is at least of size $\mathcal{O}(N)$. 
-% In a nutshell, both the above two categories have two limitations:
-\begin{enumerate}
-\item[1)]  Channel estimation only extracts the mathematical features of channels, while neglects their electromagnetic nature.
-\item[2)] The procedure of channel estimation and beamforming are separated, where redundant information is needlessly estimated.
-\end{enumerate}
-These limitations have caused that, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,nguyen2021hybrid,Huchen,wang2020compressed,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent.  % 
-This is unacceptable especially when the number of RIS elements is large (e.g. 256 elements in \cite{dai2020reconfigurable}, and 1100 elements in \cite{pei2021ris}).   % larger RIS! fabricated (how many elements?)
+Note that, in order to achieve high beamforming gain, all the above classical channel estimation methods are designed to estimate the full channel matrix as accurately as possible. However, since the size of the channel matrix is at least of size $\mathcal{O}(N)$, where $N$ denotes the number of RIS elements, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,nguyen2021hybrid,Huchen,wang2020compressed,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent. This is unacceptable especially when the RIS is fabricated with larger number of elements (e.g. 1100 elements in \cite{pei2021ris}, and 2304 elements in \cite{yangfan2020coding}).   % larger RIS! fabricated (how many elements?)
 Therefore, the question naturally arises as to: {\it Does there exist a dimension-independent approach where the required pilot overhead is independent of the number of RIS elements?}
+
+% In a nutshell, both the above two categories have two limitations:
+% \begin{enumerate}
+% \item[1)]  Channel estimation only extracts the mathematical features of channels, while neglects their electromagnetic nature.
+% \item[2)] The procedure of channel estimation and beamforming are separated, where redundant information is needlessly estimated.
+% \end{enumerate}
 
 \subsection{Our Contributions}
 \label{Our Contributions}
 
-To circumvent the problem of high pilot overhead required for channel estimation in RIS-assisted system, we propose an \ac{IRF}-based approach, where the \ac{IRF} on RIS is utilized for channel estimation\footnote{Simulation codes will be provided to reproduce the results in this paper: \url{http://oa.ee.tsinghua.edu.cn/dailinglong/publications/publications.html}.}.
+To circumvent the problem of high pilot overhead required for channel estimation in RIS-assisted systems, we point out that the main drawback of conventional channel estimation methods is that they only extracts the mathematical features of channels, while neglects their electromagnetic nature. Thus, we propose an \ac{IRF}-based approach, where the \ac{IRF} on RIS is utilized for channel estimation\footnote{Simulation codes will be provided to reproduce the results in this paper: \url{http://oa.ee.tsinghua.edu.cn/dailinglong/publications/publications.html}.}.
 Specifically, the contributions of this paper can be summarized as follows.
     \begin{itemize}
         \item %We propose a novel signal transmission framework in RIS-assisted system, and reveal the corresponding phenomenon of electromagnetic interference.
         % up-link channel estimation / down-link channel estimation
-        Inspired by optical interference, phase information can be obtained from the interference fringes, while for beamforming only phase information is necessary. Thus, we propose a novel framework that signals are transmitted from the \ac{BS} and the user to RIS simultaneously during CSI acquisition.
-        Under this framework, we reveal the phenomenon that electromagnetic interference will occur on RIS, which can be achieved by rotational signaling. which we name as the \ac{IRF}.
+        Inspired by optical interference where phase information can be obtained from the interference fringes, we reveal that phase information about the channel can also be obtained from the phenomenon of electromagnetic interference that occurs on RIS, which we name as the \ac{IRF}. 
+        Fortunately, phase information is enough for RIS beamforming that serves a single-antenna user. 
+        To create the \ac{IRF} on RIS, we propose a novel pilot transmission method called simultaneous rotational signaling, where signals are transmitted from the \ac{BS} and the user to RIS simultaneously, and the two signals bear a slight frequency difference during CSI acquisition. 
         \item
-        To exploit this \ac{IRF} for phase estimation, we employ sensing RIS which integrates power detectors to capture the features of \ac{IRF}.
-        Each of the low-cost power sensor can know its own phase information independently from IRF.
-        We then develop LS, ML and VM-EM phase estimation algorithms that combine the procedures of channel estimation and beamforming, where the required pilot overhead is independent of the number of RIS elements.
+        To exploit this \ac{IRF} for CSI acquisition, we employ sensing RIS which integrates power detectors into the RIS elements to capture the features of the \ac{IRF}. Each of the power detectors can acquire its own phase information independently from the \ac{IRF}, so that the required pilot overhead is independent of the number of RIS elements. 
+        We then develop LS, ML and VM-EM phase estimation algorithms to extract the phase information from the power detector signals in order to perform beamforming. 
         \item
-        We derive the \ac{CRLB} of the phase estimation problem based on \ac{IRF}, and its approximated asymptotic expression for channel estimation in the sensing RIS-assisted system.
-        Our numerical results demonstrate that this approximated \ac{CRLB} is asymptotically precise, and that our developed algorithms are close to \ac{CRLB}. Our simulation results also demonstrate that. 
-        \item
-        (delete this item) Simulation results demonstrate that, our proposed signal transmission framework and the corresponding algorithms can obtain precise phase information 
-        realize dimension-independent CSI acquisition for beamforming, which achieve the near-optimal capacity, which is the first one to achieve dimension-independent CSI acquisition. 
+        We derive the \ac{CRLB} of the phase estimation problem based on the \ac{IRF}, and its approximated asymptotic expression for channel estimation in the sensing RIS-assisted system.
+        Our numerical results verify that this approximated \ac{CRLB} is asymptotically precise, and that our developed algorithms are close to \ac{CRLB}. 
+        Our simulation results further demonstrate that, our proposed signal transmission method and the corresponding algorithms can realize dimension-independent CSI acquisition for beamforming, and then achieve the near-optimal spectral efficiency. 
+        
 %        The \ac{IRF} generated by the BS and UE makes it possible to obtain CSI with only one pilot symbol. Thus, the pilot overhead is reduced to $\mathcal{O}(1)$, independent of the number of RIS elements $N$. 
 %        \item After measuring the \ac{IRF} by the integrated power sensors, it is possible to directly calculate the optimal phase for each RIS element within $\mathcal{O}(1)$ time. However, traditional channel estimation schemes require at least $\mathcal{O}(N)$ time, since the scale of the estimation problem is at least $\mathcal{O}(N)$.
 %        \item Both the CSI acquisition and beamforming can be done immediately at the RIS, thus making channel feedback and BS signal processing unnecessary.
