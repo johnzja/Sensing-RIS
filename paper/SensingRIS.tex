@@ -155,7 +155,7 @@ In \cite{wang2020channel}, based on the shared reflected channels among multi-us
 % Multi-user relevance, two-timescale channel property & channel sparsity. 
 
 %% Re-interpret. All the above methods require channel matrix first. The channel matrix is at least of size O(N). Usually...
-Note that, in order to achieve high beamforming gain, all the above classical channel estimation methods are designed to estimate the full channel matrix as accurately as possible. However, since the size of the channel matrix is at least of size $\mathcal{O}(N)$, where $N$ denotes the number of RIS elements, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,nguyen2021hybrid,Huchen,wang2020compressed,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent. This is unacceptable especially when the RIS is fabricated with larger number of elements (e.g. 1100 elements in \cite{pei2021ris}, and 2304 elements in \cite{yangfan2020coding}).   % larger RIS! fabricated (how many elements?)
+Note that, in order to achieve high beamforming gain, all the above classical channel estimation methods are designed to estimate the full channel matrix as accurately as possible. However, since the size of the channel matrix is at least of size $\mathcal{O}(N)$, where $N$ denotes the number of RIS elements, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,nguyen2021hybrid,Huchen,wang2020compressed,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent. This is unacceptable especially when the RIS is fabricated with larger number of elements (e.g. 1100 elements in \cite{pei2021ris}, 2304 elements in \cite{yangfan2020coding}, and 10240 elements in \cite{yang2018reconfigurable}).   % larger RIS! fabricated (how many elements?)
 Therefore, the question naturally arises as to: {\it Does there exist a dimension-independent approach where the required pilot overhead is independent of the number of RIS elements?}
 
 % In a nutshell, both the above two categories have two limitations:
@@ -205,7 +205,7 @@ Finally, in Section~\ref{Conclusion}, we provide our conclusions followed by pro
 \textit{Notation:} $\mathbb C$ and $\mathbb R$ denote the set of complex and real numbers, respectively;
 $[L]$ represents the set of integers $\{0,1,\cdots,L-1\}$;
 $\bm A^{-1}, \bm A^*,\bm A^T,$ and $\bm A^H$ denote the inverse, conjugate, transpose, and conjugate transpose of matrix $\bm A$, respectively; 
-$\Vert \bm x\Vert_{2}$ is the $\mathcal{L}_{2}$-norm of the vector $\bm x$; 
+$\Vert x\Vert_{2}$ is the $\mathcal{L}_{2}$-norm of the function $x(\cdot)$; 
 %$\left\langle\bm x\right\rangle$ is the normalized vector of $\bm x$, i.e., $\left\langle\bm x\right\rangle=\bm x/\Vert\bm x\Vert_{2}$;
 $\text{arg}(x)$ and $\text{exp}(x)$ denote the phase angle and exponential representation of the complex scalar $x$, respectively;
 $\vert x\vert$ denotes the amplitude
