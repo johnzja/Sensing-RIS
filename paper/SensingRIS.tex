@@ -342,9 +342,17 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     Specially-designed electromagnetic waves are emitted by the transmitter, which imping the RIS, and the bounced-back waves enter the receiver, carrying information about the channel. 
     These methods all use electromagnetic waves to probe the radio environment. 
     However, for RIS-aided systems, the channel may contain up to thousands of free parameters, which makes the probing process extremely inefficient, especially when the transceivers are only equipped with dozens of antennas. This can be compared to shedding a few beams of light into a blackbox and trying to distinguish thousands of objects inside, which is generally inefficient. Apparently, a more reasonable way is just simply to place our probes inside the blackbox. This idea motivates us to attach power sensors to the RIS. 
-    \begin{figure}
-        % TODO
-    \end{figure}
+    	\begin{figure}[t]
+		\centering
+		\subfigure[Active RIS with existing fully-connected architecture.]
+		{\includegraphics[width=.6\textwidth]{figures/scheme1.pdf}}
+		%\vspace{0.2mm}
+		\subfigure[Active RIS with proposed sub-connected architecture.]
+		{\includegraphics[width=.6\textwidth]{figures/scheme2.pdf}}
+		\caption{Comparison between the fully-connected and the sub-connected architectures for active RIS.}
+		\label{fig:scheme}
+		%\vspace{-0.5em}
+	\end{figure}
 
 \subsection{Simultaneous Rotational Signaling and Interference Detection}
     However, it seems impractical to use simple low-cost power sensors to obtain enough information for RIS beamforming. 
