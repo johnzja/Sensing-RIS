@@ -342,6 +342,9 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     Specially-designed electromagnetic waves are emitted by the transmitter, which imping the RIS, and the bounced-back waves enter the receiver, carrying information about the channel. 
     These methods all use electromagnetic waves to probe the radio environment. 
     However, for RIS-aided systems, the channel may contain up to thousands of free parameters, which makes the probing process extremely inefficient, especially when the transceivers are only equipped with dozens of antennas. This can be compared to shedding a few beams of light into a blackbox and trying to distinguish thousands of objects inside, which is generally inefficient. Apparently, a more reasonable way is just simply to place our probes inside the blackbox. This idea motivates us to attach power sensors to the RIS. 
+    \begin{figure}
+        % TODO
+    \end{figure}
 
 \subsection{Simultaneous Rotational Signaling and Interference Detection}
     However, it seems impractical to use simple low-cost power sensors to obtain enough information for RIS beamforming. 
@@ -768,10 +771,8 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     and the expectation $\mathbb{E}\left[R(z_l) \sqrt{P[l]}\right]$ can be evaluated by calculating the derivative w.r.t $\lambda_l$ on both sides of the identity $\mathbb{E}_{\lambda_l, A\sigma_v^2}[e^{\lambda_l/(A\sigma_v^2)}]=e^{\lambda_l/(A\sigma_v^2)}$:
     \begin{equation}
         \begin{aligned}
-            \mathbb{E}\left[R(z_l) \sqrt{P[l]}\right] & = \int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x+\lambda_l}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x}\\
-            & = e^{-\lambda_l/(A\sigma_v^2)}\int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x} \\
+            \mathbb{E}\left[R(z_l) \sqrt{P[l]}\right] & = e^{-\lambda_l/(A\sigma_v^2)}\int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x} \\
             & = e^{-\lambda_l/(A\sigma_v^2)} A\sigma_v^2 \sqrt{\lambda_l} \frac{\partial}{\partial\lambda_l} \int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_0\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right) {\rm d}x}\\
-            & = e^{-\lambda_l/(A\sigma_v^2)} A\sigma_v^2 \sqrt{\lambda_l} \frac{\partial}{\partial\lambda_l} \left(e^{\lambda_l/(A\sigma_v^2)}\right)\\
             & = \sqrt{\lambda_l}.\\
         \end{aligned}
         \label{eqn:expectation_second_kind_1}
