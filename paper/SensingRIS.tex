@@ -155,7 +155,7 @@ In \cite{wang2020channel}, based on the shared reflected channels among multi-us
 % Multi-user relevance, two-timescale channel property & channel sparsity. 
 
 %% Re-interpret. All the above methods require channel matrix first. The channel matrix is at least of size O(N). Usually...
-Note that, in order to achieve high beamforming gain, all the above classical channel estimation methods are designed to estimate the full channel matrix as accurately as possible. However, since the size of the channel matrix is at least of size $\mathcal{O}(N)$, where $N$ denotes the number of RIS elements, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,nguyen2021hybrid,Huchen,wang2020compressed,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent. This is unacceptable especially when the RIS is fabricated with larger number of elements (e.g. 1100 elements in \cite{pei2021ris}, 2304 elements in \cite{yangfan2020coding}, and 10240 elements in \cite{yang2018reconfigurable}).   % larger RIS! fabricated (how many elements?)
+Note that, in order to achieve high beamforming gain, all the above classical channel estimation methods are designed to estimate the full channel matrix as accurately as possible. However, since the size of the channel matrix is at least of size $\mathcal{O}(N)$, where $N$ denotes the number of RIS elements, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,vlachos2019wideband,nguyen2021hybrid,Huchen,wang2020compressed,wang2020channel,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent. This is unacceptable especially when the RIS is fabricated with larger number of elements (e.g. 1100 elements in \cite{pei2021ris}, 2304 elements in \cite{yangfan2020coding}, and 10240 elements in \cite{yang2018reconfigurable}).   % larger RIS! fabricated (how many elements?)
 Therefore, the question naturally arises as to: {\it Does there exist a dimension-independent approach where the required pilot overhead is independent of the number of RIS elements?}
 
 % In a nutshell, both the above two categories have two limitations:
@@ -211,9 +211,9 @@ $\text{arg}(x)$ and $\text{exp}(x)$ denote the phase angle and exponential repre
 $\vert x\vert$ denotes the amplitude
 of a complex scalar $x$; 
 $\text{diag}(\cdot )$ is the diagonal operation;
-$\mathcal{CN}\left(\mu, \sigma^2 \right)$, $\mu\in \mathbb C$ represents the complex univariate Gaussian distribution with the mean $\mu$ and the variance $\sigma^2$;
-$\VM(\mu, \kappa)$, $\mu\in [0,2\pi]$ denotes the von Mises distribution with circular mean $\mu$ and centrality $\kappa$.
-$\nc_{\chi_k^2}(\lambda, \sigma^2)$ and $\nc_{\chi_k}(\lambda)$ are the degree-$k$ non-central chi-squared distribution with  non-centrality parameter $\lambda$ and variance parameter $\sigma^2$, and the non-central chi distribution with non-centrality parameter $\lambda$, respectively.   
+$\mathcal{CN}\left(\mu, \sigma^2 \right)$ represents the complex univariate Gaussian distribution with the mean $\mu$ and the variance $\sigma^2$;
+$\VM(\mu, \kappa)$ denotes the von Mises distribution with circular mean $\mu\in [0,2\pi]$ and centrality $\kappa$;
+$\nc_{\chi_k^2}(\lambda, \sigma^2)$ and $\nc_{\chi_k}(\lambda)$ are the degree-$k$ non-central chi-squared distribution with  non-centrality parameter $\lambda$ and variance parameter $\sigma^2$, and the non-central chi distribution with non-centrality parameter $\lambda$, respectively; 
 %$\bm 0_{L}$ denotes the $L\times 1$ zero vector;
 $\bm I_{L}$ denotes the $L\times L$ identity matrix;
 % $\bm \psi_{\text{max}}(\bm A)$ is the eigenvector of matrix
@@ -225,7 +225,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
 
 
 \section{System Model}  \label{System Model}
-    In this section, we will first specify the system model of the \ac{RIS}-assisted \ac{MISO} system.
+    In this section, we will first specify the system model of the RIS-assisted \ac{MISO} system.
     Then, we will introduce traditional approaches for the corresponding beamforming design and channel estimation in Subsection~\ref{Beamforming design} and \ref{Channel Estimation}, respectively.
 
    % \subsection{RIS-Aided MISO System}  \label{MISO case}
@@ -318,7 +318,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     \begin{equation}
         E_{n,{\rm BB, IRF}}(t) = E_{n, {\rm BB, BS}}(t)+E_{n,{\rm BB, UE}}(t).
     \end{equation}
-    By defining $\alpha = \left\vert\bm g_{n}^{T}\bm w\right\vert$, $\beta = \left\vert f_{n}^{*}\right \vert$, and the phase difference between the \ac{BS}-\ac{RIS} channel and the \ac{RIS}-\ac{UE} channel as $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, then the power of the interference field can be written as (the subscript $n$ omitted for simplicity)
+    By defining $\alpha = \left\vert\bm g_{n}^{T}\bm w\right\vert$, $\beta = \left\vert f_{n}^{*}\right \vert$, and the phase difference between the \ac{BS}-RIS channel and the RIS-\ac{UE} channel as $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, then the power of the interference field can be written as (the subscript $n$ omitted for simplicity)
     \begin{equation}
         \label{eqn:power of interference}
         \begin{aligned}
