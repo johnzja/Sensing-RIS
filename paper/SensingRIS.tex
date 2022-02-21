@@ -228,11 +228,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     Then, we will introduce traditional approaches for the corresponding beamforming design and channel estimation in Subsection~\ref{Beamforming design} and \ref{Channel Estimation}, respectively.
 
    % \subsection{RIS-Aided MISO System}  \label{MISO case}
-        Let us consider a RIS-aided MISO system, where an $N$-element RIS is employed for enhancing the transmission from an $M$-antenna \ac{BS} to a single-antenna user. Assume furthermore that the phase-shift of RIS's each element can be continuously and independently controlled \cite{wu2019intelligent}. Then, the RIS precoding matrix can be represented by
-        \begin{equation}
-            \label{RIS}
-            \bm \Theta = \diag \left(\bm \theta\right )=\diag \left(\left[\theta_{1},\cdots ,\theta_{N}\right]^{T}\right),
-        \end{equation}
+        Let us consider a RIS-aided MISO system, where an $N$-element RIS is employed for enhancing the transmission from an $M$-antenna \ac{BS} to a single-antenna user. Assume furthermore that the phase-shift of RIS's each element can be continuously and independently controlled \cite{wu2019intelligent}. Then, the RIS precoding matrix can be represented by $\bm \Theta = \diag \left(\bm \theta\right )=\diag \left(\left[\theta_{1},\cdots ,\theta_{N}\right]^{T}\right)$,
         where $\theta_n (n\in[N])$ denotes the phase-shift of the $n$-th RIS element, satisfying $\lvert \theta_n\rvert=1$. Therefore, the signal received by the user can be written as 
         \begin{equation}
             \label{Signal model}
@@ -259,15 +255,10 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
         
         
         In this paper, we assume that the locations of the \ac{BS} and the RIS are unchanged, which can provide us a beamforming approach expressed as
-                \begin{subequations}
+                \begin{equation}
 \label{traditional beamforming}
-\begin{align}
-\label{w_optimal}
-&\bm w=\sqrt{P_{\rm max}}\bm a\left(\alpha\right),\\
-\label{theta_optimal}
-&\theta_{n} = \exp\left(-{\rm j} \arg\left(f_{n}^{*}\bm g_{n}^{T}\bm w\right)\right),~\forall n\in [N],
-\end{align}
-\end{subequations}
+\bm w=\sqrt{P_{\rm max}}\bm a\left(\alpha\right),\quad \theta_{n} = \exp\left(-{\rm j} \arg\left(f_{n}^{*}\bm g_{n}^{T}\bm w\right)\right),~\forall n\in [N],
+\end{equation}
 where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave departure angle $\alpha$ of the BS antenna array, and $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
 
 \subsection{Channel Estimation}
@@ -300,21 +291,22 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
 \label{Interference Random Field}
     In this section, the signal model for \ac{IRF} will be first introduced in Subsection~\ref{Models for IRFs}. Then, in order to utilize the \ac{IRF} for low-overhead CSI acquisition, power sensors will be attached to the RIS elements in Subsection~\ref{probe the channel directly on the RIS}. Finally, to make the power signal vary in a desired form that is rich in CSI, simultaneous rotational signaling method will be proposed in Subsection~\ref{Simultaneous Rotational Signaling and Interference Detection}. 
 
+\subsection{Signal Model for IRF}
+\label{Models for IRFs}
+
     Interference is a fundamental physical phenomenon of all kinds of waves. The most well-known example is the double-slit optical interference \cite{louradour1993interference}, as is shown in Fig.~\ref{fig:scheme}~(a), where the interference fringes created during the wave superposition reveal the phase difference of the two optical paths. Similarly, the same interference phenomenon occurs when two RF electromagnetic waves meet together on the RIS, as is shown in Fig.~\ref{fig:scheme}~(b), and the \ac{IRF} created by this interference reveals the \ac{CSI}. 
     \begin{figure}[t]
         \centering
-        \subfigure[Double-slit optical interference.]
+        \subfigure[Optical interference.]
         {\includegraphics[width=.6\textwidth]{figures/scheme1.pdf}}
         %\vspace{0.2mm}
-        \subfigure[\ac{IRF} on RIS, created by transmitting signals from the \ac{BS} and the user to RIS simultaneously.]
+        \subfigure[Electromagnetic interference.]
         {\includegraphics[width=.6\textwidth]{figures/scheme2.pdf}}
-        \caption{Analogy between the optical interference and the \ac{IRF} phenomenon occured on RIS.}
+        \caption{Analogy between the optical interference and the \ac{IRF} phenomenon occurred on RIS.}
         \label{fig:scheme}
         %\vspace{-0.5em}
     \end{figure}
 
-\subsection{Signal Model for IRF}
-\label{Models for IRFs}
     Suppose two signals imping the RIS simultaneously, creating an interference field at the $n$-th RIS element, with both of the symbols transmitted by \ac{BS} and \ac{UE} being $s=1$. In order to perform channel estimation, we need to probe the interference fringes, i.e., the power of the \ac{IRF}. To clarify the power problem associated with an electromagnetic signal, the relationship between physical signal power and baseband equivalent signal power is re-stated here. Both of the BS-RIS and user-RIS signals that appear on each RIS element can be represented by their baseband equivalent signals $E_{n,{\rm BB}}(t)$, 
     and the corresponding physical passband electric field induced on each RIS element is represented by 
     \begin{equation}
@@ -323,22 +315,12 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     \end{equation}
     where $\omega_c = 2\pi f_c$ denotes the carrier frequency, and the coefficient $\sqrt{2}$ ensures that the passband signal energy (power) is equal to the baseband signal energy (power), i.e., 
     $\lVert E_{n, {\rm BB}}\rVert_2^2 = \lVert E_{n}\rVert_2^2$. Thus, we are sure that taking the square of the baseband signal is equivalent to calculating the power of the physical electromagnetic signal. 
-    Now we consider the superposition of the BS-RIS signal and the user-RIS signal. Due to the linearity of \eqref{baseband-passband relationship}, we can simply add up the two impinging baseband signals to represent the interference signal that appears at the RIS, i.e., 
+    Now we consider the superposition of the BS-RIS signal and the user-RIS signal. Due to the linearity of \eqref{baseband-passband relationship}, we obtain the noisy IRF signal by adding up the two impinging baseband signals as
     \begin{equation}
-        E_{n,{\rm BB, IRF}}(t) = E_{n, {\rm BB, BS}}(t)+E_{n,{\rm BB, UE}}(t),
-    \end{equation}
-    where 
-    \begin{equation}
-        E_{n, {\rm BB, BS}}(t) = \bm g_{n}^{T}\bm w,
-    \end{equation}
-    and 
-    \begin{equation}
-        E_{n,{\rm BB, UE}}(t) = f_{n}^{*} e^{{\rm j}\psi(t)}.
-    \end{equation}
-    Thus, the noisy \ac{IRF} signal is
-    \begin{equation}
-        \label{interference}
-        E_{n,{\rm BB, IRF}}(t)=\bm g_{n}^{T}\bm w+f_{n}^{*}e^{{\rm j}\psi (t)}+v(t),
+    \begin{aligned}
+    E_{n,{\rm BB, IRF}}(t) &= E_{n, {\rm BB, BS}}(t)+E_{n,{\rm BB, UE}}(t)+v(t)\\
+    &=\bm g_{n}^{T}\bm w+f_{n}^{*}e^{{\rm j}\psi (t)}+v(t),
+    \end{aligned}
     \end{equation}
     where $v(t)$ is the electromagnetic noise signal in its baseband representation, and $\psi(t)$ is the time-dependent phase difference between the symbols transmitted by \ac{BS} and the user.  
     Furthermore, by defining $\alpha = \left\vert\bm g_{n}^{T}\bm w\right\vert$, $\beta = \left\vert f_{n}^{*}\right\vert$, and the phase difference between the \ac{BS}-\ac{RIS} channel and the \ac{RIS}-user channel as $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, then the detected power of the \ac{IRF} can be written as
@@ -379,11 +361,11 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     %     \caption{MISO communication scheme which is considered in this paper. Colorful shadings on the RIS represent the interference fringes; Yellow points on the RIS represent the power sensors.}
     %     \label{fig:scheme}
     % \end{figure}
-    % If we allow the BS and UE to emit EM waves simultaneously, then the interference phenomenon will occur (see Fig.~\ref{fig:scheme}), and interference fringes \cite{louradour1993interference} will appear on the RIS. Then, if we alter the phase at the UE, the interference fringes will change accordingly, allowing the power sensors on the RIS to obtain CSI. 
-    \begin{figure}[!t]
+    % If we allow the BS and UE to emit EM waves simultaneously, then the interference phenomenon will occur (see Fig.~\ref{fig:scheme}), and interference fringes \cite{louradour1993interference} will appear on the RIS. Then, if we alter the phase at the UE, the interference fringes will change accordingly, allowing the power sensors on the RIS to obtain CSI.    
+        \begin{figure}[!t]
         \centering
-        \myincludegraphics{data/protocol.pdf} 
-        \caption{Simultaneous rotational signaling scheme. The IRF power is the instantaneous total power of the the BS-RIS signal and the user-RIS signal. The composite power waveform detected by the power sensor enables our algorithm to obtain the desired CSI. The parameters $\alpha$ and $\beta$ are estimated from the first 2 time slots, and $\varphi$ is estimated by IRF that occurs during the third time slot. }
+        \includegraphics[width=.9\textwidth]{data/protocol.pdf}
+        \caption{Simultaneous rotational signaling scheme. The IRF power is the instantaneous total power of the the BS-RIS signal and the user-RIS signal. The composite power waveform detected by the power sensor enables our algorithm to obtain the desired CSI. The parameters $\alpha$ and $\beta$ are estimated from the first 2 time slots, and $\varphi$ is estimated by IRF that occurs during the third time slot.}
         \label{fig:protocol}
     \end{figure}
 
@@ -404,7 +386,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     Note that the power of interference field measured at instant $t$, expressed by \eqref{eqn:power of interference}, exhibits a sinusoidal waveform in the time domain, as is shown in Fig.~\ref{fig:phasor}. 
     The phase of this sinusoidal waveform is uniquely determined by $\varphi$.
     Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. 
-    However, according to \eqref{theta_optimal}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*)$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we only need to obtain one of the phases of these two channels to perform optimal RIS beamforming. Though generally it is difficult to obtain the BS-RIS channel and the RIS-user channel, since the BS and RIS are installed at fixed locations, it is reasonable to assume that the BS-RIS channel is much more stable and predictable, compared to the RIS-user counterpart. As a result, the phases of the BS-RIS link $\arg({\bm g}_n^{\rm T}{\bm w})$ can be assumed to be known in our algorithms. Due to the stability of this channel, the phases are mainly determined by geometric parameters, i.e., the location of the BS and RIS. 
+    However, according to \eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*)$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we only need to obtain one of the phases of these two channels to perform optimal RIS beamforming. Though generally it is difficult to obtain the BS-RIS channel and the RIS-user channel, since the BS and RIS are installed at fixed locations, it is reasonable to assume that the BS-RIS channel is much more stable and predictable, compared to the RIS-user counterpart. As a result, the phases of the BS-RIS link $\arg({\bm g}_n^{\rm T}{\bm w})$ can be assumed to be known in our algorithms. Due to the stability of this channel, the phases are mainly determined by geometric parameters, i.e., the location of the BS and RIS. 
 
 
 \section{Sensing RIS-Based Channel Estimation}
@@ -418,7 +400,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
 
 % \textcolor{red}{HERE: Add feasibility analysis for attaching power sensors to RIS. Including: (1) Are the signals strong enough to be detected? (2) Are the sensor devices fast enough to catch the IRF variations? (3) What are the typical technical parameters of these power-sensing devices, including the sampling rate, working bandwidth and sensitivity?}
 
-    \begin{figure}[htbp]
+    \begin{figure}[!t]
         \centering
         \includegraphics[width=\textwidth]{figures/hardware.pdf}
         \caption{Hardware architecture of sensing RIS.}
@@ -433,11 +415,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         \item Integrate phase information and other CSI to perform beamforming. 
     \end{enumerate} 
     Since we all assume the modulation method to be OFDM, the first step (1) can be easily realized by transmitting a symbol $1$ on the zeroth subcarrier at BS, while transmitting a symbol $1$ on the $k$-th subcarrier at UE. 
-    Denote the OFDM symbol period to be $T_s$ (without cyclic prefix), then the equivalent IRF angular frequency $\omega$ is given by 
-    \begin{equation}
-        \omega = k \frac{2\pi}{T_s},
-    \end{equation}
-    which means the power signal experiences exactly $k$ sine-shaped\footnote{The noiseless power signals are, in fact, strictly sinusoidal. } periods during an OFDM symbol. For calculation simplicity, in this paper, we always assume $k=1$. In fact, for multi-user MISO\footnote{In this paper, we consider UE with a single antenna, but the number of antennas at BS is not restricted. Furthermore, for MIMO systems, since UE is equipped with multi-antennas, phase-tuning simply for constructive interference at UE is sub-optimal. Thus, IRF methods should be further improved to fully harness the multi-antenna space-multiplexing gains.} systems, different $k$ values can be assigned to different users in order to enable channel estimation and beamforming design for several users within the same time slot. 
+    Denote the OFDM symbol period to be $T_s$ (without cyclic prefix), then the equivalent IRF angular frequency $\omega$ is given by $\omega = 2\pi k /T_s$, which means the power signal experiences exactly $k$ sine-shaped\footnote{The noiseless power signals are, in fact, strictly sinusoidal. } periods during an OFDM symbol. For calculation simplicity, in this paper, we always assume $k=1$. In fact, for multi-user MISO\footnote{In this paper, we consider UE with a single antenna, but the number of antennas at BS is not restricted. Furthermore, for MIMO systems, since UE is equipped with multi-antennas, phase-tuning simply for constructive interference at UE is sub-optimal. Thus, IRF methods should be further improved to fully harness the multi-antenna space-multiplexing gains.} systems, different $k$ values can be assigned to different users in order to enable channel estimation and beamforming design for several users within the same time slot. 
     This can be done by Fourier analysis on the power signal $P(t)$ and extraction of phase angles for each user at distinct frequencies. 
 
     The second step (2) is called phase estimation. This step is designed to extract the phase difference $\varphi$ between the BS-RIS and RIS-user channel. 
@@ -487,15 +465,10 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
 
 \subsection{Newton-ML method}  \label{ML method}
     Suppose the noise field $v'(t)=v'_R(t) + {\rm j}v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2$ is a non-central chi-squared distribution $\nc_{\chi_2^2}(A(\mu_{n,R}^2+\mu_{n,I}^2),  A\sigma_v^2/2)$ \cite{krishnan1967noncentral} with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
-    \begin{subequations}
-    \label{chi2 distribution mean values}
-        \begin{align}
-        \label{mu_n,R}
-        \mu_{n,R} & = \alpha + \beta \cos(\psi(t)+\varphi),\\
-        \label{mu_n,L}
-        \mu_{n,I} & = \beta \sin(\psi(t)+\varphi).
-        \end{align}
-    \end{subequations}
+        \begin{equation}
+        \mu_{n,R} = \alpha + \beta \cos(\psi(t)+\varphi),\quad  \mu_{n,I}  = \beta \sin(\psi(t)+\varphi).
+        \label{chi2 distribution mean values}
+    \end{equation}
     Thus, according to \eqref{eqn:power of interference}, the output signal of the power sensor is given by 
     \begin{equation}
         P(t)  = A\left((v'_{R} + \mu_{n,R})^2 + (v'_{I} + \mu_{n,I})^2 \right)+ \zeta 
@@ -510,12 +483,9 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         f_{s(t)}(x) = \frac{1}{A\sigma_{v}^2} \exp\left(-\frac{x+\lambda(t)}{A\sigma_v^2}\right)I_{0}\left(\frac{\sqrt{\lambda(t) x}}{A\sigma_v^2/2}\right),\quad x \geq 0.
         \label{ML single observation}
     \end{equation}
-    In the following analysis, for the sake of simplicity, we always assume that $\sigma_{\zeta}^2 = 0$. Thus, if we have obtained observations $P[l], \forall l\in [0:L]$ at instants $t_l$, then the log likelihood function of $\varphi$, given the observations $P[l], \forall l\in [0:L]$, is represented by
+    In the following analysis, for the sake of simplicity, we always assume that $\sigma_{\zeta}^2 = 0$. Thus, the log likelihood function of $\varphi$ based on the observations $P[l]$ can be represented by
     \begin{equation}
-        \begin{aligned}
-        \mathcal{L}(P[0:L] | \varphi) &= \log \prod_{l=0}^{L-1} f_{s (t)}(P[l])\\
-        & = \sum_{l=0}^{L-1}\left[-\frac{P[l] + \lambda_l}{A\sigma_v^2} + \log I_0\left(\frac{\sqrt{P[l] \lambda_l}}{A\sigma_v^2/2}\right)\right] - L\log(A\sigma_v^2),
-        \end{aligned}
+        \mathcal{L}(P[0:L] | \varphi) = \sum_{l=0}^{L-1}\left[-\frac{P[l] + \lambda_l}{A\sigma_v^2} + \log I_0\left(\frac{\sqrt{P[l] \lambda_l}}{A\sigma_v^2/2}\right)\right] - L\log(A\sigma_v^2),
         \label{ML likelihood}
     \end{equation}
     where $\lambda_l := \lambda(t_l)$, and the derivative of \eqref{ML likelihood} is 
@@ -562,10 +532,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     Note that the von Mises distribution is a distribution on a circle, thus it acts as a perfect prior distribution of a phase estimation problem. 
     More fortunately, the von Mises distribution is also closely related to the complex Gaussian distribution, thus implying the possibility of designing an iterative EM algorithm \cite{casella2021statistical} based on the interactions between the von Mises distribution and the complex Gaussian noise distribution. The following two lemmas: {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}} reveal these interations. 
     \begin{lemma}[Bayesian estimation of von Mises distribution]\label{lemma_1} \mbox{}\par
-        Let $\theta \sim \VM(\mu, \kappa)$, and $z|\theta \sim \CN(e^{{\rm j}\theta}, \sigma^2)$. Then the posterior distribution $\theta | z$ is also a von-Mises distribution $\VM(\mu', \kappa')$ with parameters $\mu'$ and $\kappa'$ satisfying
-        \begin{equation}
-            \kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} + \frac{1}{\sigma^2/2}z.
-        \end{equation}
+        Let $\theta \sim \VM(\mu, \kappa)$, and $z|\theta \sim \CN(e^{{\rm j}\theta}, \sigma^2)$. Then the posterior distribution $\theta | z$ is also a von-Mises distribution $\VM(\mu', \kappa')$ with parameters $\mu'$ and $\kappa'$ satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} + 2z/\sigma^2$.
     \end{lemma}
         \begin{IEEEproof}
         See {\bf Appendix \ref{Proof of Lemma 1}}. 
@@ -827,7 +794,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     Combining the above equations of expectations \eqref{eqn:expectation of P_l}, \eqref{eqn:expectation_second_kind_1}, \eqref{eqn:expectation_second_kind_2} and \eqref{eqn:proof precise g function}, we obtain
     \begin{equation}
         \begin{aligned}
-        \frac{1}{{\rm CRLB}(\varphi)} & = -\mathbb{E}\left[\frac{\partial^2\mathcal{L}}{\partial\varphi^2}\right] \\
+        \frac{1}{{\rm CRLB}(\varphi)} %& = -\mathbb{E}\left[\frac{\partial^2\mathcal{L}}{\partial\varphi^2}\right] \\
         & \overset{(a)}{=}  -\frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] - \frac{a}{\lambda_l}\right) } \\
         & \overset{(b)}{=} \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\frac{a}{\lambda_l}-g(\lambda_l/a)\right)},
         \end{aligned}
@@ -907,27 +874,27 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
 
 \section{Proof of \textbf{Theorem 3}}
 \label{Proof of Theorem 3}
-    Since the only imprecise step of the above derivation is the asymptotic expansion, the approximation error of the expectation can be upper-bounded by the asymptotic expansion error. Assume that the asymptotic expansion error does not exceeds $\delta$, i.e.,
-    \begin{equation}
-        \lvert x(1-R^2(2\sqrt{x}))-\sqrt{x}/2 \rvert \leq \delta,
-        \label{eqn:asymptotic error}
-    \end{equation}
     \begin{figure}[t]
         \centering
         \myincludegraphics{figures/asymptotic_expansion.pdf}
         \caption{The curve $x(1-R^2(2\sqrt{x}))-\sqrt{x}/2$, when $0\leq x\leq 5$. We can see from the curve that the approximation error $\delta \leq 0.07$.}
         \label{fig:asymptotic_expansion}
     \end{figure}
-    then, from \eqref{eqn:approx evaluation}, we have 
+    Since the only imprecise step of the above derivation is the asymptotic expansion, the approximation error of the expectation can be upper-bounded by the asymptotic expansion error. Assume that the asymptotic expansion error does not exceeds $\delta$, i.e.,
+    \begin{equation}
+        \left\vert x\left(1-R^2(2\sqrt{x})\right)-\sqrt{x}/2 \right\vert \leq \delta.
+        \label{eqn:asymptotic error}
+    \end{equation}
+    Then, according to \eqref{eqn:approx evaluation}, we have 
     \begin{equation}
         \left| g(\gamma) - \hat{g}(\gamma)\right| \leq \frac{1}{\gamma^2} \delta. 
     \end{equation}
-    It can be discovered numerically that $\delta \leq 0.07$, and that as $x\to \infty$, the approximation error tends to zero. Thus, \eqref{eqn:approx evaluation result} is a nearly perfect approximation when the interferential SNR $\gamma$ is large. To be more precise, the function $\hat{g}(\gamma)$ has asymptotic expansion at $\gamma \to +\infty$
+    It can be numerically discovered from Fig. \ref{fig:asymptotic_expansion} that $\delta \leq 0.07$, and that as $x\to \infty$, the approximation error tends to zero. Thus, \eqref{eqn:approx evaluation result} is a nearly perfect approximation when the interferential SNR $\gamma$ is large. To be more precise, at $\gamma \to +\infty$, the function $\hat{g}(\gamma)$ can be asymptotically expanded as
     \begin{equation}
-        \hat{g}(\gamma) \sim \frac{1}{2}\left(\frac{1}{\gamma} + \frac{1}{4\gamma^2} + \mathcal{O}(\frac{1}{\gamma^3})\right).
+        \hat{g}(\gamma) \sim \frac{1}{2}\left(\frac{1}{\gamma} + \frac{1}{4\gamma^2} + \mathcal O(\frac{1}{\gamma^3})\right).
         \label{eqn:g hat asymptotic expansion}
     \end{equation}
-    Thus, $1/\gamma - \hat{g}(\gamma) \sim 1/2\,\Theta(1/\gamma)$, and the relative error $r$ of a single term in the CRLB expression is upper bounded by introducing a positive parameter $\epsilon$:
+    Thus, $1/\gamma - \hat{g}(\gamma) \sim 1/2\,\mathcal O(1/\gamma)$, and the relative error $r$ of a single term in the CRLB expression is upper bounded by introducing a positive parameter $\epsilon$, which is
     \begin{equation}
         \begin{aligned}
         r & \overset{(a)}{\leq} \frac{\delta/\gamma^2}{\lvert \,\lvert 1/\gamma - \hat{g}(\gamma)\rvert - \lvert \hat{g}(\gamma) -  g(\gamma)\rvert\,\rvert} \\
