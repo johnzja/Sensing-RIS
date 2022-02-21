@@ -464,7 +464,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     Note that this LS method simply ignores the non-Gaussian noise. For Gaussian noise, LS method is optimal. However, in fact, the noise in \eqref{eqn:power of interference} contains a squared term of a Gaussian noise, resulting the noise to be non-Gaussian. Thus, we further conceive an ML method, as described in the following Subsection~\ref{ML method}. 
 
 \subsection{Newton-ML method}  \label{ML method}
-    Suppose the noise field $v'(t)=v'_R(t) + {\rm j}v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2$ is a non-central chi-squared distribution $\nc_{\chi_2^2}(A(\mu_{n,R}^2+\mu_{n,I}^2),  A\sigma_v^2/2)$ \cite{krishnan1967noncentral} with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
+    Suppose the noise field $v'(t)=v'_R(t) + {\rm j}v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2$ is a non-central chi-squared distribution $\nc_{\chi_2^2}(A(\mu_{n,R}^2+\mu_{n,I}^2),  A\sigma_v^2/2)$ with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
         \begin{equation}
         \mu_{n,R} = \alpha + \beta \cos(\psi(t)+\varphi),\quad  \mu_{n,I}  = \beta \sin(\psi(t)+\varphi).
         \label{chi2 distribution mean values}
@@ -516,7 +516,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         \hat{\varphi}^{(k+1)} = \hat{\varphi}^{(k)} - \frac{\mathcal{L}'(\hat{\varphi}^{(k)})}{\mathcal{L}''(\hat{\varphi}^{(k)})},
         \label{eqn:Newton-ML renewal formula}
     \end{equation}
-    where $\mathcal{L}'(\hat{\varphi}^{(k)})$ and $\mathcal{L}''(\hat{\varphi}^{(k)})$ are given by \eqref{eqn:First Derivative Likelihood} and \eqref{Second Derivative Likelihood} respectively. Note that during the calculation of \eqref{eqn:Newton-ML renewal formula}, $A, \sigma_v, \alpha, \beta$ and the received signal $P[l], \forall l\in [0:L]$ are all assumed to be known. Thus, in fact,  \eqref{eqn:First Derivative Likelihood} and \eqref{Second Derivative Likelihood} are functions of a single variable $\varphi$. 
+    where $\mathcal{L}'(\hat{\varphi}^{(k)})$ and $\mathcal{L}''(\hat{\varphi}^{(k)})$ are given by \eqref{eqn:First Derivative Likelihood} and \eqref{Second Derivative Likelihood} respectively. Note that during the calculation of \eqref{eqn:Newton-ML renewal formula}, $A, \sigma_v, \alpha, \beta$ and the received signal $P[l]$ are all assumed to be known. Thus, in fact,  \eqref{eqn:First Derivative Likelihood} and \eqref{Second Derivative Likelihood} are functions of a single variable $\varphi$. 
 
 \subsection{von Mises-EM method}    \label{von Mises-EM method}
     The Newton-ML algorithm, if convergent, is asymptotically optimal \cite{casella2021statistical}. 
@@ -526,7 +526,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
 
     The von Mises-EM algorithm is based on the Bayesian inference of von Mises distributions \cite{mardia1976bayesian}. The von Mises distribution $\VM(\mu, \kappa)$ is a two-parameter distribution on $[0, 2\pi]$, with the probability density function given by 
     \begin{equation}
-        p(\theta|\mu, \kappa) = \frac{\exp(\kappa \cos(\theta - \mu))}{2\pi I_0(\kappa)}, 0\leq \theta \leq 2\pi,
+        p(\theta|\mu, \kappa) = \frac{\exp(\kappa \cos(\theta - \mu))}{2\pi I_0(\kappa)}, \quad 0\leq \theta \leq 2\pi,
     \end{equation}
     where $\mu \in [0,2\pi]$ and $\kappa >0$ being the cyclic location parameter and the concentration parameter. 
     Note that the von Mises distribution is a distribution on a circle, thus it acts as a perfect prior distribution of a phase estimation problem. 
@@ -741,11 +741,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
 % Non-central Chi-Squared distribution. 
 \section{Proof of \textbf{Lemma 1}}
 \label{Proof of Lemma 1}
-        Since $z=z_r + {\rm j} z_i \sim \CN(e^{{\rm j} \theta}, \sigma^2)$, the conditional density for $z|\theta$ is given by 
-        \begin{equation}
-            p(z|\theta) = \frac{1}{\sigma^2}\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right)
-        \end{equation}
-        The posterior density $p(\theta | z) \propto p(\theta)p(z|\theta)$. Thus
+        Denote $z=z_r + {\rm j} z_i$, then the posterior density $p(\theta | z) \propto p(\theta)p(z|\theta)$ can be expressed as
         \begin{equation}
             \begin{aligned}
                 p(\theta|z) & \propto \exp(\kappa \cos(\theta - \mu))\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right) \\
@@ -753,16 +749,16 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
                 & \propto \exp\left( \re\left[ e^{{\rm j} \theta}\left(\kappa e^{-{\rm j}\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
             \end{aligned}
         \end{equation}
-        Since the density of von Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{{\rm j} \theta}(\kappa e^{{\rm j} \mu})^* \right] \right)$, we can also parameterize the von Mises distribution by a single complex parameter $\kappa e^{{\rm j}\mu}$. Thus, the above $p(\theta|z)$ is a von Mises density with parameter $\kappa'e^{{\rm j}\mu'}$, satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} + 1/(\sigma^2/2)\,z$. This completes the proof.
+        Since the density of von Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{{\rm j} \theta}(\kappa e^{{\rm j} \mu})^* \right] \right)$, we can also parameterize the von Mises distribution by a single complex parameter $\kappa e^{{\rm j}\mu}$. Thus, the above $p(\theta|z)$ is a von Mises density with parameter $\kappa'e^{{\rm j}\mu'}$, satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} +2z/\sigma^2$. This completes the proof.
 
 
 \section{Proof of \textbf{Theorem 1}}\label{appendix:proof of theorem1}
     According to the definition of CRLB \eqref{eqn:CRLB definition}, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\varphi$. Note that in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[P[l]\right]$, $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power} by the linearity of the expectation operation:
     \begin{equation}
-        \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l,
+        \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l.
         \label{eqn:expectation of P_l}
     \end{equation}
-    and the expectation $\mathbb{E}\left[R(z_l) \sqrt{P[l]}\right]$ can be evaluated by calculating the derivative w.r.t $\lambda_l$ on both sides of the identity $\mathbb{E}_{\lambda_l, A\sigma_v^2}[e^{\lambda_l/(A\sigma_v^2)}]=e^{\lambda_l/(A\sigma_v^2)}$:
+    The expectation $\mathbb{E}\left[R(z_l) \sqrt{P[l]}\right]$ can be evaluated by calculating the derivative w.r.t $\lambda_l$ on both sides of the identity $\mathbb{E}_{\lambda_l, A\sigma_v^2}[e^{\lambda_l/(A\sigma_v^2)}]=e^{\lambda_l/(A\sigma_v^2)}$:
     \begin{equation}
         \begin{aligned}
             \mathbb{E}\left[R(z_l) \sqrt{P[l]}\right] & = e^{-\lambda_l/(A\sigma_v^2)}\int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x} \\
@@ -830,7 +826,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     % where $a=A\sigma_v^2 \ll \lambda_l$, $h(\lambda_l, a)$ is a two-variable function\footnote{In fact, the two-variable function $g(\lambda, a)$ can be further simplified into a single-variable function $g(\cdot). $}, and $I_\nu$ is the $\nu$-th order  modified Bessel function of the first kind. For detailed proof of the calculation process and error analysis of \eqref{eqn:trickiest_expectation}, please refer to {\bf Appendix B}. 
 
 
-    In order to evaluate the expectation $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$, we first introduce some preliminaries about the noncentral chi distribution $\nc_{\chi_k}(\lambda)$ with noncentrality parameter $\lambda>0$ \cite{krishnan1967noncentral}. The distribution $\nc_{\chi_k}(\lambda)$ is the law of the length (2-norm) of a $k$-dimensional standard normal distribution $\mathcal{N}({\bm \mu}, {\bm I}_k)$, with $\lambda = \Vert {\bm \mu} \Vert_2$. Specifically, we are interested in the case where $k=2$, since this is the case of the 2-dimensional complex plane. For  $k=2$, let $Y \sim \nc_{\chi_2}(m)$, then we have \cite{park1961moments}
+    In order to evaluate the expectation $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$, we first introduce some preliminaries about the noncentral chi distribution $\nc_{\chi_k}(\lambda)$ with noncentrality parameter $\lambda>0$. The distribution $\nc_{\chi_k}(\lambda)$ is the law of the length (2-norm) of a $k$-dimensional standard normal distribution $\mathcal{N}({\bm \mu}, {\bm I}_k)$, with $\lambda = \Vert {\bm \mu} \Vert_2$. Specifically, we are interested in the case where $k=2$, since this is the case of the 2-dimensional complex plane. For  $k=2$, let $Y \sim \nc_{\chi_2}(m)$, then we have \cite{park1961moments}
     \begin{equation}
         \mathbb{E}\left[Y\right] = \sqrt{\frac{\pi}{2}}L_{1/2}(-m^2/2),
         \label{eqn:noncentral chi mean}
