@@ -264,25 +264,25 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
 \subsection{Channel Estimation}
 \label{Channel Estimation}
 Observe from \eqref{traditional beamforming} that, the estimation for the cascade channel ${\bm H} = {\rm diag}({\bm f}^{*})\bm G$ is enough for beamforming design.
-To accurately acquire this cascade channel, the user generally sends pilot signal $x$ to the BS under $P$ different RIS configurations which are the first $P$ columns of the DFT matrix $\bm F_{N,K}$. Due to the channel reciprocity, the received signal at the BS with the $p$-th RIS configuration $\bm \Theta_{p}=\diag({\bm \theta}_p)$ can be written as \cite{atapattu2020reconfigurable}
+To accurately acquire this cascade channel, the user generally sends pilot signal $x$ to the BS under $P$ different RIS configurations which are the first $P$ columns of the DFT matrix $\bm F_N$, denoted as $\bm F_{N,P}$. Due to the channel reciprocity, the received signal at the BS with the $p$-th RIS configuration $\bm \Theta_{p}=\diag({\bm \theta}_p)$ can be written as \cite{atapattu2020reconfigurable}
     \begin{equation}
     \label{CE received signal}
-            {\bm y}_{{\rm BS}, p} =\bm H^{T} {\bm \theta}_p x+\bm n,
+        {\bm y}_{{\rm BS}, p} =\bm H^{T} {\bm \theta}_p x+\bm n,
     \end{equation}
     where $\bm n\sim \mathcal{CN}\left( \bm 0_{M}, \sigma_{n}^{2}\bm I_{M}\right)$ is the \ac{AWGN} at the receiver BS.
 Equivalently, \eqref{CE received signal} can be expressed as the matrix form
     \begin{equation}
     \label{eqn:LS_CE model}
-        {\bm Y}_{\rm BS}=\bm H^{T} \bm F_{N,K}x + {\bm N},
+        {\bm Y}_{\rm BS}=\bm H^{T} \bm F_{N,P}x + {\bm N},
     \end{equation}
     where ${\bm Y}_{\rm BS}=\left[\bm y_{{\rm BS}, 1},\cdots,\bm y_{{\rm BS}, P}\right]$ and $\bm N = \left[ \bm n_{1},\cdots,\bm n_{P}\right]$.
 With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estimation in RIS-assisted system can be formulated as 
     \begin{equation}
-        \hat{\bm H} = \arg\min_{\bm H} \lVert {\bm Y}_{\rm BS} - {\bm H^{T}} {\bm F}_{N,K}\rVert_{F}^2.
+        \hat{\bm H} = \arg\min_{\bm H} \lVert {\bm Y}_{\rm BS} - {\bm H^{T}} {\bm F}_{N,P}\rVert_{F}^2.
     \end{equation}
     With the minimal least-square (LS) criterion \cite{kundu2021channel}, we obtain
     \begin{equation}
-        \hat{\bm H}_{\rm LS} = \frac{1}{P}{\bm F}_{N,K}^{*}{\bm Y}_{\rm BS}^{T},
+        \hat{\bm H}_{\rm LS} = \frac{1}{P}{\bm F}_{N,P}^{*}{\bm Y}_{\rm BS}^{T},
         \label{eqn:LS-CE}
     \end{equation}
     which provides a solution for channel estimation in this system. In this paper, we name it the least-square channel estimation (LS-CE) method. 
@@ -294,7 +294,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
 \subsection{Signal Model for IRF}
 \label{Models for IRFs}
 
-    Interference is a fundamental physical phenomenon of all kinds of waves. The most well-known example is the double-slit optical interference \cite{louradour1993interference}, as is shown in Fig.~\ref{fig:scheme}~(a), where the interference fringes created during the wave superposition reveal the phase difference of the two optical paths. Similarly, the same interference phenomenon occurs when two RF electromagnetic waves meet together on the RIS, as is shown in Fig.~\ref{fig:scheme}~(b), and the \ac{IRF} created by this interference reveals the \ac{CSI}. 
+    Physical intuition is vital in designing RIS-aided systems \cite{najafi2020physics}, and interference is a fundamental physical phenomenon of all kinds of waves. The most well-known example is the double-slit optical interference \cite{louradour1993interference}, as is shown in Fig.~\ref{fig:scheme}~(a), where the interference fringes created during the wave superposition reveal the phase difference of the two optical paths. Similarly, the same interference phenomenon occurs when two RF electromagnetic waves meet together on the RIS, as is shown in Fig.~\ref{fig:scheme}~(b), and the \ac{IRF} created by this interference reveals the \ac{CSI}. 
     \begin{figure}[t]
         \centering
         \subfigure[Optical interference.]
