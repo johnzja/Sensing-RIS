@@ -39,24 +39,19 @@ breaklinks=true}
 \theoremseparator{}
 \theoremsymbol{\rule{1ex}{1ex}}
 \newtheorem{proof}{Proof:}
-\acrodef{EAR}[EAR]{element activation ratio}
 \acrodef{SNR}[SNR]{signal-to-noise ratio}
-\acrodef{TC}[TC]{transmission coefficients}
-\acrodef{US-RIS}[US-RIS]{user-side RIS}
-\acrodef{BSS-RIS}[BSS-RIS]{base-station-side RIS}
 \acrodef{DoF}[DoF]{degree of freedom}
 \acrodef{FPGA}[FPGA]{field programmable gate array}
 \acrodef{RF}[RF]{radio-frequency}
-%\acrodef{RIS}[RIS]{reconfigurable intelligent surfaces}
-\acrodef{UE}[UE]{user equipment}
+%\acrodef{UE}[UE]{user equipment}
+%do not user \ac{UE}
 \acrodef{BS}[BS]{base station}
-\acrodef{RIS}[RIS]{reconfigurable intelligent surface}
+%\acrodef{RIS}[RIS]{reconfigurable intelligent surface}
+%do not use \ac{RIS}
 \acrodef{DL}[DL]{downlink}
 \acrodef{TA}[TA]{transmit antenna}
 \acrodef{RA}[RA]{receive antenna}
 \acrodef{LoS}[LoS]{line-of-sight}
-\acrodef{UL-TBF}[UL-TBF]{uplink transmit beamforming}
-\acrodef{TPS}[TPS]{transmit phase shifter}
 \acrodef{RC}[RC]{receiver combining}
 \acrodef{AWGN}[AWGN]{additive white Gaussian noise}
 \acrodef{DFT}[DFT]{discrete Fourier transform}
@@ -205,7 +200,7 @@ In Section~\ref{Simulation Results}, simulation results are provided for quantif
 Finally, in Section~\ref{Conclusion}, we provide our conclusions followed by promising future research ideas.
 
 \textit{Notation:} $\mathbb C$ and $\mathbb R$ denote the set of complex and real numbers, respectively;
-$[L]$ represents the set of integers $\{0,1,\cdots,L-1\}$;
+$\{L\}$ represents the set of integers $\{0,1,\cdots,L-1\}$;
 $\bm A^{-1}, \bm A^*,\bm A^T,$ and $\bm A^H$ denote the inverse, conjugate, transpose, and conjugate transpose of matrix $\bm A$, respectively; 
 $\Vert \cdot\Vert_{2}$ is the $\mathcal{L}_{2}$-norm of its argument function; 
 %$\left\langle\bm x\right\rangle$ is the normalized vector of $\bm x$, i.e., $\left\langle\bm x\right\rangle=\bm x/\Vert\bm x\Vert_{2}$;
@@ -260,7 +255,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
         In this paper, we assume that the locations of the \ac{BS} and the RIS are unchanged, which can provide us a beamforming approach expressed as
                 \begin{equation}
 \label{traditional beamforming}
-\bm w=\sqrt{P_{\rm max}}\bm a\left(\alpha\right),\quad \theta_{n} = \exp\left(-{\rm j} \arg\left(f_{n}^{*}\bm g_{n}^{T}\bm w\right)\right),~\forall n\in [N],
+\bm w=\sqrt{P_{\rm max}}\bm a\left(\alpha\right),\quad \theta_{n} = \exp\left(-{\rm j} \arg\left(f_{n}^{*}\bm g_{n}^{T}\bm w\right)\right),~\forall n\in \{N\},
 \end{equation}
 where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave departure angle $\alpha$ of the BS antenna array, and $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
 
@@ -310,7 +305,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
         %\vspace{-0.5em}
     \end{figure}
 
-    Suppose two signals imping the RIS simultaneously, creating an interference field at the $n$-th RIS element, with both of the symbols transmitted by \ac{BS} and \ac{UE} being $s=1$. In order to perform channel estimation, we need to probe the interference fringes, i.e., the power of the \ac{IRF}. To clarify the power problem associated with an electromagnetic signal, the relationship between physical signal power and baseband equivalent signal power is re-stated here. Both of the BS-RIS and user-RIS signals that appear on each RIS element can be represented by their baseband equivalent signals $E_{n,{\rm BB}}(t)$, 
+    Suppose two signals imping the RIS simultaneously, creating an interference field at the $n$-th RIS element, with both of the symbols transmitted by \ac{BS} and the user being $s=1$. In order to perform channel estimation, we need to probe the interference fringes, i.e., the power of the \ac{IRF}. To clarify the power problem associated with an electromagnetic signal, the relationship between physical signal power and baseband equivalent signal power is re-stated here. Both of the BS-RIS and user-RIS signals that appear on each RIS element can be represented by their baseband equivalent signals $E_{n,{\rm BB}}(t)$, 
     and the corresponding physical passband electric field induced on each RIS element is represented by 
     \begin{equation}
         E_{n}(t) = \sqrt{2} {\rm Re}\left( E_{n,{\rm BB}}(t)e^{{\rm j}\omega_c t} \right),
@@ -326,7 +321,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     \end{aligned}
     \end{equation}
     where $v(t)$ is the electromagnetic noise signal in its baseband representation, and $\psi(t)$ is the time-dependent phase difference between the symbols transmitted by \ac{BS} and the user.  
-    Furthermore, by defining $\alpha = \left\vert\bm g_{n}^{T}\bm w\right\vert$, $\beta = \left\vert f_{n}^{*}\right\vert$, and the phase difference between the \ac{BS}-\ac{RIS} channel and the \ac{RIS}-user channel as $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, then the detected power of the \ac{IRF} can be written as
+    Furthermore, by defining $\alpha = \left\vert\bm g_{n}^{T}\bm w\right\vert$, $\beta = \left\vert f_{n}^{*}\right\vert$, and the phase difference between the \ac{BS}-RIS channel and the RIS-user channel as $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, then the detected power of the \ac{IRF} can be written as
     \begin{equation}
         \label{eqn:power of interference}
         \begin{aligned}
@@ -341,7 +336,7 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
     The phase difference $\varphi$ defined here will play an important role in our following channel estimation, since it carries enough CSI for beamforming. To estimate the phase difference $\varphi$, we need enough observations from the sensor-detected power signal $P(t)$. For simplicity and without loss of generality, we can assume $\psi(t)=\omega t$ and $\omega=\frac{2\pi}{T_{s}}$, where $T_s$ is the symbol period. Furthermore, assume that $L$ observations $P[l]=P(t_{l})$ located at equally-spaced instants 
     \begin{equation}
         \label{observation time}
-        t_{l}=\frac{l}{L}T_{s},~\forall l\in \left\{0,\cdots ,L-1\right\}
+        t_{l}=\frac{l}{L}T_{s},~\forall l\in \{L\}
     \end{equation}
     are used for phase estimation $\varphi$.
 
@@ -368,13 +363,13 @@ With the received signal $\bm Y_{\rm BS}$ and assuming $x=1$, the channel estima
         \begin{figure}[!t]
         \centering
         \includegraphics[width=.9\textwidth]{data/protocol.pdf}
-        \caption{Simultaneous rotational signaling scheme. The IRF power is the instantaneous total power of the the BS-RIS signal and the user-RIS signal. The composite power waveform detected by the power sensor enables our algorithm to obtain the desired CSI. The parameters $\alpha$ and $\beta$ are estimated from the first 2 time slots, and $\varphi$ is estimated by IRF that occurs during the third time slot.}
+        \caption{Simultaneous rotational signaling scheme. The IRF power is the instantaneous total power of the BS-RIS signal and the user-RIS signal. The composite power waveform detected by the power sensor enables our algorithm to obtain the desired CSI. The parameters $\alpha$ and $\beta$ are estimated from the first 2 time slots, and $\varphi$ is estimated by IRF that occurs during the third time slot.}
         \label{fig:protocol}
     \end{figure}
 
     To clarify this idea, we take only one RIS element into consideration. 
-    As is introduced in previous subsections, if we allow the BS and \ac{UE} to transmit electromagnetic waves simultaneously, then the interference phenomenon will occur on each RIS element. 
-    However, equal carrier frequencies of the BS and \ac{UE} create stable interference fringes \cite{louradour1993interference} on the RIS, which do not carry information about the channel. 
+    As is introduced in previous subsections, if we allow the BS and the user to transmit electromagnetic waves simultaneously, then the interference phenomenon will occur on each RIS element. 
+    However, equal carrier frequencies of the BS and the user create stable interference fringes \cite{louradour1993interference} on the RIS, which do not carry information about the channel. 
     In contrast, a rotational symbol at UE, which is equivalent to a slightly higher carrier frequency, enables the IRF power to vary in time. 
     Thus, the desired CSI can be drawn from the varying IRF power signal received by sensing RIS.
     Fig.~\ref{fig:protocol} shows the simultaneous rotational signaling procedure and the IRF waveform. 
@@ -452,7 +447,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     The key challenge of the IRF channel estimation and beamforming is the phase estimation step, i.e., how to obtain the phase difference $\varphi$. Since the interferential power $P_n(t)$ exhibits a sinusoidal waveform, Fourier transforms can be applied to extract its phase. Apply $L$-point \ac{DFT} to the discrete-time  observed sensor detection signals $P[0],\cdots ,P[L-1]$, and we have
     \begin{equation}
         \label{DFT}
-        p[l']=\sum\nolimits_{l=0}^{L-1}P[l]e^{-{\rm j}\frac{2\pi}{L}ll'},~\forall l'\in [L].
+        p[l']=\sum\nolimits_{l=0}^{L-1}P[l]e^{-{\rm j}\frac{2\pi}{L}ll'},\quad \forall l'\in \{L\}.
     \end{equation}
     Specifically, we have the complex amplitude of the first harmonics $p[1]$ as 
     \begin{equation}
@@ -488,12 +483,12 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     \end{equation}
     In the following analysis, for the sake of simplicity, we always assume that $\sigma_{\zeta}^2 = 0$. Thus, the log likelihood function of $\varphi$ based on the observations $P[l]$ can be represented by
     \begin{equation}
-        \mathcal{L}(P[0:L] | \varphi) = \sum_{l=0}^{L-1}\left[-\frac{P[l] + \lambda_l}{A\sigma_v^2} + \log I_0\left(\frac{\sqrt{P[l] \lambda_l}}{A\sigma_v^2/2}\right)\right] - L\log(A\sigma_v^2),
+        \mathcal{L}(P[0],\cdots,P[L-1] | \varphi) = \sum_{l=0}^{L-1}\left[-\frac{P[l] + \lambda_l}{A\sigma_v^2} + \log I_0\left(\frac{\sqrt{P[l] \lambda_l}}{A\sigma_v^2/2}\right)\right] - L\log(A\sigma_v^2),
         \label{ML likelihood}
     \end{equation}
     where $\lambda_l := \lambda(t_l)$, and the derivative of \eqref{ML likelihood} is 
     \begin{equation}
-        \frac{\partial \mathcal{L}(P[0:L] | \varphi)}{\partial \varphi} = \frac{2\alpha\beta}{\sigma_v^2}\sum_{l=0}^{L-1}\sin(\psi(t_l)+\varphi) \left[1 - R\left( \frac{\sqrt{P[l]\lambda_l}}{A\sigma_v^2/2} \right) \frac{\sqrt{P[l]}}{\sqrt{\lambda_l}}\right],
+        \frac{\partial \mathcal{L}(P[0],\cdots,P[L-1] | \varphi)}{\partial \varphi} = \frac{2\alpha\beta}{\sigma_v^2}\sum_{l=0}^{L-1}\sin(\psi(t_l)+\varphi) \left[1 - R\left( \frac{\sqrt{P[l]\lambda_l}}{A\sigma_v^2/2} \right) \frac{\sqrt{P[l]}}{\sqrt{\lambda_l}}\right],
         \label{eqn:First Derivative Likelihood}
     \end{equation}
     where the function $R(z)$ is defined as $R(z) = I_1(z)/I_0(z)$. Since the derivative of the function $R(z)$ satisfies the property \cite{silverman1972special}
@@ -504,7 +499,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     the second derivative of the likelihood function $\mathcal{L}$ can be expressed as
     \begin{equation}
         \begin{aligned}
-        \frac{\partial^2 \mathcal{L}(P[0:L] | \varphi)}{\partial \varphi^2}  = &  \frac{2\alpha\beta}{\sigma_v^2} \sum_{l=0}^{L-1}{\cos(\psi(t_l)+\varphi)}\left[1 - R\left(z_l\right) \frac{\sqrt{P[l]}}{\sqrt{\lambda_l}}\right] \\
+        \frac{\partial^2 \mathcal{L}(P[0],\cdots,P[L-1] | \varphi)}{\partial \varphi^2}  = &  \frac{2\alpha\beta}{\sigma_v^2} \sum_{l=0}^{L-1}{\cos(\psi(t_l)+\varphi)}\left[1 - R\left(z_l\right) \frac{\sqrt{P[l]}}{\sqrt{\lambda_l}}\right] \\
         & +\frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{\sin^2(\psi(t_l)+\varphi) \left(1-R^2(z_l) -\frac{2}{z_l}R(z_l)\right)\frac{P[l]}{\lambda_l} },\\
         \end{aligned}
         \label{Second Derivative Likelihood}
@@ -610,7 +605,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     
 \subsection{Precise CRLB} \label{Precise CRLB}
     \begin{theorem}[Non-central Chi-Squared CRLB] \label{thm:precise CRLB}\mbox{}\par
-        Suppose the probabilistic model is specified by \eqref{eqn:sensor power}, where $L$ observations are obtained at instants $t_l, \forall l\in[0:L]$. Then the CRLB of this $L$-point phase estimation problem is given by
+        Suppose the probabilistic model is specified by \eqref{eqn:sensor power}, where $L$ observations are obtained at instants $t_l, \forall l\in P[0],\cdots,P[L-1]$. Then the CRLB of this $L$-point phase estimation problem is given by
         \begin{equation}
             \frac{1}{{\rm CRLB}(\varphi)} = K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}\sin^2(\psi_l+\varphi)\left(1/\gamma_l-g(\gamma_l)\right),
             \label{eqn:precise_CRLB}
