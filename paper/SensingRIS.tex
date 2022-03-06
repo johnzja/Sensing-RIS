@@ -110,10 +110,10 @@ Reconfigurable intelligent surface (RIS) has been envisioned as a revolutionary 
 However, the RIS's disability of processing signals and the increased channel dimension have brought new challenges to RIS-assisted system, which greatly increases the pilot overhead required for channel estimation.
 To tackle this problem, several prior contributions that enhance the hardware architecture of RIS or develop algorithms to exploit the channels' mathematical properties have been made, where the required pilot overhead is reduced to be proportional to the number of RIS elements.
 In this paper, we propose a dimension-independent channel state information (CSI) acquisition approach, that the required pilot overhead is independent of the number of RIS elements.
-Specifically, in contrast to traditional signal transmission framework, where signals from the base station (BS) and the users are transmitted in different time slots, we propose a novel framework that signals are transmitted from the BS and the user simultaneously during CSI acquisition.
-Under this framework, we reveal the phenomenon that an electromagnetic interference random field (IRF) will occur on RIS, and we employ sensing RIS to capture its feature.
+Specifically, in contrast to traditional signal transmission method, where signals from the base station (BS) and the users are transmitted in different time slots, we propose a novel method that signals are transmitted from the BS and the user simultaneously during CSI acquisition.
+Under this method, we reveal the phenomenon that an electromagnetic interference random field (IRF) will occur on RIS, and we employ sensing RIS to capture its feature.
 Moreover, we develop three algorithms for parameter estimation in this system, and also derive the Cramer-Rao lower bound (CRLB) and its asymptotic expression.
-Simulation results verify that our proposed signal transmission framework and the corresponding algorithms can achieve dimension-independent CSI acquisition for beamforming.
+Simulation results verify that our proposed signal transmission method and the corresponding algorithms can achieve dimension-independent CSI acquisition for beamforming.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -151,7 +151,7 @@ In \cite{wang2020channel}, based on the shared reflected channels among multi-us
 % Multi-user relevance, two-timescale channel property & channel sparsity. 
 
 %% Re-interpret. All the above methods require channel matrix first. The channel matrix is at least of size O(N). Usually...
-Note that, in order to achieve high beamforming gain, all the above classical channel estimation methods are designed to estimate the full channel matrix as accurately as possible. However, since the size of the channel matrix is at least of size $\mathcal{O}(N)$, where $N$ denotes the number of RIS elements, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,nguyen2021hybrid,Huchen,wang2020compressed,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent. This is unacceptable especially when the RIS is fabricated with larger number of elements (e.g. 1100 elements in \cite{pei2021ris}, 2304 elements in \cite{yangfan2020coding}, and 10240 elements in \cite{yang2018reconfigurable}).   % larger RIS! fabricated (how many elements?)
+Note that, in order to achieve high beamforming gain, all the above classical channel estimation methods are designed to estimate the full channel matrix as accurately as possible. However, since the channel matrix is at least of size $\mathcal{O}(N)$, where $N$ denotes the number of RIS elements, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,nguyen2021hybrid,Huchen,wang2020compressed,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent. This is unacceptable especially when the RIS is fabricated with larger number of elements (e.g. 1100 elements in \cite{pei2021ris}, 2304 elements in \cite{yangfan2020coding}, and 10240 elements in \cite{yang2018reconfigurable}).   % larger RIS! fabricated (how many elements?)
 Therefore, the question naturally arises as: {\it Does there exist a dimension-independent approach where the required pilot overhead is independent of the number of RIS elements?}
 
 % In a nutshell, both the above two categories have two limitations:
@@ -190,7 +190,7 @@ Specifically, the contributions of this paper can be summarized as follows.
 \textit{Organization:}
 The rest of the paper is organized as follows.
 In Section~\ref{System Model}, we introduce the system model of RIS-aided communications, and review the traditional separate procedures of beamforming and channel estimation.
-In Section~\ref{Interference Random Field}, we propose a novel transmission framework for RIS-aided system, and reveal the \ac{IRF} phenomenon under this framework.
+In Section~\ref{Interference Random Field}, we propose a novel signal transmission method for CSI acquisition in RIS-aided system, and reveal the \ac{IRF} phenomenon under this method.
 In Section~\ref{Sensing RIS-Based Channel Estimation}, we introduce the hardware architecture of sensing RIS to exploit the \ac{IRF}.
 Based on sensing RIS, we propose three algorithms to realize channel estimation.
 In Section~\ref{Performance Analysis}, we derive the \ac{CRLB} and its asymptotic expression for channel estimation in the sensing RIS-assisted system.
@@ -371,15 +371,15 @@ Equivalently, \eqref{CE received signal} can be expressed in the matrix form
 
     \begin{figure}[!t]
         \centering
-        \myincludegraphics{figures/phasor.pdf}
-        \caption{Phasor representation of the \ac{IRF} on each RIS element. Red vector represents the complex BS-RIS signal; Blue vector represents the complex user-RIS signal; $\alpha$ and $\beta$ denote the amplitude of these signals respectively. In our signaling method, the BS transmits a fixed symbol $1$, while the user transmits a rotating symbol $e^{{\rm j}\psi(t)}$, causing the output of the power sensor $P(t)$ to vary in a waveform that is similar to a sine curve.}
+        \includegraphics[width=\textwidth]{figures/phasor.pdf}
+        \caption{Phasor representation of the \ac{IRF} on each RIS element. Red vector represents the complex BS-RIS signal ${\bm g}_n^T{\bm w}$; Blue vector represents the complex user-RIS signal $f_n^*w'$; $\alpha$ and $\beta$ denote the amplitude of these signals respectively. In our signaling method, the BS transmits a fixed symbol $s=1$, while the user transmits a rotating symbol $s'=e^{{\rm j}\psi(t)}$, causing the output of the power sensor $P(t)$ to vary in a waveform that is similar to a sine curve.}
         \label{fig:phasor}
     \end{figure}
     To further analyze the interference, we focus on the received field of the $n$-th RIS element. 
     Note that the power of interference field measured at instant $t$, expressed by \eqref{eqn:power of interference}, exhibits a sinusoidal waveform in the time domain, as is shown in Fig.~\ref{fig:phasor}. 
     The initial phase ($t=0$) of this sinusoidal waveform is uniquely determined by $\varphi$.
     Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. 
-    However, according to \eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*)$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we only need to obtain one of the phases of these two channels to perform optimal RIS beamforming. Though generally it is difficult to obtain the BS-RIS channel and the RIS-user channel, since the BS and RIS are installed at fixed locations, it is reasonable to assume that the BS-RIS channel is much more stable and predictable, compared to the RIS-user counterpart. As a result, the phases of the BS-RIS link $\arg({\bm g}_n^{\rm T}{\bm w})$ can be assumed to be known in our algorithms. Due to the stability of this channel, the phases are mainly determined by geometric parameters, i.e., the location of the BS and RIS. 
+    However, according to \eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*w')$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we only need to obtain one of the phases of these two channels to perform optimal RIS beamforming. Though generally it is difficult to obtain the BS-RIS channel and the RIS-user channel, since the BS and RIS are installed at fixed locations, it is reasonable to assume that the BS-RIS channel is much more stable and predictable, compared to the RIS-user counterpart. As a result, the phases of the BS-RIS link $\arg({\bm g}_n^{T}{\bm w})$ can be assumed to be known in our algorithms. Due to the stability of this channel, the phases are mainly determined by geometric parameters, i.e., the location of the BS and RIS. 
 
 
 \section{Sensing RIS-Based Channel Estimation}
@@ -407,15 +407,16 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         \item Phase estimation based on power data;
         \item Integrate phase information and other CSI to perform beamforming. 
     \end{enumerate} 
-    Since we all assume the modulation method to be OFDM, the first step (1) can be easily realized by transmitting a symbol $s=1$ on the zeroth subcarrier at the BS, while transmitting a symbol $1$ on the $k$-th subcarrier at the user. 
+    Since we all assume the modulation method to be OFDM, the first step 1) can be easily realized by transmitting a symbol $s=1$ on the zeroth subcarrier at the BS, while transmitting a symbol $1$ on the $k$-th subcarrier at the user. 
     As is mentioned above, if we denote the OFDM symbol period by $T_s$, then the equivalent IRF angular frequency $\omega$ is given by $\omega = 2\pi k /T_s$, which means the power signal exhibits exactly $k$ sine-shaped\footnote{The noiseless power signals are, in fact, strictly sinusoidal. } periods during an OFDM symbol. For calculation simplicity, in this paper, we always assume $k=1$. In fact, for multi-user MISO\footnote{In this paper, we assume that the user is equipped with a single antenna, but the number of antennas at BS is not restricted. Furthermore, for MIMO systems, since the user is equipped with multi-antennas, phase-tuning simply for constructive interference at the user is sub-optimal. Thus, IRF methods should be further improved to fully harness the multi-antenna space-multiplexing gains.} systems, different $k$ values can be assigned to different users in order to enable channel estimation and beamforming design for several users within a single OFDM symbol. 
     This can be done by Fourier analysis on the power signal $P(t)$ and extraction of phase angles for each user at distinct frequencies. 
 
-    The second step (2) is called {\it phase estimation}. This step is designed to extract the phase difference $\varphi$ between the BS-RIS and RIS-user channel. 
+    The second step 2) is called {\it phase estimation}. This step is designed to extract the phase difference $\varphi$ between the BS-RIS and RIS-user channel. 
     This is the key step of dimension-independent IRF channel estimation and beamforming, since this step can be done independently among all the RIS elements. 
 
-    The third step (3) is to utilize the phase information provided by step (2) and calculate the near-optimal phase shifts for each RIS element in order to perform beamforming. 
-    Step (2) and Step (3) are executed by processors, so we collect these two steps into pseudo codes shown in {\bf Algorithm~\ref{alg:IRF-Beamforming}}:
+    The third step 3) is to utilize the phase information provided by step 2) and calculate the near-optimal phase shifts for each RIS element in order to perform beamforming. The additional CSI refers to the phase information ${\rm arg}({\bm g}_n^T {\bm w})$. 
+
+    Step 2) and step 3) are executed by processors, so we collect these two steps into pseudo codes shown in {\bf Algorithm~\ref{alg:IRF-Beamforming}}:
     \begin{algorithm}[H] 
         \caption{Near-optimal RIS Beamforming by IRF} \label{alg:IRF-Beamforming}
         \setstretch{1.35}
@@ -424,8 +425,8 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
             \ENSURE RIS phase-shift matrix ${\bm \Theta}$.
             \FOR{$n=1,2,\cdots,N$}
                 \STATE Estimate $\alpha$ and $\beta$ as in Fig.~\ref{fig:protocol}.
-                \STATE $\varphi_n \leftarrow$ estimate phase difference  $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}^{\rm T}\bm w\right)$ from $P_n(t)$, $\alpha$ and $\beta$. 
-                \STATE $\psi_{n} \leftarrow$ estimate phase-shift ${\rm arg}(\bm g_{n}^{\rm T}\bm w)$ from geometric parameters of BS and RIS
+                \STATE $\varphi_n \leftarrow$ estimate phase difference  $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$ from $P_n(t)$, $\alpha$ and $\beta$. 
+                \STATE $\psi_{n} \leftarrow$ estimate phase-shift ${\rm arg}(\bm g_{n}^{T}\bm w)$ from geometric parameters of BS and RIS
                 \STATE $\theta_n \leftarrow -\varphi_n - 2\psi_n$
             \ENDFOR
             \STATE ${\bm \Theta} \leftarrow \diag(\theta_1, \theta_2, \cdots, \theta_N)$
@@ -523,9 +524,9 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     \end{equation}
     where $\mu \in [0,2\pi]$ and $\kappa >0$ being the cyclic location parameter and the concentration parameter. 
     Note that the von Mises distribution is a distribution on a circle, thus it acts as a perfect prior distribution of a phase estimation problem. 
-    More fortunately, the von Mises distribution is also closely related to the complex Gaussian distribution, thus implying the possibility of designing an iterative EM algorithm \cite{casella2021statistical} based on the interactions between the von Mises distribution and the complex Gaussian noise distribution. The following two lemmas: {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}} reveal these interations. 
+    More fortunately, the von Mises distribution is also closely related to the complex Gaussian distribution, thus implying the possibility of designing an iterative EM algorithm \cite{casella2021statistical} based on the interactions between the von Mises distribution and the complex Gaussian noise distribution. The following two lemmas: {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}} reveal these interactions. 
     \begin{lemma}[Bayesian estimation of von Mises distribution]\label{lemma_1} \mbox{}\par
-        Let $\theta \sim \VM(\mu, \kappa)$, and $z|\theta \sim \CN(e^{{\rm j}\theta}, \sigma^2)$. Then the posterior distribution $\theta | z$ is also a von-Mises distribution $\VM(\mu', \kappa')$ with parameters $\mu'$ and $\kappa'$ satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} + 2z/\sigma^2$.
+        Let $\theta \sim \VM(\mu, \kappa)$, and $z|\theta \sim \CN(e^{{\rm j}\theta}, \sigma^2)$. Then the posterior distribution $\theta | z$ is also a von Mises distribution $\VM(\mu', \kappa')$ with parameters $\mu'$ and $\kappa'$ satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} + 2z/\sigma^2$.
     \end{lemma}
         \begin{IEEEproof}
         See {\bf Appendix \ref{Proof of Lemma 1}}. 
@@ -535,7 +536,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     \end{remark}
 
     \begin{lemma}[Noncentral $\CN$ posterior distribution on circle is $\VM$]\label{lemma_2} \mbox{}\par
-        Suppose $z \sim \CN(z_0, \sigma^2)$, where $z_0 \in \mathbbm{C}$, and a positive radius $r>0$. Then the posterior distribution of angle $\theta= {\rm arg} (z)$, constrained on a circle $|z|=r$ obeys the von-Mises distribution
+        Suppose $z \sim \CN(z_0, \sigma^2)$, where $z_0 \in \mathbbm{C}$, and a positive radius $r>0$. Then the posterior distribution of angle $\theta= {\rm arg} (z)$, constrained on a circle $|z|=r$ obeys the von Mises distribution
         \begin{equation}
             p(\theta |\, |z|=r) \sim \VM\left({\rm arg}(z_0), \frac{r|z_0|}{\sigma^2/2}\right).
         \end{equation}
