@@ -59,17 +59,19 @@ for idx_scan = 1:N_scan
 
         % LS method with FFT.
         p = fft(P);
-        varphi_hat = angle(p(2));
+        varphi_hat_DFT = angle(p(2));
+        varphi_hat = varphi_hat_DFT;
 
         delta = (varphi_hat - varphi)/(2*pi);
         MSE_arr_LS(idx, idx_scan) = ((delta - round(delta))*(2*pi))^2;
 
         % von-Mises method
-        varphi_hat = EM_von_mises(P, SensingRIS_param);
+        varphi_hat = EM_von_mises(P, SensingRIS_param, 20, true);
         delta = (varphi_hat - varphi)/(2*pi);
         MSE_arr_VM(idx, idx_scan) = ((delta - round(delta))*(2*pi))^2;
 
         % Estimate varphi by Newton-Raphson method.
+        varphi_hat = varphi_hat_DFT;
         for k = 1:4
             [logL, dlogL, d2logL] = calc_likelihood(P, varphi_hat, SensingRIS_param);
             varphi_hat = varphi_hat - dlogL/d2logL;
