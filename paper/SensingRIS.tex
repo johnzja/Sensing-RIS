@@ -314,14 +314,19 @@ Equivalently, \eqref{CE received signal} can be expressed in the matrix form
     where $\omega_c = 2\pi f_c$ denotes the carrier frequency, and the coefficient $\sqrt{2}$ ensures that the passband signal energy (power) is equal to the baseband signal energy (power), i.e., 
     $\lVert E_{n, {\rm BB}}\rVert_2^2 = \lVert E_{n}\rVert_2^2$. 
     Thus, taking the square of the baseband signal is equivalent to calculating the power of the physical electromagnetic signal. 
-    Now we consider the IRF case, where a superposition of the BS-RIS signal and the user-RIS signal is considered. Due to the linearity of \eqref{baseband-passband relationship}, we obtain the noisy IRF signal by adding up the two impinging baseband signals
+    Now we consider the IRF case, where a superposition of the BS-RIS signal and the user-RIS signal is considered. 
+    Following the notations in Section~\ref{System Model} and due to the linearity of \eqref{baseband-passband relationship}, we obtain the noisy IRF signal by adding up the two impinging baseband signals
     \begin{equation}
         \begin{aligned}
             E_{n,{\rm BB, IRF}}(t) &= E_{n, {\rm BB, BS}}(t)+E_{n,{\rm BB,user}}(t)+v(t)\\
             &=\bm g_{n}^{T}\bm w s+f_{n}^{*} w' s' +v(t),
         \end{aligned}
     \end{equation}
-    where $v(t)$ is the electromagnetic noise signal in its baseband representation, $w'$ is the user beamforming scalar that satisfies the power constraint $\lvert w'\rvert^2 \leq P_u$, since the user has only a single antenna. 
+    where $v(t)\sim \mathcal{CN}(0,\sigma_{v}^{2})$ is the electromagnetic noise signal in its baseband representation, $\bm w$ and $w'$ are the beamforming vector at the BS side and the user side, respectively, which satisfies
+    \begin{equation}
+    \label{power constraint}
+    \Vert \bm w \Vert_{2}^{2}\leq P_{\text{max}}, \quad |w'|^{2}\leq P'_{\text{max}}.
+    \end{equation}
     $s$ is the symbol transmitted from the BS to RIS, and $s'=e^{{\rm j} \psi(t)}$ is the time-varying transmitted symbol from the user to RIS.  
     Since the interference fringes are not sensitive to a global phase change, we can safely assume that $s=1$, and then the relative phase between the user and BS can be fully characterized by a time-varying phase function $\psi(t)$.  
 
@@ -334,12 +339,7 @@ Equivalently, \eqref{CE received signal} can be expressed in the matrix form
             &~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{{\rm j}\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
         \end{aligned}
     \end{equation}
-    where for every time instant $t\in {\mathbb R}$, $v'(t)$ is the equivalent electromagnetic noise, $\zeta$ is the noise introduced by digital signal processing after measuring the IRF power, and $A$ is the amplification factor of the power sensor. 
-    The equivalent electromagnetic noise $v'(t)$ satisfies 
-    \begin{equation}
-        v'(t) = e^{{\rm j}{\rm arg}({\bm g}_n^T \bm w)}v^*(t),
-    \end{equation}
-    thus, the distribution of $v'(t)$ coincides with that of $v(t)$, i.e., $v'(t)\overset{\text{d}}{=}v\sim\mathcal{CN}\left(0,\sigma_{v}^{2}\right)$. 
+    where for every time instant $t\in {\mathbb R}$, $\zeta$ is the noise introduced by digital signal processing after measuring the IRF power, $A$ is the amplification factor of the power sensor, and the equivalent electromagnetic noise $v'(t) = e^{{\rm j}{\rm arg}({\bm g}_n^T \bm w)}v^*(t)$ follows the same distribution as $v(t)$.
     The name IRF comes from the randomness of the unknown $\varphi$, the unknown noise realization, and the interferential nature of the field.
 
     The phase difference $\varphi$ defined here will play an important role in our following channel estimation, since it carries enough CSI for beamforming, which will be justified in the next section. To estimate the phase difference $\varphi$, we need enough observations from the sensor-detected power signal $P(t)$. For simplicity and without loss of generality, we can assume $\psi(t)=\omega t$ and $\omega=\frac{2\pi}{T_{s}}$, where $T_s$ is the symbol period. Furthermore, assume that $L$ observations $P[l]=P(t_{l})$ located at equally-spaced instants 
@@ -837,12 +837,10 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     \end{equation}
     and the random variable $P[l]$ obeys a non-central chi-squared distribution which can be equivalently expressed as 
     \begin{equation}
-        \begin{aligned}
-        P[l] &\sim A\left| \CN\left( (\alpha + \beta e^{{\rm j} (\psi_l + \varphi)}), \sigma_v^2 \right)\right|^2 \\
-        &\sim \frac{a}{2} \left| \CN\left((\alpha + \beta e^{{\rm j} (\psi_l + \varphi)})/(\sigma_v / \sqrt{2}), 2\right)\right|^2\\
-        \end{aligned}
+        P[l] \sim A\left| \CN\left( (\alpha + \beta e^{{\rm j} (\psi_l + \varphi)}), \sigma_v^2 \right)\right|^2
+        \sim \frac{a}{2} \left| \CN\left((\alpha + \beta e^{{\rm j} (\psi_l + \varphi)})/(\sigma_v / \sqrt{2}), 2\right)\right|^2.
     \end{equation}
-    and $\left| \CN\left((\alpha + \beta e^{{\rm j} (\psi_l + \varphi)})/(\sigma_v / \sqrt{2}), 2\right)\right|$, in fact, obeys a noncentral chi distribution of dimension $k=2$ and noncentrality parameter $m=\lvert\alpha + \beta e^{{\rm j} (\psi_l + \varphi)}\rvert/(\sigma_v / \sqrt{2})$ Thus, we can convert the expectation  $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$ into the expectation of a noncentral chi random variable:
+    Thus, we obtain
     \begin{equation}
         \begin{aligned}
         \mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l] & = \mathbb{E}\left[\left(1-R^2\left(\frac{\sqrt{\lambda_l P[l]}}{a/2}\right)\right)\frac{P[l]}{\lambda_l}\right] \\
