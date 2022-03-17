@@ -231,7 +231,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
             \label{Signal model}
             y=\bm f^{H} \bm\Theta \bm G \bm w s+z,
         \end{equation}
-        where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with power constraint $\left\Vert \bm w\right \Vert_{2}^{2}\leq P_{\text{max}}$; $s$ denotes the normalized transmitted symbol; $z\sim \mathcal{CN}\left(0,\sigma_{z}^{2}\right)$ denotes the \ac{AWGN} introduced at the receiver user. To focus on RIS beamforming, other possible links are neglected in this paper\footnote{In fact, our proposed CSI acquisition procedure automatically works when there exists extra links, which will be explained later in this paper.}.
+        where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with power constraint $\left\Vert \bm w\right \Vert_{2}^{2}\leq P_{\text{max}}$; $s$ denotes the normalized BS transmitted symbol; $z\sim \mathcal{CN}\left(0,\sigma_{z}^{2}\right)$ denotes the \ac{AWGN} introduced at the receiver user. To focus on RIS beamforming, other possible links are neglected in this paper\footnote{In fact, our proposed CSI acquisition procedure automatically works when there exists extra links, which will be explained later in this paper.}.
         % TODO: Explain it. 
         
         \subsection{Beamforming Design}
@@ -260,20 +260,21 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
 
 \subsection{Channel Estimation}
 \label{Channel Estimation}
-Observe from \eqref{traditional beamforming} that, the estimation for the cascade channel ${\bm H} = {\rm diag}({\bm f}^{*})\bm G$ is enough for beamforming design.
-To accurately acquire this cascade channel, the user generally sends pilot signal $x$ to the BS under $P$ different RIS configurations which are the first $P$ columns of the DFT matrix $\bm F_N$, denoted as $\bm F_{N,P}$. Due to the channel reciprocity, the received signal at the BS with the $p$-th RIS configuration $\bm \Theta_{p}=\diag({\bm \theta}_p)$ can be written as \cite{atapattu2020reconfigurable}
+    Observe from \eqref{traditional beamforming} that, the estimation for the cascade channel ${\bm H} = {\rm diag}({\bm f}^{*})\bm G$ is enough for beamforming design.
+    To accurately acquire this cascade channel, the user generally sends pilot signal $x$ to the BS under $P$ different RIS configurations which are the first $P$ columns of the DFT matrix $\bm F_N$, denoted as $\bm F_{N,P}$. 
+    Due to the channel reciprocity, the received signal at the BS with the $p$-th RIS configuration $\bm \Theta_{p}=\diag({\bm \theta}_p)$ can be written as \cite{atapattu2020reconfigurable}
     \begin{equation}
     \label{CE received signal}
-        {\bm y}_{{\rm BS}, p} =\bm H^{T} {\bm \theta}_p s+\bm n,
+        {\bm y}_{{\rm BS}, p} =\bm H^{T} {\bm \theta}_p w' s'+\bm n,
     \end{equation}
-    where $\bm n\sim \mathcal{CN}\left( \bm 0_{M}, \sigma_{n}^{2}\bm I_{M}\right)$ is the \ac{AWGN} at the receiver BS.
-Equivalently, \eqref{CE received signal} can be expressed in the matrix form
+    where $w'$ is the precoding scalar of the user satisfying $|w'|^2 \leq P_{\rm u}$, $s'$ is the normalized user transmitted symbol, and $\bm n\sim \mathcal{CN}\left( \bm 0_{M}, \sigma_{n}^{2}\bm I_{M}\right)$ is the \ac{AWGN} at the receiver BS.
+    Equivalently, \eqref{CE received signal} can be expressed in the matrix form
     \begin{equation}
     \label{eqn:LS_CE model}
-        {\bm Y}_{\rm BS}=\bm H^{T} \bm F_{N,P}s + {\bm N},
+        {\bm Y}_{\rm BS}=\bm H^{T} \bm F_{N,P}w' s' + {\bm N},
     \end{equation}
     where ${\bm Y}_{\rm BS}=\left[\bm y_{{\rm BS}, 1},\cdots,\bm y_{{\rm BS}, P}\right]$ and $\bm N = \left[ \bm n_{1},\cdots,\bm n_{P}\right]$.
-    Given the received signal $\bm Y_{\rm BS}$ and assuming $s=1$, the channel estimation problem in RIS-assisted system can be formulated as 
+    Given the received signal $\bm Y_{\rm BS}$ and, without loss of generality, assuming $w's'=1$, the channel estimation problem in RIS-assisted system can be formulated as 
     \begin{equation}
         \hat{\bm H} = \arg\min_{\bm H} \lVert {\bm Y}_{\rm BS} - {\bm H^{T}} {\bm F}_{N,P}\rVert_{F}^2.
     \end{equation}
