@@ -94,7 +94,7 @@ breaklinks=true}
 \hyphenation{op-tical net-works semi-conduc-tor}
 \begin{document}
 \title{Sensing RIS: Enabling Dimension-Independent CSI Acquisition for Beamforming}
-\author{{Jieao~Zhu, Kunzan~Liu, Zhongzhichao~Wan, Linglong~Dai, {\textit{Fellow, IEEE}, and H.~Vincent~Poor, {\textit{Life Fellow, IEEE}}}
+\author{{Jieao~Zhu, Kunzan~Liu, Zhongzhichao~Wan, Linglong~Dai, {\textit{Fellow, IEEE}, \\and H.~Vincent~Poor, {\textit{Life Fellow, IEEE}}}
 \vspace*{-3em}}
 \thanks{J. Zhu, K. Liu, Z. Wan, and L. Dai are with the Beijing National Research Center for Information Science and Technology (BNRist) as well as the Department of Electronic Engineering, Tsinghua University, Beijing 100084, China (e-mails: \{zja21, lkz18, wzzc20\}@mails.tsinghua.edu.cn, daill@tsinghua.edu.cn).
 
@@ -387,18 +387,19 @@ Equivalently, \eqref{CE received signal} can be expressed in the matrix form
 In this section, we will first briefly introduce the hardware architecture required for detecting the \ac{IRF} in Subsection~\ref{Hardware Architecture of Sensing RIS}. Then, the core concept of IRF channel estimation and beamforming procedures will be introduced in Subsection~\ref{IRF Channel Estimation and Beamforming}. After that, three phase estimation algorithms will be described in Subsection~\ref{LS method}, \ref{ML method}, and \ref{von Mises-EM method} respectively, which constitute the kernel of the \ac{IRF} channel estimation and beamforming algorithm. 
 
 \subsection{Hardware Architecture of Sensing RIS} \label{Hardware Architecture of Sensing RIS}
-The basic hardware architecture in Fig.~\ref{fig:hardware} is to equip each RIS reflecting element with a cost-efficient RF power sensor \cite{ma2020smartsensing}, which is responsible for detecting the IRF power signals. 
-Since all of the RIS elements can sense and adjust the phase independently from one another, low-cost microcontroller units (MCUs) can be attached locally to each RIS element to allow parallel computation of the optimal phases. 
-However, for extremely large-scale RIS systems, sparse sensing and controlling may be preferred to reduce cost and hardware complexity. 
-
-% \textcolor{red}{HERE: Add feasibility analysis for attaching power sensors to RIS. Including: (1) Are the signals strong enough to be detected? (2) Are the sensor devices fast enough to catch the IRF variations? (3) What are the typical technical parameters of these power-sensing devices, including the sampling rate, working bandwidth and sensitivity?}
 
     \begin{figure}[!t]
         \centering
         \includegraphics[width=\textwidth]{figures/hardware.pdf}
-        \caption{Hardware architecture of sensing RIS.}
+        \centerline{(a)~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~(b)}
+        \caption{Comparison of hardware architectures. (a) Traditional RIS. (b) Proposed sensing RIS.}
         \label{fig:hardware}
     \end{figure}
+    
+To obtain the amplitude of the induced \ac{IRF}, we propose a hardware architecture named sensing RIS.
+In contrast to traditional RIS architecture shown in Fig.~\ref{fig:hardware}~(a), where each RIS element includes a phase-shift circuit and a patch antenna, each sensing RIS element additionally integrates a power sensor which is responsible for detecting the amplitude of the IRF \cite{ma2020smartsensing}, as shown in Fig.~\ref{fig:hardware}~(b).
+Since all of the RIS elements can sense and adjust the phase independently from one another, low-cost microcontroller units (MCUs) can be attached locally to each RIS element to allow parallel computation of the optimal phases. 
+However, for extremely large-scale RIS systems, sparse sensing and controlling may be preferred to reduce cost and hardware complexity. 
 
 \subsection{IRF Channel Estimation and Beamforming} \label{IRF Channel Estimation and Beamforming}
     In this subsection, we will thoroughly introduce the IRF-based algorithms for adjusting the phases of the RIS elements. The \ac{IRF} channel estimation and beamforming procedure can be divided into three steps:
