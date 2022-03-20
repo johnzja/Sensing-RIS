@@ -267,7 +267,7 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
     \label{CE received signal}
         {\bm y}_{{\rm BS}, p} =\bm H^{T} {\bm \theta}_p w' s'+\bm n,
     \end{equation}
-    where $w'$ is the precoding scalar of the user satisfying $|w'|^2 \leq P_{\rm u}$, $s'$ is the normalized user transmitted symbol, and $\bm n\sim \mathcal{CN}\left( \bm 0_{M}, \sigma_{n}^{2}\bm I_{M}\right)$ is the \ac{AWGN} at the receiver BS.
+    where $w'$ is the precoding scalar of the user satisfying $|w'|^2 \leq P_{\rm max}'$, $s'$ is the normalized user transmitted symbol, and $\bm n\sim \mathcal{CN}\left( \bm 0_{M}, \sigma_{n}^{2}\bm I_{M}\right)$ is the \ac{AWGN} at the receiver BS.
     Equivalently, \eqref{CE received signal} can be expressed in the matrix form
     \begin{equation}
     \label{eqn:LS_CE model}
@@ -385,7 +385,7 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
 
 \section{Sensing RIS-Based Channel Estimation}
 \label{Sensing RIS-Based Channel Estimation}
-In this section, we will first briefly introduce the hardware architecture required for detecting the \ac{IRF} in Subsection~\ref{Hardware Architecture of Sensing RIS}. Then, the core concept of IRF channel estimation and beamforming procedures will be introduced in Subsection~\ref{IRF Channel Estimation and Beamforming}. After that, three phase estimation algorithms will be described in Subsection~\ref{DFT method}, \ref{ML method}, and \ref{von Mises-EM method} respectively, which constitute the kernel of the \ac{IRF} channel estimation and beamforming algorithm. 
+In this section, we will first briefly introduce the hardware architecture required for detecting the \ac{IRF} in Subsection~\ref{Hardware Architecture of Sensing RIS}. Then, the core concept of IRF channel estimation and beamforming procedures will be introduced in Subsection~\ref{IRF Channel Estimation and Beamforming}. After that, three phase estimation algorithms will be described in Subsection~\ref{DFT method}, \ref{ML method}, and \ref{von Mises-EM method} respectively, which constitute the core of the \ac{IRF} channel estimation and beamforming algorithm. 
 
 \subsection{Hardware Architecture of Sensing RIS} \label{Hardware Architecture of Sensing RIS}
 
@@ -707,10 +707,10 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     \begin{figure}[!t]
         \centering
         \myincludegraphics{data/rate.pdf}
-        \caption{Performance curve of the achievable spectral efficiency against the BS transmitted power.}
+        \caption{Performance curve of the achievable spectral efficiency against the BS transmitted power $P_{\rm max}$.}
         \label{fig:rate}
     \end{figure}
-    All our simulation data are acquired under $P_{\rm u}=300 \,{\rm mW}$, $n_0=-174\,{\rm dBm/Hz}$, subcarrier bandwidth ${\rm BW} = 180\,{\rm kHz}$, thermal noise at the receiver $\sigma^2 = {\rm BW}\times n_0$, $\sigma_v^2=100\,{\rm MHz}\times n_0$, and the BS-RIS and RIS-user channels are all assumed to be Rayleigh fading with 1 LOS path and 4 NLOS paths. The LOS path has, on average, $\kappa$ times more energy than the NLOS paths together, and $\kappa=2$. Both the BS and the RIS are equipped with $\lambda/2$-spaced uniform planar arrays (UPAs), while the user has a single antenna. The BS is located at a distance that is drawn from a uniform distribution between $20\,{\rm m}$ and $100\,{\rm m}$, and the angle of the BS is uniformly distributed. The user appears uniformly from $10\,{\rm m}$ to $100\,{\rm m}$, and the angle distribution of the user is also uniform. The size of the RIS is set to be $40\times 30$, and that of the BS antenna is $4\times 2$. For IRF methods, 3 pilots are used for CSI acquisition. 
+    All our simulation data are acquired under $P_{\rm max}'=300 \,{\rm mW}$, $n_0=-174\,{\rm dBm/Hz}$, subcarrier bandwidth ${\rm BW} = 180\,{\rm kHz}$, thermal noise at the receiver $\sigma^2 = {\rm BW}\times n_0$, $\sigma_v^2=100\,{\rm MHz}\times n_0$, and the BS-RIS and RIS-user channels are all assumed to be Rayleigh fading with 1 LOS path and 4 NLOS paths. The LOS path has, on average, $\kappa$ times more energy than the NLOS paths together, and $\kappa=2$. Both the BS and the RIS are equipped with $\lambda/2$-spaced uniform planar arrays (UPAs), while the user has a single antenna. The BS is located at a distance that is drawn from a uniform distribution between $20\,{\rm m}$ and $100\,{\rm m}$, and the angle of the BS is uniformly distributed. The user appears uniformly from $10\,{\rm m}$ to $100\,{\rm m}$, and the angle distribution of the user is also uniform. The size of the RIS is set to be $40\times 30$, and that of the BS antenna is $4\times 2$. For IRF methods, 3 pilots are used for CSI acquisition. 
     However, for LS-CE methods, the number of pilots is $N=40\times 30$. 
 
     We compare our proposed \ac{IRF} channel estimation and beamforming method with classical LS-CE algorithm and other idealized settings in Fig.~\ref{fig:rate}. The black dashed line ``Oracle'' assumes perfectly-known CSI, thus perfect iterative beamforming can be performed. In the LS-CE method, we first utilize \eqref{eqn:LS-CE} to obtain estimates for the cascaded channel \cite{kundu2021channel,wei2021channel}, and then perform iterative RIS beamforming based on the estimated channel. In addition, we also consider the randomly-phased RIS scheme as a benchmark.  
