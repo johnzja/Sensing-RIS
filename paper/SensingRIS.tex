@@ -306,20 +306,20 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
     \end{figure}
 
     Suppose two signals imping the RIS simultaneously, creating an interference field at the $n$-th RIS element. Denote the symbol transmitted from \ac{BS} by $s$, and the symbol transmitted from the user by $s'$. In order to perform channel estimation by exploiting the \ac{IRF}, we need to probe the interference fringes, i.e., the power of the \ac{IRF}. To clarify the power problem associated with an electromagnetic signal, the relationship between physical signal power and baseband equivalent signal power is stressed in the following formulas. 
-    If we represent both of the BS-RIS and user-RIS signals that appear on each RIS element by their baseband equivalent signals $E_{n,{\rm BB}}(t)$, 
+    If we represent both of the BS-RIS and user-RIS signals that appear on each RIS element by their baseband equivalent signals $E_{{\rm BB}}(t)$, 
     then the corresponding physical passband electric field induced on each RIS element is characterized by 
     \begin{equation}
-        E_{n}(t) = \sqrt{2} {\rm Re}\left( E_{n,{\rm BB}}(t)e^{{\rm j}\omega_c t} \right),
+        E_(t) = \sqrt{2} {\rm Re}\left( E_{{\rm BB}}(t)e^{{\rm j}\omega_c t} \right),
         \label{baseband-passband relationship}
     \end{equation}
     where $\omega_c = 2\pi f_c$ denotes the carrier frequency, and the coefficient $\sqrt{2}$ ensures that the passband signal energy (power) is equal to the baseband signal energy (power), i.e., 
-    $\lVert E_{n, {\rm BB}}\rVert_2^2 = \lVert E_{n}\rVert_2^2$. 
+    $\lVert E_{{\rm BB}}\rVert_2^2 = \lVert E\rVert_2^2$. 
     Thus, taking the square of the baseband signal is equivalent to calculating the power of the physical electromagnetic signal. 
     Now we consider the IRF case, where a superposition of the BS-RIS signal and the user-RIS signal is considered. 
     Following the notations in Section~\ref{System Model} and due to the linearity of \eqref{baseband-passband relationship}, we obtain the noisy IRF signal by adding up the two impinging baseband signals
     \begin{equation}
         \begin{aligned}
-            E_{n,{\rm BB, IRF}}(t) &= E_{n, {\rm BB, BS}}(t)+E_{n,{\rm BB,user}}(t)+v(t)\\
+            E_{{\rm BB, IRF}}(t) &= E_{{\rm BB, BS}}(t)+E_{{\rm BB,user}}(t)+v(t)\\
             &=\bm g_{n}^{T}\bm w s+f_{n}^{*} w' s' +v(t),
         \end{aligned}
     \end{equation}
@@ -335,7 +335,7 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
     \begin{equation}
         \label{eqn:power of interference}
         \begin{aligned}
-            P(t)&=A \left| E_{n, {\rm BB, IRF}} (t)\right |^{2}+\zeta\\
+            P(t)&=A \left| E_{{\rm BB, IRF}} (t)\right |^{2}+\zeta\\
             &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{IRF power signal}}\\
             &~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{{\rm j}\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
         \end{aligned}
@@ -359,7 +359,7 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
     \begin{figure}[!t]
         \centering
         \includegraphics[width=.9\textwidth]{data/protocol.pdf}
-        \caption{Simultaneous rotational signaling scheme. The IRF power is the instantaneous total power of the BS-RIS signal and the user-RIS signal. The composite power waveform that appears on RIS enables our algorithm to obtain the desired CSI. The parameters $\alpha$ and $\beta$ are estimated from the first two time slots, and $\varphi$ is estimated by IRF that occurs during the third time slot.}
+        \caption{Simultaneous rotational signaling scheme. The IRF power is the instantaneous total power of the BS-RIS signal and the user-RIS signal. The composite power waveform that appears on RIS enables our algorithm to obtain the desired CSI. The parameters $\alpha$ and $\beta$ are estimated from the signals $P_{\alpha}(t), P_{\beta}(t)$ measured during the first two time slots, and $\varphi$ is estimated by IRF signal $P(t)$ that occurs during the third time slot.}
         \label{fig:protocol}
     \end{figure}
 
@@ -376,7 +376,7 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
         \caption{Phasor representation of the \ac{IRF} on each RIS element. Red vector represents the complex BS-RIS signal ${\bm g}_n^T{\bm w}$; Blue vector represents the complex user-RIS signal $f_n^*w'$; $\alpha$ and $\beta$ denote the amplitude of these signals respectively. In our signaling method, the BS transmits a fixed symbol $s=1$, while the user transmits a rotating symbol $s'=e^{{\rm j}\psi(t)}$, causing the output of the power sensor $P(t)$ to vary in a waveform that is similar to a sine curve.}
         \label{fig:phasor}
     \end{figure}
-    To further analyze the interference, we focus on the received field of the $n$-th RIS element. 
+    To further analyze the interference, we focus on the received IRF signal $P(t)$ of the $n$-th RIS element. 
     Note that the power of interference field measured at instant $t$, expressed by \eqref{eqn:power of interference}, exhibits a sinusoidal waveform in the time domain, as is shown in Fig.~\ref{fig:phasor}. 
     The initial phase ($t=0$) of this sinusoidal waveform is uniquely determined by $\varphi$.
     Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. 
@@ -409,8 +409,13 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         \item Phase estimation based on power data;
         \item Integrate phase information and other CSI to perform beamforming. 
     \end{enumerate} 
-    Since we all assume the modulation method to be OFDM, the first step 1) can be easily realized by transmitting a symbol $s=1$ on the zeroth subcarrier at the BS, while transmitting a symbol $1$ on the $k$-th subcarrier at the user. 
-    As is mentioned above, if we denote the OFDM symbol period by $T_s$, then the equivalent IRF angular frequency $\omega$ is given by $\omega = 2\pi k /T_s$, which means the power signal exhibits exactly $k$ sine-shaped\footnote{The noiseless power signals are, in fact, strictly sinusoidal. } periods during an OFDM symbol. For calculation simplicity, in this paper, we always assume $k=1$. In fact, for multi-user MISO\footnote{In this paper, we assume that the user is equipped with a single antenna, but the number of antennas at BS is not restricted. Furthermore, for MIMO systems, since the user is equipped with multi-antennas, phase-tuning simply for constructive interference at the user is sub-optimal. Thus, IRF methods should be further improved to fully harness the multi-antenna space-multiplexing gains.} systems, different $k$ values can be assigned to different users in order to enable channel estimation and beamforming design for several users within a single OFDM symbol. 
+
+    In step 1), three power signals are recorded: $P_{\alpha}(t)$, $P_{\beta}(t)$, and $P(t)$. The IRF appears during the third signal $P(t)$. 
+    In order to create an IRF, simultaneous rotational signaling must be performed. 
+    In fact, the signaling requirements can be realized by transmitting a symbol $s=1$ on the zeroth subcarrier at the BS, while transmitting a symbol $s'=1$ on the $k$-th subcarrier at the user. 
+    As is mentioned above, if we denote the OFDM symbol period by $T_s$, then the equivalent IRF angular frequency $\omega$ is given by $\omega = 2\pi k /T_s$, which means the power signal exhibits exactly $k$ sine-shaped\footnote{The noiseless power signals are, in fact, strictly sinusoidal. } periods during an OFDM symbol. 
+    For calculation simplicity, in this paper, we always assume $k=1$. 
+    In fact, for multi-user MISO\footnote{In this paper, we assume that the user is equipped with a single antenna, but the number of antennas at BS is not restricted. Furthermore, for MIMO systems, since the user is equipped with multi-antennas, phase-tuning simply for constructive interference at the user is sub-optimal. Thus, IRF methods should be further improved to fully harness the multi-antenna space-multiplexing gains.} systems, different $k$ values can be assigned to different users in order to enable channel estimation and beamforming design for several users within a single OFDM symbol. 
     This can be done by Fourier analysis on the power signal $P(t)$ and extraction of phase angles for each user at distinct frequencies. 
 
     The second step 2) is called {\it phase estimation}. This step is designed to extract the phase difference $\varphi$ between the BS-RIS and RIS-user channel. 
@@ -423,26 +428,26 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         \caption{Near-optimal RIS Beamforming by IRF} \label{alg:IRF-Beamforming}
         \setstretch{1.35}
         \begin{algorithmic}[1]
-            \REQUIRE Number of RIS elements $N$, IRF power signals detected on each RIS element $P_n(t)$.
+            \REQUIRE Number of RIS elements $N$, IRF power signals detected on each RIS element $P_{\alpha}(t), P_{\beta}(t)$ and $P(t)$.
             \ENSURE RIS phase-shift matrix ${\bm \Theta}$.
             \FOR{$n=1,2,\cdots,N$}
-                \STATE Estimate $\alpha$ and $\beta$ as in Fig.~\ref{fig:protocol}.
-                \STATE $\varphi_n \leftarrow$ estimate phase difference  $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$ from $P_n(t)$, $\alpha$ and $\beta$. 
-                \STATE $\psi_{n} \leftarrow$ estimate phase-shift ${\rm arg}(\bm g_{n}^{T}\bm w)$ from geometric parameters of BS and RIS
-                \STATE $\theta_n \leftarrow -\varphi_n - 2\psi_n$
+                \STATE Estimate $\alpha$ and $\beta$ from $P_{\alpha}(t)$ and $P_{\beta}(t)$.
+                \STATE Estimate phase difference $\varphi_n$ from $P(t)$, $\alpha$ and $\beta$. 
+                \STATE Estimate $\psi_{n} = {\rm arg}(\bm g_{n}^{T}\bm w)$ from known locations of BS and RIS
+                \STATE $\theta_n \leftarrow \exp(-{\rm j}(\varphi_n + 2\psi_n))$
             \ENDFOR
-            \STATE ${\bm \Theta} \leftarrow \diag(\theta_1, \theta_2, \cdots, \theta_N)$
+            \STATE ${\bm \Theta} \leftarrow \diag([\theta_1, \theta_2, \cdots, \theta_N]^{T})$
             \RETURN ${\bm \Theta}$
         \end{algorithmic}
     \end{algorithm}
-    Note that in each iteration $n$ of {\bf Algorithm~\ref{alg:IRF-Beamforming}}, the data $P_n(t)$ is independent of other iterations. Thus, we can perform the calculations in parallel for each phase-shift $\theta_n$. For example, we can install an MCU for each of the elements on the RIS. Each MCU is only responsible for gathering the data from its own power sensor and adjusting the phase-shift of its own RIS element. Since all MCUs can work in parallel, the computational time is independent of the number of RIS elements, resulting in an RIS beamforming algorithm of $\mathcal{O}(1)$ time complexity. 
+    Note that in each iteration $n$ of {\bf Algorithm~\ref{alg:IRF-Beamforming}}, the data $P(t)$ is independent of other iterations. Thus, we can perform the calculations in parallel for each phase-shift $\theta_n$. For example, we can install an MCU for each of the elements on the RIS. Each MCU is only responsible for gathering the data from its own power sensor and adjusting the phase-shift of its own RIS element. Since all MCUs can work in parallel, the computational time is independent of the number of RIS elements, resulting in an RIS beamforming algorithm of $\mathcal{O}(1)$ time complexity. 
 
     The pilot overhead is also $\mathcal{O}(1)$. The reason is that, no matter how many RIS elements are employed, the IRF appears on them simultaneously. Thus, both the channel estimation and beamforming can be fulfilled within only one pilot symbol. This complexity is also independent of the RIS dimension $N$. 
 
     However, the $\mathcal{O}(1)$ time complexity only holds when one MCU is installed for each RIS element. If all the RIS elements are collectively controlled by one processor, the computational time would be of order $\mathcal{O}(N)$, but the pilot overhead is still $\mathcal{O}(1)$. These conclusions of complexity can be easily extended to multi-RIS schemes, where multiple RISs are employed to serve a single user at the same time. The independent nature of IRF methods allows the RISs to work without the need to exchange data with the BS or other RISs. This property makes it much easier to integrate a new RIS into an existing communication system, which greately enhances the extendibility of the system.
 
 \subsection{DFT method}  \label{DFT method}
-    The key challenge of the IRF channel estimation and beamforming is the phase estimation step, i.e., how to obtain the phase difference $\varphi$. Since the interferential power $P_n(t)$ exhibits a sinusoidal waveform, Fourier transforms can be applied to extract its phase. Apply $L$-point \ac{DFT} to the discrete-time  observed sensor detection signals $P[0],\cdots ,P[L-1]$, and we have
+    The key challenge of the IRF channel estimation and beamforming is the phase estimation step, i.e., how to obtain the phase difference $\varphi$. Since the interferential power $P(t)$ exhibits a sinusoidal waveform, Fourier transforms can be applied to extract its phase. Apply $L$-point \ac{DFT} to the discrete-time  observed sensor detection signals $P[0],\cdots ,P[L-1]$, and we have
     \begin{equation}
         \label{DFT}
         p[l']=\sum\nolimits_{l=0}^{L-1}P[l]e^{-{\rm j}\frac{2\pi}{L}ll'},\quad \forall l'\in \{L\}.
@@ -460,26 +465,29 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     Note that this DFT method simply ignores the non-Gaussian noise. For Gaussian noise, the DFT method is optimal. However, in fact, the noise in \eqref{eqn:power of interference} contains a squared term of a Gaussian noise, resulting the noise to be non-Gaussian. Thus, we further conceive an ML method, as described in the following Subsection~\ref{ML method}. 
 
 \subsection{Newton-ML method}  \label{ML method}
-    Suppose the noise field $v'(t)=v'_R(t) + {\rm j}v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. Then the distribution of $s(t) := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2$ is a non-central chi-squared distribution $\nc_{\chi_2^2}(A(\mu_{n,R}^2+\mu_{n,I}^2),  A\sigma_v^2/2)$ with degrees of freedom $k=2$, and mean values $\mu_{n,R}, \mu_{n,I}$ given by
-        \begin{equation}
-        \mu_{n,R} = \alpha + \beta \cos(\psi(t)+\varphi),\quad  \mu_{n,I}  = \beta \sin(\psi(t)+\varphi).
+    Suppose the noise field $v'(t)=v'_R(t) + {\rm j}v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. 
+    Without loss of generality, we can assume that the sensor noise power $\sigma_{\zeta}^2$ is much weaker than the electromagnetic noise field $v'(t)$.
+    Thus, we assume $\sigma_{\zeta}^2=0$ in the following discussion.  
+    As a result, the distribution of $P(t) = A\left|E_{{\rm BB}, {\rm IRF}}(t)\right|^2$ is a non-central chi-squared distribution $\nc_{\chi_2^2}(A(\mu_{R}^2+\mu_{I}^2),  A\sigma_v^2/2)$ with degrees of freedom $k=2$, and mean values $\mu_{R}, \mu_{I}$ given by
+    \begin{equation}
+        \mu_{R} = \alpha + \beta \cos(\psi(t)+\varphi),\quad  \mu_{I}  = \beta \sin(\psi(t)+\varphi).
         \label{chi2 distribution mean values}
     \end{equation}
     Thus, according to \eqref{eqn:power of interference}, the output signal of the power sensor is given by 
     \begin{equation}
-        P(t)  = A\left((v'_{R} + \mu_{n,R})^2 + (v'_{I} + \mu_{n,I})^2 \right)+ \zeta 
+        P(t)  = A\left((v'_{R} + \mu_{R})^2 + (v'_{I} + \mu_{I})^2 \right)
         \label{eqn:sensor power}
     \end{equation}
     Let us define the noncentral parameter $\lambda(t)$ as
     \begin{equation}
-        \lambda(t)  = A(\mu_{n,R}^2 + \mu_{n,I}^2) = A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right],
+        \lambda(t)  = A(\mu_{R}^2 + \mu_{I}^2) = A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right],
     \end{equation}
-    then, according to the definition of the $\nc_{\chi_2^2}$, the p.d.f of $s(t)  := A\left|E_{n, {\rm BB}, {\rm IRF}}(t)\right|^2 = P(t)-\zeta$ is given by the zeroth-order modified Bessel function
+    then, according to the definition of the $\nc_{\chi_2^2}$, the p.d.f of $P(t)$ is given by the zeroth-order modified Bessel function of the first kind 
     \begin{equation}
-        f_{s(t)}(x) = \frac{1}{A\sigma_{v}^2} \exp\left(-\frac{x+\lambda(t)}{A\sigma_v^2}\right)I_{0}\left(\frac{\sqrt{\lambda(t) x}}{A\sigma_v^2/2}\right),\quad x \geq 0.
+        f_{P}(x) = \frac{1}{A\sigma_{v}^2} \exp\left(-\frac{x+\lambda(t)}{A\sigma_v^2}\right)I_{0}\left(\frac{\sqrt{\lambda(t) x}}{A\sigma_v^2/2}\right),\quad x \geq 0.
         \label{ML single observation}
     \end{equation}
-    In the following analysis, for the sake of simplicity, we always assume that $\sigma_{\zeta}^2 = 0$. Thus, the log likelihood function of $\varphi$ based on the observations $P[l]$ can be represented by
+    Then, the log likelihood function of $\varphi$ based on the observations $P[l]$ can be represented by
     \begin{equation}
         \mathcal{L}(P[0],\cdots,P[L-1] | \varphi) = \sum_{l=0}^{L-1}\left[-\frac{P[l] + \lambda_l}{A\sigma_v^2} + \log I_0\left(\frac{\sqrt{P[l] \lambda_l}}{A\sigma_v^2/2}\right)\right] - L\log(A\sigma_v^2),
         \label{ML likelihood}
