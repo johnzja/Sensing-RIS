@@ -11,7 +11,14 @@ function [P_recv, Rate] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Np)
     H = (G.') * diag(conj(f));
     tmp = sqrt(BS_conf.Pt_UE)*H*Thetas;
     Y = tmp + sigma_noise * (randn([M, Np])+1j*randn([M, Np])/sqrt(2));
-    H_hat = Y*Thetas'/Np/sqrt(BS_conf.Pt_UE);
+    H_hat = Y*Thetas'/Np/sqrt(BS_conf.Pt_UE);   % LS-CE. 
+    
+
+    % Calculate estimation noise here, in NMSE. 
+    nmse_pow = (norm(H_hat-H, 'fro')/norm(H,'fro'))^2;
+    nmse_db = pow2db(nmse_pow);
+    % report NMSE.
+    % disp(nmse_db);
     
     % Perform beamforming based on H_hat. The model is: y_UE = theta.' * (H).' *w*s + n
     theta = exp(1j*2*pi*rand(N, 1));

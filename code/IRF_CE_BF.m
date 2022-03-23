@@ -29,6 +29,10 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np)
     % Calculate the beta-field.
     s_beta = conj(f)*sqrt(BS_conf.Pt_UE);
 
+    % Report the mean interferential SNR. 
+    gamma_bar_arr = zeros(N_ris, 1);
+    K_arr = zeros(N_ris, 1);
+
     % Obtain the interference random field (IRF) for each time slot.
     P_int = zeros(L, N_ris);
     for idx = 1:L
@@ -42,9 +46,17 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np)
         SensingRIS_param.alpha	= abs(s_alpha(n)+sigma_v*(randn()+1j*randn())/sqrt(2*L));  
         % Noises should also be added here.
         SensingRIS_param.beta	= abs(s_beta(n)+sigma_v*(randn()+1j*randn())/sqrt(2*L));
+
+        K_arr(n) = 2*(SensingRIS_param.alpha)*(SensingRIS_param.beta)/(SensingRIS_param.alpha^2+SensingRIS_param.beta^2);
+        gamma_bar_arr(n) = (SensingRIS_param.alpha^2+SensingRIS_param.beta^2)/sigma_v^2;
+
         varphi(n) = EM_von_mises(P_int(:,n), SensingRIS_param);
     end
     
+    K_mean = mean(K_arr);
+    gamma_bar_mean = mean(gamma_bar_arr);
+    % report the results. 
+    % fprintf('K_mean = %f, \\gamma_bar_mean = %f\n', K_mean, gamma_bar_mean);
     
     % Calculate the (invariant) G.
     phase_G = kron(exp(1j*pi*sin(psi_BS)*(0:Nz-1)), exp(1j*pi*cos(psi_BS)*sin(theta_BS)*(0:Ny-1)));

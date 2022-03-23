@@ -39,7 +39,7 @@ N_sim = 200;
 Pt_BS_range = logspace(-1,1, 10);
 SE = zeros(length(Pt_BS_range), 4);
 
-parfor idx_scan = 1:length(Pt_BS_range)
+for idx_scan = 1:length(Pt_BS_range)
     % Pt_BS = 1;      % Total transmit power is 1W. (distributed on M transmit antennas).
     Pt_BS = Pt_BS_range(idx_scan);
     
@@ -48,7 +48,7 @@ parfor idx_scan = 1:length(Pt_BS_range)
     kappa = 2;    % LOS ratio.
     Np = N;         % Number of pilots in traditional beamforming.
     
-    BS_conf         = struct()
+    BS_conf         = struct();
     BS_conf.My      = M;            % Assume the BS is equipped with lambda/2 ULA.
     BS_conf.Mz      = 1;
     BS_conf.M       = BS_conf.My*BS_conf.Mz;
@@ -86,7 +86,7 @@ parfor idx_scan = 1:length(Pt_BS_range)
         Rates(idx_sim, 1) = Rate_random;
 
         % Baseline 2: Perform channel estimation by traditional methods: Orthogonal
-        % pilots, MMSE. Assume the RIS to be continuously adjustable within
+        % pilots, LS-CE/MMSE. Assume the RIS to be continuously adjustable within
         % [0,2pi].
         [P_recv_traditional, Rate_traditional] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Np);
         Rates(idx_sim, 2) = Rate_traditional;

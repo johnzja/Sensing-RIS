@@ -385,7 +385,7 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
 
 \section{Sensing RIS-Based Channel Estimation}
 \label{Sensing RIS-Based Channel Estimation}
-In this section, we will first briefly introduce the hardware architecture required for detecting the \ac{IRF} in Subsection~\ref{Hardware Architecture of Sensing RIS}. Then, the core concept of IRF channel estimation and beamforming procedures will be introduced in Subsection~\ref{IRF Channel Estimation and Beamforming}. After that, three phase estimation algorithms will be described in Subsection~\ref{DFT method}, \ref{ML method}, and \ref{von Mises-EM method} respectively, which constitute the core of the \ac{IRF} channel estimation and beamforming algorithm. 
+In this section, we will first briefly introduce the hardware architecture required for detecting the \ac{IRF} in Subsection~\ref{Hardware Architecture of Sensing RIS}. Then, the core concept of IRF channel estimation and beamforming procedures will be introduced in Subsection~\ref{IRF Channel Estimation and Beamforming}. Finally, Subsection~\ref{Pilot Overhead} will include the analysis on pilot overhead and computational complexity of our proposed IRF-based CSI acquisition methods. 
 
 \subsection{Hardware Architecture of Sensing RIS} \label{Hardware Architecture of Sensing RIS}
 
@@ -436,15 +436,54 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
                 \STATE Estimate $\psi_{n} = {\rm arg}(\bm g_{n}^{T}\bm w)$ from known locations of BS and RIS
                 \STATE $\theta_n \leftarrow \exp(-{\rm j}(\varphi_n + 2\psi_n))$
             \ENDFOR
-            \STATE ${\bm \Theta} \leftarrow \diag([\theta_1, \theta_2, \cdots, \theta_N]^{T})$
+            \STATE ${\bm \Theta} \leftarrow \diag\left(\left[\theta_1, \theta_2, \cdots, \theta_N\right]^{T}\right)$
             \RETURN ${\bm \Theta}$
         \end{algorithmic}
     \end{algorithm}
-    Note that in each iteration $n$ of {\bf Algorithm~\ref{alg:IRF-Beamforming}}, the data $P(t)$ is independent of other iterations. Thus, we can perform the calculations in parallel for each phase-shift $\theta_n$. For example, we can install an MCU for each of the elements on the RIS. Each MCU is only responsible for gathering the data from its own power sensor and adjusting the phase-shift of its own RIS element. Since all MCUs can work in parallel, the computational time is independent of the number of RIS elements, resulting in an RIS beamforming algorithm of $\mathcal{O}(1)$ time complexity. 
+    Note that in each iteration $n$ of {\bf Algorithm~\ref{alg:IRF-Beamforming}}, the data $P(t)$ is independent of other iterations. Thus, we can perform the calculations in parallel for each phase-shift $\theta_n$. For example, we can install an MCU for each of the elements on the RIS. Each MCU is only responsible for gathering the data from its own power sensor and adjusting the phase-shift of its own RIS element. Since all MCUs can work in parallel, the computational time is independent of the number of RIS elements, resulting in an $\mathcal{O}(1)$ time complexity. 
 
-    The pilot overhead is also $\mathcal{O}(1)$. The reason is that, no matter how many RIS elements are employed, the IRF appears on them simultaneously. Thus, both the channel estimation and beamforming can be fulfilled within only one pilot symbol. This complexity is also independent of the RIS dimension $N$. 
+\subsection{Pilot Overhead and Computational Complexity}\label{Pilot Overhead}
+    In our proposed IRF-based CSI acquisition method, the pilot overhead is fixed to $\mathcal{O}(1)$, which is independent of the RIS dimension $N$. 
+    The reason is that, no matter how many RIS elements are employed, the IRF appears on them simultaneously. 
+    Thus, both the channel estimation and beamforming can be fulfilled within only three pilot symbols, as is depicted in Fig.~\ref{fig:protocol}. 
+    Thus, the pilot overhead is independent of the RIS dimension $N$. 
+    To the best of our knowledge, this dimension-independent property is unprecedented, if we cannot endure the cost of attaching a dedicated RF chain to every RIS element. Some hybrid solutions do exist, such as connecting all the RIS elements to several RF chains with analog combiners\cite{alexandropoulos2021hybrid,alexandropoulos2020hardware} to enable explicit channel estimation at RIS. Unfortunately, the cost of analog combiners and RF chains are usually much higher than power sensors, which contradicts the original motivation of employing a cost-efficient RIS. 
 
-    However, the $\mathcal{O}(1)$ time complexity only holds when one MCU is installed for each RIS element. If all the RIS elements are collectively controlled by one processor, the computational time would be of order $\mathcal{O}(N)$, but the pilot overhead is still $\mathcal{O}(1)$. These conclusions of complexity can be easily extended to multi-RIS schemes, where multiple RISs are employed to serve a single user at the same time. The independent nature of IRF methods allows the RISs to work without the need to exchange data with the BS or other RISs. This property makes it much easier to integrate a new RIS into an existing communication system, which greately enhances the extendibility of the system.
+    \begin{table}[!t]
+        \centering
+        \caption{Pilot Overhead Comparison of Different CSI Acquisition Methods}
+        \label{tab:pilot overhead comp CE}
+        \begin{tabular}{|c|c|c|}
+            \hline 
+            CSI acquisition method & Minimum pilot overhead & Applicable scenario \\ 
+            \hline 
+            Proposed IRF & 3 & Sensing-RIS \\ 
+            \hline
+            MVU\cite{jensen2020optimal}         & $NK+K$    & General \\
+            \hline
+            Multi-user\cite{wang2020channel}  & $K+N+\max \lbrace K-1, \lceil \frac{(K-1)N}{M} \rceil \rbrace$ & General \\
+            \hline
+            CS\cite{wei2021channel}          & $\mathcal{O}(KS\log N)$ & Sparse \\
+            \hline 
+            Two-timescale\cite{Huchen} & $\frac{2(N+1)}{\alpha} + K\lceil N/M\rceil +K$ & Slow variation \\
+            \hline 
+        \end{tabular}
+    \end{table}
+
+    Table~\ref{tab:pilot overhead comp CE} compares different CSI acquisition schemes. 
+
+    The computational complexity of processing the obtained power signals depends on the hardware implementation. 
+    The $\mathcal{O}(1)$ time complexity only holds when one MCU is installed for each RIS element. 
+    If all the RIS elements are collectively controlled by one processor, the computational time would be $\mathcal{O}(N)$, but the pilot overhead still remains $\mathcal{O}(1)$. 
+    These conclusions of complexity can be easily extended to multi-RIS schemes, where multiple RISs are employed to serve a single user at the same time. 
+    The independent nature of IRF methods allows the RISs to work without the need to exchange data with the BS or other RISs. 
+    This property makes it much easier to integrate a new RIS into an existing communication system, which greately enhances the extendibility of the system.
+
+    
+
+
+\section{Phase Estimation Algorithms}
+In this section, three phase estimation algorithms will be proposed in Subsection~\ref{DFT method}, \ref{ML method}, and \ref{von Mises-EM method} respectively, which constitute the core of the \ac{IRF} channel estimation and beamforming algorithm.
 
 \subsection{DFT method}  \label{DFT method}
     The key challenge of the IRF channel estimation and beamforming is the phase estimation step, i.e., how to obtain the phase difference $\varphi$. Since the interferential power $P(t)$ exhibits a sinusoidal waveform, Fourier transforms can be applied to extract its phase. Apply $L$-point \ac{DFT} to the discrete-time  observed sensor detection signals $P[0],\cdots ,P[L-1]$, and we have
@@ -634,7 +673,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         See {\bf Appendix \ref{appendix:proof of theorem1}}. 
     \end{IEEEproof}
 
-    In analogy to optics, the parameter $K$ in \eqref{eqn:precise_CRLB} is called the interferential contrast. And the parameter $\bar{\gamma}$ is the average interferential SNR, since $\gamma_l=\lambda_l/a = (\mu_{n,R}^2+\mu_{n,I}^2)/\sigma_v^2$ is the ratio of the noiseless power signal and the noise power. Thus, the CRLB expression \eqref{eqn:precise_CRLB} has strong physical meanings. However, this precise CRLB expression is difficult to evaluate due to the sophisticated evaluation of integral in \eqref{eqn:precise_g_function}, hence it is more feasible to obtain a simpler approximated CRLB with closed-form expression. 
+    In analogy to optics, the parameter $K$ in \eqref{eqn:precise_CRLB} is called the interferential contrast. And the parameter $\bar{\gamma}$ is the average interferential SNR, since $\gamma_l=\lambda_l/a = (\mu_{R}^2+\mu_{I}^2)/\sigma_v^2$ is the ratio of the noiseless power signal and the noise power. Thus, the CRLB expression \eqref{eqn:precise_CRLB} has strong physical meanings. However, this precise CRLB expression is difficult to evaluate due to the sophisticated evaluation of integral in \eqref{eqn:precise_g_function}, hence it is more feasible to obtain a simpler approximated CRLB with closed-form expression. 
 
 \subsection{Asymptotic CRLB}    \label{Asymptotic CRLB}
     \begin{theorem}[Asymptotic Evaluation of Noncentral Chi-Squared CRLB] \label{thm:asymptotic CRLB} \mbox{}\par
@@ -693,23 +732,30 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
 In this section, we will present our simulation results. In Subsection \ref{Phase Estimation Algorithms}, we will show the performance comparison of the phase estimation algorithms. In Subsection \ref{Achievable Spectral Efficiency under IRF}, we will show the achievable rate comparison of our \ac{IRF} method and other RIS-aided channel estimation and beamforming algorithms. 
 
 \subsection{Phase Estimation Algorithms} \label{Phase Estimation Algorithms}
-    In Section~\ref{Sensing RIS-Based Channel Estimation}, we have already introduced three phase estimation algorithms: DFT, Newton-ML and VM-EM. Now we compare the performance of these algorithms together with the CRLB derived in Section~\ref{Performance Analysis}.  
+    In Section~\ref{Sensing RIS-Based Channel Estimation}, we have already introduced three phase estimation algorithms: DFT, Newton-ML and VM-EM. Now we compare the performance of these algorithms together with the CRLB which has been derived in Section~\ref{Performance Analysis}. 
     \begin{figure}[!t]
         \centering
         \myincludegraphics{data/pe_K.pdf}
-        \caption{Performance comparison of phase estimation algorithms. $x$-axis represents the interferential contrast $K$; $y$-axis represents the MSE of the estimators.}
+        \caption{Performance comparison of phase estimation algorithms. $x$-axis represents the interferential contrast $K$; $y$-axis represents the MSE of the estimators. The VM-EM algorithm outperforms naive DFT by at least $1\,{\rm dB}$ in high-$K$ regions. }
         \label{fig:phase estimation_K}
     \end{figure}
     % Insert the comparison figure w.r.t \bar{\gamma}.
     \begin{figure}[!t]
         \centering
         \myincludegraphics{data/pe_gamma.pdf}
-        \caption{Performance comparison of phase estimation algorithms. $x$-axis represents the average interferential SNR $\bar{\gamma}$; $y$-axis represents the MSE of the estimators.}
+        \caption{Performance comparison of phase estimation algorithms. $x$-axis represents the average interferential SNR $\bar{\gamma}$; $y$-axis represents the MSE of the estimators. The interferential contrast $K=0.6$. }
         \label{fig:phase estimation_gamma}
     \end{figure}
-    In the simulations for phase estimation algorithms in Fig.~\ref{fig:phase estimation_K}, the amplification factor $A$ is fixed to be $1$, the number of power samples is fixed to $L=2^8=256$\footnote{In practical OFDM systems, the number of signal samples within the duration of an OFDM symbol is usually $\sim 2048$. Considering that the power sensor is usually slower than the baseband ADC, it is reasonable to assume a 10-times slower sampling rate of the power sensor. Thus, $L=256$ is a reasonable number of acquired power samples during one time slot.}, and $\sigma_\zeta=0.05$; The interferential SNR $\bar{\gamma}=2$. The CRLB and CRLB-approx curves are calculated according to \eqref{eqn:precise_CRLB} and \eqref{eqn:asymptotic CRLB}, respectively. For Newton-ML algorithm, the Newton iteration is performed 4 times according to \eqref{eqn:Newton-ML renewal formula}. For VM-EM algorithm, the iteration number is also fixed to 4. The random variable $\varphi$ under estimation is drawn from a uniform distribution on $[0,2\pi]$. In the simulations in Fig.~\ref{fig:phase estimation_gamma}, all the simulation parameters, except for $K$ and $\bar{\gamma}$ are the same with Fig.~\ref{fig:phase estimation_K}. And $K=0.6$.  
+    In all the simulations for phase estimation algorithms, the amplification factor $A$ is fixed to be $1$, the number of power samples\footnote{In practical OFDM systems, the number of signal samples within the duration of an OFDM symbol is usually $\sim 2048$. Considering that the power sensor is usually slower than the baseband ADC, it is reasonable to assume a 32-times slower sampling rate of the power sensor. Thus, $L=64$ is a reasonable number of acquired power samples during one time slot.} is fixed to $L=2^6=64$, and $\sigma_\zeta=0.05$; 
+    The interferential SNR $\bar{\gamma}=20$ in Fig.~\ref{fig:phase estimation_K}. 
+    The CRLB and CRLB-approx curves are calculated from \eqref{eqn:precise_CRLB} and \eqref{eqn:asymptotic CRLB}, respectively. 
+    For Newton-ML algorithm, the Newton iteration is performed 4 times according to \eqref{eqn:Newton-ML renewal formula}. 
+    For VM-EM algorithm, the iteration number is also fixed to 4. The true value of random variable $\varphi$ under estimation is drawn from a uniform distribution on $[0,2\pi]$. 
+    In the simulations in Fig.~\ref{fig:phase estimation_gamma}, all the simulation parameters, except for $K$ and $\bar{\gamma}$, are the same with Fig.~\ref{fig:phase estimation_K}.
 
-    From Fig.~\ref{fig:phase estimation_K} and Fig.~\ref{fig:phase estimation_gamma} we discover that the VM-EM algorithm has comparable performance with the Newton-ML algorithm, but the computational cost is significantly lower, since {\bf Algorithm \ref{alg:VM-EM}} does not include the evaluation of the complicated modified Bessel functions. Both the Newton-ML and VM-EM algorithms are close to CRLB, and both of them outperform the simple DFT algorithm. The CRLB approximation is also satisfactory under a wide range of $K$ and $\bar{\gamma}$. 
+    From Fig.~\ref{fig:phase estimation_K} and Fig.~\ref{fig:phase estimation_gamma} we discover that the VM-EM algorithm has comparable performance with the Newton-ML algorithm, but the computational cost is significantly lower, since {\bf Algorithm \ref{alg:VM-EM}} does not require the evaluation of the complicated modified Bessel functions. 
+    Both the Newton-ML and VM-EM algorithms are close to CRLB, and both of them outperform the simple DFT algorithm\footnote{The DFT estimator in Fig.~\ref{fig:phase estimation_gamma} exhibits a near-constant performance gap towards the CRLB in the high-SNR region, while the Newton-ML and VM-EM estimators seem to bridge this gap and finally approaches the CRLB as $\bar{\gamma}\to\infty$.}. 
+    The CRLB approximation is also satisfactory under a wide range of $K$ and $\bar{\gamma}$. 
 
 \subsection{Achievable Spectral Efficiency under IRF} \label{Achievable Spectral Efficiency under IRF}
     \begin{figure}[!t]
@@ -718,7 +764,8 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \caption{Performance curve of the achievable spectral efficiency against the BS transmitted power $P_{\rm max}$.}
         \label{fig:rate}
     \end{figure}
-    All our simulation data are acquired under $P_{\rm max}'=300 \,{\rm mW}$, $n_0=-174\,{\rm dBm/Hz}$, subcarrier bandwidth ${\rm BW} = 180\,{\rm kHz}$, thermal noise at the receiver $\sigma^2 = {\rm BW}\times n_0$, $\sigma_v^2=100\,{\rm MHz}\times n_0$, and the BS-RIS and RIS-user channels are all assumed to be Rayleigh fading with 1 LOS path and 4 NLOS paths. The LOS path has, on average, $\kappa$ times more energy than the NLOS paths together, and $\kappa=2$. Both the BS and the RIS are equipped with $\lambda/2$-spaced uniform planar arrays (UPAs), while the user has a single antenna. The BS is located at a distance that is drawn from a uniform distribution between $20\,{\rm m}$ and $100\,{\rm m}$, and the angle of the BS is uniformly distributed. The user appears uniformly from $10\,{\rm m}$ to $100\,{\rm m}$, and the angle distribution of the user is also uniform. The size of the RIS is set to be $40\times 30$, and that of the BS antenna is $4\times 2$. For IRF methods, 3 pilots are used for CSI acquisition. 
+    All our simulation data are acquired under $P_{\rm max}'=300 \,{\rm mW}$, $n_0=-174\,{\rm dBm/Hz}$, subcarrier bandwidth ${\rm BW} = 180\,{\rm kHz}$, thermal noise at the receiver $\sigma^2 = {\rm BW}\times n_0$, $\sigma_v^2=100\,{\rm MHz}\times n_0$, and the BS-RIS and RIS-user channels are all assumed to be Rayleigh fading with 1 LOS path and 4 NLOS paths. The LOS path has, on average, $\kappa$ times more energy than the NLOS paths together, and $\kappa=2$. Both the BS and the RIS are equipped with $\lambda/2$-spaced uniform planar arrays (UPAs), while the user has a single antenna. 
+    The BS is located at a distance from the RIS that is drawn from a uniform distribution between $20\,{\rm m}$ and $100\,{\rm m}$, and the angle of the BS is uniformly distributed. The user appears uniformly from $10\,{\rm m}$ to $100\,{\rm m}$, and the angle distribution of the user is also uniform. The size of the RIS is set to be $40\times 30$, and that of the BS antenna is $4\times 2$. For IRF methods, 3 pilots are used for CSI acquisition. 
     However, for LS-CE methods, the number of pilots is $N=40\times 30$. 
 
     We compare our proposed \ac{IRF} channel estimation and beamforming method with classical LS-CE algorithm and other idealized settings in Fig.~\ref{fig:rate}. The black dashed line ``Oracle'' assumes perfectly-known CSI, thus perfect iterative beamforming can be performed. In the LS-CE method, we first utilize \eqref{eqn:LS-CE} to obtain estimates for the cascaded channel \cite{kundu2021channel,wei2021channel}, and then perform iterative RIS beamforming based on the estimated channel. In addition, we also consider the randomly-phased RIS scheme as a benchmark.  
