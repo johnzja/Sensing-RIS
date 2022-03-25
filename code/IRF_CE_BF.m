@@ -18,7 +18,7 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np)
     SensingRIS_param.psi_arr    = psi_arr;
     SensingRIS_param.A          = A;
     SensingRIS_param.L          = L;
-    SensingRIS_param.sigma_v    = sigma_v/sqrt(Np);
+    SensingRIS_param.sigma_v    = sigma_v;
     
     % Generate & Measure the interferential random field (IRF) on each RIS
     % element.

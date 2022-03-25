@@ -32,14 +32,16 @@ BW = 180e3;                     % System baseband BW on each subcarrier = 180kHz
 P_noise = PSD_noise * BW;       % Thermo-noise for BS receiver equipped with M RF-chains.
 Pt_UE = 300e-3;                 % 300mW UE transmit power.
 sigma_noise = sqrt(P_noise);
-RIS_conf.sigma_v = sqrt(PSD_noise * 100e6);     % 100M BW for IRF-sensing elements.
+RIS_conf.sigma_v = sqrt(PSD_noise * 100e6)*db2mag(10);     % 100M BW for IRF-sensing elements.
     
 N_sim = 200;
 
 Pt_BS_range = logspace(-1,1, 10);
-SE = zeros(length(Pt_BS_range), 4);
+scan_len = length(Pt_BS_range);
+SE = zeros(scan_len, 4);
 
-for idx_scan = 1:length(Pt_BS_range)
+fprintf('Start simulating...\n');
+parfor idx_scan = 1:scan_len
     % Pt_BS = 1;      % Total transmit power is 1W. (distributed on M transmit antennas).
     Pt_BS = Pt_BS_range(idx_scan);
     
@@ -101,7 +103,7 @@ for idx_scan = 1:length(Pt_BS_range)
     end
     R = mean(Rates);
     SE(idx_scan, :) = R;
-    fprintf('Pt_{BS} = %f \n', Pt_BS);
+    fprintf('Pt_{BS} = %.3f dB sim complete. %d/%d\n', pow2db(Pt_BS), idx_scan, scan_len);
 end
 disp('sim complete. Files saved at data/.');
 save('data/IRF_sim.mat', 'Pt_BS_range', 'SE', 'M', 'Pt_UE', 'RIS_conf', 'sigma_noise', 'N_sim');
@@ -118,14 +120,15 @@ set(0,'DefaultLineLineWidth',1.4);
 set(0,'defaultfigurecolor','w');
 
 figure('color',[1 1 1]); hold on;
-plot(dbP, SE(:,1), 'color', [1, 0, 0.9], 'LineStyle', '-', 'marker', 'x');
-plot(dbP, SE(:,2), 'color', [0, 0, 1], 'LineStyle', '-', 'marker', 'x');
-plot(dbP, SE(:,3), 'ro-');
-plot(dbP, SE(:,4), 'ko-.');
+
+plot(dbP, SE(:,4), 'ko-.','MarkerSize',6);
+plot(dbP, SE(:,3), 'ro-','MarkerSize',6);
+plot(dbP, SE(:,2), 'color', [0, 0, 1], 'LineStyle', '-', 'marker', 'x','MarkerSize',6);
+plot(dbP, SE(:,1), 'color', [1, 0, 0.9], 'LineStyle', '-', 'marker', 'x', 'MarkerSize',6);
 
 set(gca,'FontName','Times New Roman');
 grid on; box on;
-legend('Random', 'MMSE', 'Proposed-IRF', 'Oracle');
+legend('Oracle', 'Proposed-IRF + VM-EM','LS-CE','Random');
 xlabel('BS transmit power (dBW)', 'interpreter', 'latex');
 ylabel('Capacity (bps/Hz)', 'interpreter', 'latex');
 

@@ -14,8 +14,8 @@ K = 0.6;
 gamma_bar = 20;
 N_scan = 9;             % # Scan points.
 
-K_arr = linspace(0.2,0.9,N_scan);
-% gamma_bar_arr = linspace(1, 5, N_scan);
+% K_arr = linspace(0.2,0.9,N_scan);
+gamma_bar_arr = logspace(log10(2), log10(10), N_scan);
 
 MSE_arr_LS = zeros(1, N_scan);
 MSE_arr_VM = zeros(1, N_scan);
@@ -25,8 +25,8 @@ CRLB_precise = zeros(1, N_scan);
     
 parfor idx_scan = 1:N_scan
     rng(0);
-    K = K_arr(idx_scan);
-    % gamma_bar = gamma_bar_arr(idx_scan);
+    % K = K_arr(idx_scan);
+    gamma_bar = gamma_bar_arr(idx_scan);
     beta    = (1-sqrt(1-K^2))/K;
     sigma_v = sqrt((alpha^2+beta^2)/gamma_bar);
     
@@ -111,7 +111,7 @@ set(0,'DefaultAxesFontSize',12);
 set(0,'DefaultLineLineWidth',1.4);
 set(0,'defaultfigurecolor','w');
 
-scan_arr = K_arr;
+scan_arr = pow2db(gamma_bar_arr);
 
 figure('color',[1 1 1]); hold on;
 plot(scan_arr, pow2db(MSE_arr_LS), 'bp-','MarkerSize',6);
@@ -123,7 +123,7 @@ plot(scan_arr, pow2db(CRLB), 'color', [228,0,127]/255, 'LineStyle', '--', 'marke
 set(gca,'FontName','Times New Roman');
 grid on; box on;
 legend('DFT', 'VM-EM', 'Newton-ML', 'CRLB', 'CRLB-approx');
-% xlabel('$\bar{\gamma}$', 'interpreter', 'latex');
-xlabel('$K$', 'interpreter', 'latex');
+xlabel('$\bar{\gamma} (dB)$', 'interpreter', 'latex');
+% xlabel('$K$', 'interpreter', 'latex');
 ylabel('MSE($\varphi$) (dB)', 'interpreter', 'latex');
 

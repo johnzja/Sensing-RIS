@@ -10,7 +10,7 @@ function [f, G] = generate_channel_los(RIS_conf, BS_conf, BS_pos_sph, user_pos_s
     % G - N*M
     lambda = RIS_conf.lambda;
     % large-scale fading
-    f_fading = lambda/(4*pi)/f_dis;        % Friis Transmission Formula. (1, K).
+    f_fading = lambda/(4*pi)/f_dis*exp(1j*2*pi*rand());
     G_fading = lambda/(4*pi)/G_dis;
 
     % Formula: exp(-j*(nz*sin(psi)+ny*cos(psi)*sin(theta)) for RIS.

@@ -94,9 +94,11 @@ breaklinks=true}
 \hyphenation{op-tical net-works semi-conduc-tor}
 \begin{document}
 \title{Sensing RIS: Enabling Dimension-Independent CSI Acquisition for Beamforming}
-\author{{Jieao~Zhu, Kunzan~Liu, Zhongzhichao~Wan, Linglong~Dai, {\textit{Fellow, IEEE}, \\and H.~Vincent~Poor, {\textit{Life Fellow, IEEE}}}
+\author{{Jieao~Zhu, Kunzan~Liu, Zhongzhichao~Wan, Linglong~Dai, {\textit{Fellow, IEEE}, \\Tie Jun Cui, {\textit{Fellow, IEEE}}, and H.~Vincent~Poor, {\textit{Life Fellow, IEEE}}}
 \vspace*{-3em}}
 \thanks{J. Zhu, K. Liu, Z. Wan, and L. Dai are with the Beijing National Research Center for Information Science and Technology (BNRist) as well as the Department of Electronic Engineering, Tsinghua University, Beijing 100084, China (e-mails: \{zja21, lkz18, wzzc20\}@mails.tsinghua.edu.cn, daill@tsinghua.edu.cn).
+
+T. J. Cui is with the State Key Laboratory of Millimeter Waves, Southeast University, China (e-mail: tjcui@seu.edu.cn).
 
 H. V. Poor is with the Department of Electrical and Computer Engineering, Princeton University, USA (e-mail: poor@princeton.edu).
 
@@ -309,7 +311,7 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
     If we represent both of the BS-RIS and user-RIS signals that appear on each RIS element by their baseband equivalent signals $E_{{\rm BB}}(t)$, 
     then the corresponding physical passband electric field induced on each RIS element is characterized by 
     \begin{equation}
-        E_(t) = \sqrt{2} {\rm Re}\left( E_{{\rm BB}}(t)e^{{\rm j}\omega_c t} \right),
+        E(t) = \sqrt{2} {\rm Re}\left( E_{{\rm BB}}(t)e^{{\rm j}\omega_c t} \right),
         \label{baseband-passband relationship}
     \end{equation}
     where $\omega_c = 2\pi f_c$ denotes the carrier frequency, and the coefficient $\sqrt{2}$ ensures that the passband signal energy (power) is equal to the baseband signal energy (power), i.e., 
@@ -397,7 +399,7 @@ In this section, we will first briefly introduce the hardware architecture requi
         \label{fig:hardware}
     \end{figure}
     
-To obtain the amplitude of the induced \ac{IRF}, we propose a hardware architecture named sensing RIS.
+To obtain the amplitude of the induced \ac{IRF}, inspired by the sensing metasurface \cite{ma2019smart}, we propose a hardware architecture named sensing RIS.
 In contrast to traditional RIS architecture shown in Fig.~\ref{fig:hardware}~(a), where each RIS element includes a phase-shift circuit and a patch antenna, each sensing RIS element additionally integrates a power sensor which is responsible for detecting the amplitude of the IRF \cite{ma2020smartsensing}, as shown in Fig.~\ref{fig:hardware}~(b).
 Since all of the RIS elements can sense and adjust the phase independently from one another, low-cost microcontroller units (MCUs) can be attached locally to each RIS element to allow parallel computation of the optimal phases. 
 However, for extremely large-scale RIS systems, sparse sensing and controlling may be preferred to reduce cost and hardware complexity. 
@@ -447,30 +449,32 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     The reason is that, no matter how many RIS elements are employed, the IRF appears on them simultaneously. 
     Thus, both the channel estimation and beamforming can be fulfilled within only three pilot symbols, as is depicted in Fig.~\ref{fig:protocol}. 
     Thus, the pilot overhead is independent of the RIS dimension $N$. 
-    To the best of our knowledge, this dimension-independent property is unprecedented, if we cannot endure the cost of attaching a dedicated RF chain to every RIS element. Some hybrid solutions do exist, such as connecting all the RIS elements to several RF chains with analog combiners\cite{alexandropoulos2021hybrid,alexandropoulos2020hardware} to enable explicit channel estimation at RIS. Unfortunately, the cost of analog combiners and RF chains are usually much higher than power sensors, which contradicts the original motivation of employing a cost-efficient RIS. 
+    To the best of our knowledge, this dimension-independent property is unprecedented, if we cannot endure the cost of attaching a dedicated RF chain to every RIS element. Some hybrid solutions do exist, such as connecting all the RIS elements to several RF chains with analog combiners\cite{alexandropoulos2021hybrid,alexandropoulos2020hardware} to enable explicit channel estimation at RIS. Unfortunately, the cost of analog combiners and RF chains are usually higher than power sensors.
 
     \begin{table}[!t]
         \centering
         \caption{Pilot Overhead Comparison of Different CSI Acquisition Methods}
         \label{tab:pilot overhead comp CE}
-        \begin{tabular}{|c|c|c|}
+        \begin{tabular}{|c|c|c|c|}
             \hline 
             CSI acquisition method & Minimum pilot overhead & Applicable scenario \\ 
             \hline 
-            Proposed IRF & 3 & Sensing-RIS \\ 
+            Proposed IRF & 3 & Sensing-RIS  \\ 
             \hline
-            MVU\cite{jensen2020optimal}         & $NK+K$    & General \\
+            MVU\cite{jensen2020optimal}         & $NK+K$    & General  \\
             \hline
-            Multi-user\cite{wang2020channel}  & $K+N+\max \lbrace K-1, \lceil \frac{(K-1)N}{M} \rceil \rbrace$ & General \\
+            Multi-user\cite{wang2020channel}  & $K+N+\max \lbrace K-1, \lceil \frac{(K-1)N}{M} \rceil \rbrace$ & General  \\
             \hline
             CS\cite{wei2021channel}          & $\mathcal{O}(KS\log N)$ & Sparse \\
             \hline 
-            Two-timescale\cite{Huchen} & $\frac{2(N+1)}{\alpha} + K\lceil N/M\rceil +K$ & Slow variation \\
+            Two-timescale\cite{Huchen} & $\frac{2(N+1)}{\alpha} + K\lceil N/M\rceil +K$ & Slow variation  \\
             \hline 
         \end{tabular}
     \end{table}
 
-    Table~\ref{tab:pilot overhead comp CE} compares different CSI acquisition schemes. 
+    Table~\ref{tab:pilot overhead comp CE} compares the pilot overhead of our proposed IRF method with other different CSI acquisition methods. 
+    $K$ denotes the number of users, $S$ is the sparsity of the channel assumption, $M$ is the number of antennas at BS, and $\alpha$ is the ratio of the large-timescale channel  coherence time and the small-timescale channel coherence time\cite{Huchen}. 
+    Except for CS-based methods \cite{wei2021channel}, all the channel estimation methods \cite{jensen2020optimal,wang2020channel,Huchen} require the pilot overhead to be linearly dependent on $N$, while our IRF method needs exactly 3 pilot slots, regardless of the number of RIS elements. 
 
     The computational complexity of processing the obtained power signals depends on the hardware implementation. 
     The $\mathcal{O}(1)$ time complexity only holds when one MCU is installed for each RIS element. 
@@ -764,8 +768,12 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \caption{Performance curve of the achievable spectral efficiency against the BS transmitted power $P_{\rm max}$.}
         \label{fig:rate}
     \end{figure}
-    All our simulation data are acquired under $P_{\rm max}'=300 \,{\rm mW}$, $n_0=-174\,{\rm dBm/Hz}$, subcarrier bandwidth ${\rm BW} = 180\,{\rm kHz}$, thermal noise at the receiver $\sigma^2 = {\rm BW}\times n_0$, $\sigma_v^2=100\,{\rm MHz}\times n_0$, and the BS-RIS and RIS-user channels are all assumed to be Rayleigh fading with 1 LOS path and 4 NLOS paths. The LOS path has, on average, $\kappa$ times more energy than the NLOS paths together, and $\kappa=2$. Both the BS and the RIS are equipped with $\lambda/2$-spaced uniform planar arrays (UPAs), while the user has a single antenna. 
-    The BS is located at a distance from the RIS that is drawn from a uniform distribution between $20\,{\rm m}$ and $100\,{\rm m}$, and the angle of the BS is uniformly distributed. The user appears uniformly from $10\,{\rm m}$ to $100\,{\rm m}$, and the angle distribution of the user is also uniform. The size of the RIS is set to be $40\times 30$, and that of the BS antenna is $4\times 2$. For IRF methods, 3 pilots are used for CSI acquisition. 
+    All our simulation data are acquired under $f_c = 10\,{\rm GHz}$, $P_{\rm max}'=300 \,{\rm mW}$, $n_0=-174\,{\rm dBm/Hz}$, subcarrier bandwidth ${\rm BW} = 180\,{\rm kHz}$, thermal noise at the receiver $\sigma^2 = {\rm BW}\times n_0$, $\sigma_v^2=100\,{\rm MHz}\times n_0 F_p$, where $F_p=10\,{\rm dB}$ is the noise factor of the power sensor, and the BS-RIS and RIS-user channels are all assumed to be Rayleigh fading with 1 LOS path and 4 NLOS paths. 
+    The LOS path has, on average, $\kappa$ times more energy than the NLOS paths together, and $\kappa=2$. Both the BS and the RIS are equipped with $\lambda/2$-spaced uniform planar arrays (UPAs), while the user has a single antenna. 
+    The BS is located at a distance from the RIS that is drawn from a uniform distribution between $20\,{\rm m}$ and $100\,{\rm m}$, and the angle of the BS is uniformly distributed. 
+    The user appears uniformly from $10\,{\rm m}$ to $100\,{\rm m}$, and the angle distribution of the user is also uniform. 
+    The size of the RIS is set to be $40\times 30$, and that of the BS antenna is $4\times 2$. 
+    For IRF methods, 3 pilots are used for CSI acquisition. 
     However, for LS-CE methods, the number of pilots is $N=40\times 30$. 
 
     We compare our proposed \ac{IRF} channel estimation and beamforming method with classical LS-CE algorithm and other idealized settings in Fig.~\ref{fig:rate}. The black dashed line ``Oracle'' assumes perfectly-known CSI, thus perfect iterative beamforming can be performed. In the LS-CE method, we first utilize \eqref{eqn:LS-CE} to obtain estimates for the cascaded channel \cite{kundu2021channel,wei2021channel}, and then perform iterative RIS beamforming based on the estimated channel. In addition, we also consider the randomly-phased RIS scheme as a benchmark.  
