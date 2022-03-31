@@ -56,7 +56,7 @@ breaklinks=true}
 \acrodef{IRF}[IRF]{interference random field}
 \acrodef{MISO}[MISO]{multiple-input single-output}
 \acrodef{CSI}[CSI]{channel state information}
-\acrodef{CRLB}[CRLB]{Cramer-Rao lower bound}
+\acrodef{CRLB}[CRLB]{Cram{\'e}r-Rao lower bound}
 \acrodef{UPA}[UPA]{uniform planar array}
 
 \def \H {^H}
@@ -93,7 +93,7 @@ breaklinks=true}
 \fi
 \hyphenation{op-tical net-works semi-conduc-tor}
 \begin{document}
-\title{Sensing RIS: Enabling Dimension-Independent CSI Acquisition for Beamforming}
+\title{Sensing RISs: Enabling Dimension-Independent CSI Acquisition for Beamforming}
 \author{{Jieao~Zhu, Kunzan~Liu, Zhongzhichao~Wan, Linglong~Dai, {\textit{Fellow, IEEE}, \\Tie Jun Cui, {\textit{Fellow, IEEE}}, and H.~Vincent~Poor, {\textit{Life Fellow, IEEE}}}
 \vspace*{-3em}}
 \thanks{J. Zhu, K. Liu, Z. Wan, and L. Dai are with the Beijing National Research Center for Information Science and Technology (BNRist) as well as the Department of Electronic Engineering, Tsinghua University, Beijing 100084, China (e-mails: \{zja21, lkz18, wzzc20\}@mails.tsinghua.edu.cn, daill@tsinghua.edu.cn).
@@ -108,13 +108,13 @@ This work was supported in part by the National Key Research and Development Pro
 \maketitle
 
 \begin{abstract}
-Reconfigurable intelligent surface (RIS) has been envisioned as a revolutionary paradigm for future wireless communications.
-However, the RIS's disability of processing signals and the increased channel dimension have brought new challenges to RIS-assisted system, which greatly increases the pilot overhead required for channel estimation.
-To tackle this problem, several prior contributions that enhance the hardware architecture of RIS or develop algorithms to exploit the channels' mathematical properties have been made, where the required pilot overhead is reduced to be proportional to the number of RIS elements.
-In this paper, we propose a dimension-independent channel state information (CSI) acquisition approach, that the required pilot overhead is independent of the number of RIS elements.
-Specifically, in contrast to traditional signal transmission method, where signals from the base station (BS) and the users are transmitted in different time slots, we propose a novel method that signals are transmitted from the BS and the user simultaneously during CSI acquisition.
-Under this method, we reveal the phenomenon that an electromagnetic interference random field (IRF) will occur on RIS, and we employ sensing RIS to capture its feature.
-Moreover, we develop three algorithms for parameter estimation in this system, and also derive the Cramer-Rao lower bound (CRLB) and its asymptotic expression.
+Reconfigurable intelligent surfaces (RISs) are envisioned as a potentially transformative technology for future wireless communications.
+However, RIS's inability to process signals and their attendant  increased channel dimension have brought new challenges to RIS-assisted systems, which greatly increases the pilot overhead required for channel estimation.
+To address these problems, several prior contributions that enhance the hardware architecture of RISs or develop algorithms to exploit the channels' mathematical properties have been made, where the required pilot overhead is reduced to be proportional to the number of RIS elements.
+In this paper, we propose a dimension-independent channel state information (CSI) acquisition approach in which the required pilot overhead is independent of the number of RIS elements.
+Specifically, in contrast to traditional signal transmission methods, where signals from the base station (BS) and the users are transmitted in different time slots, we propose a novel method in which signals are transmitted from the BS and the user simultaneously during CSI acquisition.
+Under this method, an electromagnetic interference random field (IRF) will be induced on the RIS, and we employ a sensing RIS to capture its features.
+Moreover, we develop three algorithms for parameter estimation in this system, and also derive the Cram{\'e}r-Rao lower bound (CRLB) and an asymptotic expression for it.
 Simulation results verify that our proposed signal transmission method and the corresponding algorithms can achieve dimension-independent CSI acquisition for beamforming.
 \end{abstract}
 
@@ -123,38 +123,36 @@ Reconfigurable intelligent surface (RIS), channel estimation, interference rando
 \end{IEEEkeywords}
 
 \section{Introduction}
-Reconfigurable intelligent surface (RIS) has been envisioned as a revolutionary paradigm for future wireless communications.
-The characteristics of low cost and power consumption provide RIS with promising applications in overcoming blockages, improving capacity, and reducing transmit power \cite{basar2019wireless,liu2021compact,wu2019intelligent}.
-Specifically, RIS is a large-scale array composed of passive elements, which can achieve significant beamforming gain by appropriately imposing the phase shifts on the incident electromagnetic waves \cite{di2020smart}.
+Reconfigurable intelligent surfaces (RISs) are considered to be a potentially important technology for future wireless communications.
+The characteristics of low cost and power consumption make RISs a promising solution for overcoming blockages, improving capacity, and reducing transmit power \cite{basar2019wireless,liu2021compact,wu2019intelligent}.
+Specifically, an RIS is a large-scale array composed of passive elements, which can achieve significant beamforming gain by appropriately imposing phase shifts on the incident electromagnetic waves \cite{di2020smart}.
 To achieve this beamforming gain, accurate \ac{CSI} should be acquired beforehand, which makes channel estimation an essential problem for RIS-assisted communications \cite{wei2021channel}.
 
-Although channel estimation has been well investigated in conventional communication systems, the additional employment of RIS brings about two challenges \cite{weili2021channel}.
-Firstly, in contrast to the traditional antenna array capable of transmitting, receiving, and processing the signals, RIS can only passively reflect the incident signals.
+Although channel estimation has been well investigated in conventional communication systems, the additional employment of RISs brings about two challenges \cite{weili2021channel}.
+Firstly, in contrast to traditional antenna array capable of transmitting, receiving, and processing the signals, RISs can only passively reflect the incident signals.
 Secondly, since the number of RIS elements is usually large, the dimensions of the channels increase sharply compared with conventional communication systems, which results in unacceptably high pilot overhead for channel estimation.
-These two main challenges result in the urgent need for new channel estimation techniques for beamforming in RIS-assisted communications.
+These two main challenges result in the need for new channel estimation techniques for beamforming in RIS-assisted communications.
 
 \subsection{Prior Works}
 \label{Prior Works}
 % Add here
 Generally, for RIS-assisted systems, channel estimation and beamforming are two separate procedures.
 Channel estimation is performed first, and then the obtained \ac{CSI} is utilized for beamforming.
-The beamforming gain highly relies on the channel estimation accuracy.
+The beamforming gain relies heavily on the channel estimation accuracy.
 
-To tackle the challenges mentioned above in channel estimation for RIS-assisted communications, some solutions have been recently proposed, which can be generally divided into two categories.
-The first category modifies the hardware architecture of RIS, which enables a little bit of signal processing capability.
+To tackle the challenges mentioned above in channel estimation for RIS-assisted communications, some solutions have been proposed, which can be generally divided into two categories.
+The first category modifies the hardware architecture of the RIS, which enables some signal processing capability.
 For example, by sparsely replacing some of the RIS elements with active sensors capable of baseband processing, the authors of \cite{taha2021enabling} proposed a compressive sensing and deep learning-based channel estimation scheme with negligible pilot overhead. 
-To further reduce the number of active sensors, in \cite{alexandropoulos2020hardware} the authors proposed an alternating direction method-based channel estimation procedure with a single \ac{RF} chain, with the help of an extended analog combiner \cite{vlachos2019wideband}. Since RF chains have been attached to RIS for channel sensing in these works, they can also be modified to perform signal relay. In \cite{nguyen2021hybrid}, a hybrid relay-reflecting architecture is considered, where a few passive RIS elements are replaced by the active amplify-and-forward relay modules. These active modules are then capable of channel estimation. 
+To further reduce the number of active sensors, in \cite{alexandropoulos2020hardware} the authors proposed an alternating direction method-based channel estimation procedure with a single \ac{RF} chain, with the help of an extended analog combiner \cite{vlachos2019wideband}. Since RF chains have been attached to RISs for channel sensing in these works, they can also be modified to perform signal relaying. In \cite{nguyen2021hybrid}, a hybrid relay-reflecting architecture is considered, where a few passive RIS elements are replaced by active amplify-and-forward relay modules. These active modules are then capable of channel estimation. 
 
-The second category preserves the original hardware architecture of RIS, while conceiving new algorithms to exploit the specific features that RIS brings about.
+The second category preserves the original hardware architecture of RISs, while conceiving new algorithms to exploit the specific features that RISs bring about.
 Exploiting the two-timescale channel property in the RIS-assisted system, the authors of \cite{Huchen} proposed a two-timescale channel estimation algorithm that reduces the pilot overhead in the time-averaged sense.
 In other works \cite{wang2020compressed,wei2021channel}, by exploiting the sparsity of channels in the angular domain, compressive sensing-based algorithms are developed with reduced pilot overhead.
-In \cite{wang2020channel}, based on the shared reflected channels among multi-users, the authors proposed a three-phase channel estimation framework to further reduce the pilot overhead. 
-% In \cite{kundu2021channel}, deep learning approaches are considered to improve the performance of estimation.
+In \cite{wang2020channel}, based on the shared reflected channels among multiple users, the authors proposed a three-phase channel estimation framework to further reduce the pilot overhead. 
 % Multi-user relevance, two-timescale channel property & channel sparsity. 
 
-%% Re-interpret. All the above methods require channel matrix first. The channel matrix is at least of size O(N). Usually...
-Note that, in order to achieve high beamforming gain, all the above classical channel estimation methods are designed to estimate the full channel matrix as accurately as possible. However, since the channel matrix is at least of size $\mathcal{O}(N)$, where $N$ denotes the number of RIS elements, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,nguyen2021hybrid,Huchen,wang2020compressed,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent. This is unacceptable especially when the RIS is fabricated with larger number of elements (e.g. 1100 elements in \cite{pei2021ris}, 2304 elements in \cite{yangfan2020coding}, and 10240 elements in \cite{yang2018reconfigurable}).   % larger RIS! fabricated (how many elements?)
-Therefore, the question naturally arises as: {\it Does there exist a dimension-independent approach where the required pilot overhead is independent of the number of RIS elements?}
+Note that, in order to achieve high beamforming gain, all the above channel estimation methods are designed to estimate the full channel matrix as accurately as possible. However, since the channel matrix is at least of size $\mathcal{O}(N)$, where $N$ denotes the number of RIS elements, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,nguyen2021hybrid,Huchen,wang2020compressed,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent. This is unacceptable especially when the RIS is fabricated with a large number of elements (e.g. 1100 elements in \cite{pei2021ris}, 2304 elements in \cite{yangfan2020coding}, and 10240 elements in \cite{yang2018reconfigurable}).   % larger RIS! fabricated (how many elements?)
+Therefore, the following question naturally arises: {\it Does there exist a dimension-independent approach where the required pilot overhead is independent of the number of RIS elements?}
 
 % In a nutshell, both the above two categories have two limitations:
 % \begin{enumerate}
@@ -165,36 +163,30 @@ Therefore, the question naturally arises as: {\it Does there exist a dimension-i
 \subsection{Our Contributions}
 \label{Our Contributions}
 
-We point out that the main drawback of conventional channel estimation methods is that they only extract the mathematical features of channels, while neglect their electromagnetic nature. This limitation has caused the problem of high pilot overhead required for channel estimation in RIS-assisted systems. Thus, we propose an \ac{IRF}-based approach, where the \ac{IRF} on RIS is utilized for channel estimation\footnote{Simulation codes will be provided to reproduce the results in this paper: \url{http://oa.ee.tsinghua.edu.cn/dailinglong/publications/publications.html}.}.
+We point out that the main drawback of conventional channel estimation methods is that they only extract the mathematical features of channels, while neglecting their electromagnetic nature. This limitation has caused the problem of high pilot overhead required for channel estimation in RIS-assisted systems. Thus, we propose an \ac{IRF}-based approach, where the \ac{IRF} induced on an RIS is utilized for channel estimation\footnote{Simulation codes will be provided to reproduce the results in this paper: \url{http://oa.ee.tsinghua.edu.cn/dailinglong/publications/publications.html}.}.
 Specifically, the contributions of this paper can be summarized as follows.
     \begin{itemize}
         \item %We propose a novel signal transmission framework in RIS-assisted system, and reveal the corresponding phenomenon of electromagnetic interference.
         % up-link channel estimation / down-link channel estimation
-        Inspired by optical interference where phase information can be obtained from the interference fringes, we reveal that phase information about the channel can also be gathered from the phenomenon of electromagnetic interference that occurs on RIS, which we name as the \ac{IRF}. %Fortunately, phase information is enough for RIS beamforming that serves a single-antenna user. 
-        To create the \ac{IRF} on RIS, we propose a novel pilot transmission method called simultaneous rotational signaling, where signals are transmitted from the \ac{BS} and the user to RIS simultaneously, and the two signals bear a slight frequency difference during CSI acquisition. 
+        Inspired by optical interference where phase information can be obtained from the interference fringes, we reveal that phase information about the channel can also be gathered from the phenomenon of electromagnetic interference that occurs on RISs, which we name the \ac{IRF}. %Fortunately, phase information is enough for RIS beamforming that serves a single-antenna user. 
+        To induce the \ac{IRF} on an RIS, we propose a novel pilot transmission method called simultaneous rotational signaling, where signals are transmitted from the \ac{BS} and the user to the RIS simultaneously, and the two signals bear a slight frequency difference during CSI acquisition. 
         \item
-        To exploit this \ac{IRF} for CSI acquisition, we employ sensing RIS which integrates power detectors into the RIS elements to capture the features of the \ac{IRF}. Each of the power detectors can acquire its phase information independently from the \ac{IRF}, so that the required pilot overhead is independent of the number of RIS elements. 
-        We then develop DFT, ML, and VM-EM phase estimation algorithms to extract the phase information from the power detector signals in order to perform beamforming. 
+        To exploit this \ac{IRF} for CSI acquisition, we employ a  sensing RIS that integrates power detectors into the RIS elements to capture the features of the \ac{IRF}. Each of the power detectors can acquire its phase information independently from the \ac{IRF}, so that the required pilot overhead is independent of the number of RIS elements. 
+        We then develop discrete Fourier transform (DFT), maximum likelihood (ML), and von Mises-expectation maximization (VM-EM) phase estimation algorithms to extract the phase information from the power detector signals in order to perform beamforming. 
         \item
         We derive the \ac{CRLB} of the phase estimation problem based on the \ac{IRF}, and its approximated asymptotic expression for channel estimation in the sensing RIS-assisted system.
-        Our numerical results verify that this approximated \ac{CRLB} is asymptotically precise, and that our developed algorithms are close to \ac{CRLB}. 
-        Our simulation results further demonstrate that our proposed signal transmission method and the corresponding algorithms can realize dimension-independent CSI acquisition for beamforming, and then achieve the near-optimal spectral efficiency. 
-        
-%        The \ac{IRF} generated by the BS and UE makes it possible to obtain CSI with only one pilot symbol. Thus, the pilot overhead is reduced to $\mathcal{O}(1)$, independent of the number of RIS elements $N$. 
-%        \item After measuring the \ac{IRF} by the integrated power sensors, it is possible to directly calculate the optimal phase for each RIS element within $\mathcal{O}(1)$ time. However, traditional channel estimation schemes require at least $\mathcal{O}(N)$ time, since the scale of the estimation problem is at least $\mathcal{O}(N)$.
-%        \item Both the CSI acquisition and beamforming can be done immediately at the RIS, thus making channel feedback and BS signal processing unnecessary.
-%        \item Compared to attaching RF chains to the RIS elements\cite{zhang2021channel}, power sensors are much more cost-efficient and energy-efficient, since power sensors do not include LNAs, mixers and complicated baseband signal processors which turn out to be  essential for RF chains.
-%        \item The \ac{IRF} channel estimation and beamforming method is not affected by near-field effect, since this method does not rely on the prior knowledge of how the BS-RIS and RIS-user channels are structured. 
+        Our numerical results verify that this approximated \ac{CRLB} is asymptotically precise, and that our developed algorithms are close to the \ac{CRLB}. 
+        Our simulation results further demonstrate that our proposed signal transmission method and the corresponding algorithms can realize dimension-independent CSI acquisition for beamforming, and then achieve near-optimal spectral efficiency. 
     \end{itemize}
 
 \subsection{Organization and notation}
 
 \textit{Organization:}
 The rest of the paper is organized as follows.
-In Section~\ref{System Model}, we introduce the system model of RIS-aided communications, and review the traditional separate procedures of beamforming and channel estimation.
+In Section~\ref{System Model}, we introduce the system model of RIS-aided communications, and review the existing separate procedures of beamforming and channel estimation.
 In Section~\ref{Interference Random Field}, we propose a novel signal transmission method for CSI acquisition in RIS-aided system, and reveal the \ac{IRF} phenomenon under this method.
-In Section~\ref{Sensing RIS-Based Channel Estimation}, we introduce the hardware architecture of sensing RIS to exploit the \ac{IRF}.
-Based on sensing RIS, we propose three algorithms to realize channel estimation.
+In Section~\ref{Sensing RIS-Based Channel Estimation}, we introduce the hardware architecture of a sensing RIS to exploit the \ac{IRF}.
+Based on the sensing RIS, we propose three algorithms to realize channel estimation.
 In Section~\ref{Performance Analysis}, we derive the \ac{CRLB} and its asymptotic expression for channel estimation in the sensing RIS-assisted system.
 In Section~\ref{Simulation Results}, simulation results are provided for quantifying the performance of our proposed sensing RIS-based channel estimation as a dimension-independent approach.
 Finally, in Section~\ref{Conclusion}, we provide our conclusions followed by promising future research ideas.
@@ -226,39 +218,37 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     In this section, we will first specify the system model of the RIS-assisted \ac{MISO} system.
     Then, we will introduce traditional approaches for the corresponding beamforming design and channel estimation in Subsection~\ref{Beamforming design} and \ref{Channel Estimation}, respectively.
 
-   % \subsection{RIS-Aided MISO System}  \label{MISO case}
-        Let us consider a RIS-aided MISO system, where an $N$-element RIS is employed for enhancing the transmission from an $M$-antenna \ac{BS} to a single-antenna user. Assume furthermore that the phase-shift of RIS's each element can be continuously and independently controlled \cite{wu2019intelligent}. Then, the RIS precoding matrix can be represented by $\bm \Theta = \diag \left(\bm \theta\right )=\diag \left(\left[\theta_{1},\cdots ,\theta_{N}\right]^{T}\right)$,
-        where $\theta_n (n\in[N])$ denotes the phase-shift of the $n$-th RIS element, satisfying $\lvert \theta_n\rvert=1$. Therefore, the signal received by the user can be written as 
+    Let us consider an RIS-aided MISO system, where an $N$-element RIS is employed for enhancing the transmission from an $M$-antenna \ac{BS} to a single-antenna user. 
+    Assume furthermore that the phase-shift of each element of the RIS can be continuously and independently controlled \cite{wu2019intelligent}. Then, the precoding matrix of the RIS can be represented by $\bm \Theta = \diag \left(\bm \theta\right )=\diag \left(\left[\theta_{1},\cdots ,\theta_{N}\right]^{T}\right)$,
+    where $\theta_n (n\in[N])$ denotes the phase-shift of the $n$-th RIS element, satisfying $\lvert \theta_n\rvert=1$. Therefore, the signal received by the user can be written as 
         \begin{equation}
             \label{Signal model}
             y=\bm f^{H} \bm\Theta \bm G \bm w s+z,
         \end{equation}
         where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with power constraint $\left\Vert \bm w\right \Vert_{2}^{2}\leq P_{\text{max}}$; $s$ denotes the normalized BS transmitted symbol; $z\sim \mathcal{CN}\left(0,\sigma_{z}^{2}\right)$ denotes the \ac{AWGN} introduced at the receiver user. To focus on RIS beamforming, other possible links are neglected in this paper\footnote{In fact, our proposed CSI acquisition procedure automatically works when there exists extra links, which will be explained later in this paper.}.
-        % TODO: Explain it. 
         
         \subsection{Beamforming Design}
         \label{Beamforming design}
         Based on the received signal \eqref{Signal model}, we can formulate the \ac{SNR} maximization problem for designing the beamforming vector $\bm w$ and precoding matrix $\bm \Theta$, i.e.,
         \begin{subequations}
-\label{optimization}
-\begin{align}
-\label{objective}
-\max_{\bm \Theta}~~&\text{SNR}=\frac{1}{\sigma_{z}^{2}}
-\left\vert
-\bm f^{H}\bm \Theta\bm G\bm w \right\vert^{2},\\
-\label{constraint}
-~~~~~\text{s.t.~~~}&\text{C}_{1}: \left\Vert \bm w\right \Vert_{2}^{2}\leq P_{\text{max}},\\
-&\text{C}_{2}: \left\vert\theta_{n}\right\vert=1,~\forall n.
-\end{align}
-\end{subequations}
+            \label{optimization}
+            \begin{align}
+            \label{objective}
+                \max_{\bm \Theta}~~&\text{SNR}=\frac{1}{\sigma_{z}^{2}}
+                \left\vert
+                \bm f^{H}\bm \Theta\bm G\bm w \right\vert^{2},\\
+            \label{constraint}
+                ~~~~~\text{s.t.~~~}&\text{C}_{1}: \left\Vert \bm w\right \Vert_{2}^{2}\leq P_{\text{max}},\\
+                &\text{C}_{2}: \left\vert\theta_{n}\right\vert=1,~\forall n.
+            \end{align}
+        \end{subequations}
         
-        
-        In this paper, we assume that the locations of the \ac{BS} and the RIS are unchanged, which can provide us a beamforming approach expressed as
-                \begin{equation}
-\label{traditional beamforming}
-\bm w=\sqrt{P_{\rm max}}\bm a\left(\alpha\right),\quad \theta_{n} = \exp\left(-{\rm j} \arg\left(f_{n}^{*}\bm g_{n}^{T}\bm w\right)\right),~\forall n\in \{N\},
-\end{equation}
-where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave departure angle $\alpha$ of the BS antenna array, and $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
+    In this paper, we assume that the locations of the \ac{BS} and the RIS are unchanged, which can provide us a beamforming approach expressed as
+    \begin{equation}
+        \label{traditional beamforming}
+        \bm w=\sqrt{P_{\rm max}}\bm a\left(\alpha\right),\quad \theta_{n} = \exp\left(-{\rm j} \arg\left(f_{n}^{*}\bm g_{n}^{T}\bm w\right)\right),~\forall n\in \{N\},
+    \end{equation}
+    where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave departure angle $\alpha$ of the BS antenna array, and $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
 
 \subsection{Channel Estimation}
 \label{Channel Estimation}
@@ -289,12 +279,12 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
 
 \section{Interference Random Field}
 \label{Interference Random Field}
-    In this section, the signal model for \ac{IRF} will be first introduced in Subsection~\ref{Models for IRFs}. Then, in order to acquire the CSI, the simultaneous rotational signaling method will be proposed in Subsection~\ref{Simultaneous Rotational Signaling and Interference Detection}. 
+    In this section, the signal model for the \ac{IRF} will be first introduced in Subsection~\ref{Models for IRFs}. Then, in order to acquire the CSI, the simultaneous rotational signaling method will be proposed in Subsection~\ref{Simultaneous Rotational Signaling and Interference Detection}. 
 
 \subsection{Signal Model for IRF}
 \label{Models for IRFs}
 
-    Physical intuition is vital in designing RIS-aided systems \cite{najafi2020physics}, and interference is a fundamental physical phenomenon in all kinds of waves. The most well-known example is the double-slit optical interference \cite{louradour1993interference}, as is shown in Fig.~\ref{fig:scheme}~(a), where the interference fringes created during the wave superposition reveal the phase difference of the two optical paths. Similarly, the same interference phenomenon occurs when two RF electromagnetic waves meet together on the RIS, as is shown in Fig.~\ref{fig:scheme}~(b), and the \ac{IRF} created by this interference unveils the \ac{CSI}. 
+    Physical intuition is vital in designing RIS-aided systems \cite{najafi2020physics}, and interference is a fundamental physical phenomenon in all kinds of waves. The most well-known example is the double-slit optical interference \cite{louradour1993interference}, as is shown in Fig.~\ref{fig:scheme}~(a), where the interference fringes created during the wave superposition reveal the phase difference of the two optical paths. Similarly, the same interference phenomenon occurs when two RF electromagnetic waves meet together on the RIS, as is shown in Fig.~\ref{fig:scheme}~(b), and the \ac{IRF} created by this interference reveals the \ac{CSI}. 
     \begin{figure}[t]
         \centering
         \subfigure[Optical interference.]
@@ -302,12 +292,12 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
         %\vspace{0.2mm}
         \subfigure[Electromagnetic interference.]
         {\includegraphics[width=.6\textwidth]{figures/scheme2.pdf}}
-        \caption{Analogy between the optical interference and the \ac{IRF} phenomenon occurred on RIS.}
+        \caption{Analogy between the optical interference and the \ac{IRF} phenomenon induced on the RIS.}
         \label{fig:scheme}
         %\vspace{-0.5em}
     \end{figure}
 
-    Suppose two signals imping the RIS simultaneously, creating an interference field at the $n$-th RIS element. Denote the symbol transmitted from \ac{BS} by $s$, and the symbol transmitted from the user by $s'$. In order to perform channel estimation by exploiting the \ac{IRF}, we need to probe the interference fringes, i.e., the power of the \ac{IRF}. To clarify the power problem associated with an electromagnetic signal, the relationship between physical signal power and baseband equivalent signal power is stressed in the following formulas. 
+    Suppose two signals impinge upon the RIS simultaneously, creating an interference field at the $n$-th RIS element. Denote the symbol transmitted from the \ac{BS} by $s$, and the symbol transmitted from the user by $s'$. In order to perform channel estimation by exploiting the \ac{IRF}, we need to probe the interference fringes, i.e., the power of the \ac{IRF}. To clarify the power problem associated with an electromagnetic signal, the relationship between physical signal power and baseband equivalent signal power is stressed in the following formulas. 
     If we represent both of the BS-RIS and user-RIS signals that appear on each RIS element by their baseband equivalent signals $E_{{\rm BB}}(t)$, 
     then the corresponding physical passband electric field induced on each RIS element is characterized by 
     \begin{equation}
@@ -330,8 +320,8 @@ where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave
     \label{power constraint}
     \Vert \bm w \Vert_{2}^{2}\leq P_{\text{max}}, \quad |w'|^{2}\leq P'_{\text{max}}.
     \end{equation}
-    $s$ is the symbol transmitted from the BS to RIS, and $s'=e^{{\rm j} \psi(t)}$ is the time-varying transmitted symbol from the user to RIS.  
-    Since the interference fringes are not sensitive to a global phase change, we can safely assume that $s=1$, and then the relative phase between the user and BS can be fully characterized by a time-varying phase function $\psi(t)$.  
+    $s$ is the symbol transmitted from the BS to RIS, and $s'=e^{{\rm j} \psi(t)}$ is the time-varying transmitted symbol from the user to the RIS.  
+    Since the interference fringes are not sensitive to a global phase change, we can safely assume that $s=1$, and then the relative phase between the user and the BS can be fully characterized by a time-varying phase function $\psi(t)$.  
 
     Furthermore, by defining $\alpha = \left\vert\bm g_{n}^{T}\bm w\right\vert$, $\beta = \left\vert f_{n}^{*} w' \right\vert$, and the phase difference between the \ac{BS}-RIS link\footnote{Since it is usually difficult to obtain the optimal BS beamforming vector $\bm w$, during the CSI acquisition procedure, we fix $\bm w$ to a steering vector that guides most of the signal energy to the RIS aperture. As a result, $\bm g_n^T \bm w$ can be treated as the equivalent link seen by the symbol $s$.} and the RIS-user channel as $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, then the power of the \ac{IRF} can be written as
     \begin{equation}
@@ -484,8 +474,6 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     This property makes it much easier to integrate a new RIS into an existing communication system, which greately enhances the extendibility of the system.
 
     
-
-
 \section{Phase Estimation Algorithms}
 In this section, three phase estimation algorithms will be proposed in Subsection~\ref{DFT method}, \ref{ML method}, and \ref{von Mises-EM method} respectively, which constitute the core of the \ac{IRF} channel estimation and beamforming algorithm.
 
@@ -630,7 +618,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
 \section{Performance Analysis}
 \label{Performance Analysis}
     In this section, we will derive the \ac{CRLB} of the phase estimation problem. 
-    Preliminaries about \ac{CRLB} will be introduced in Subsection~\ref{The CRLB}, and then precise CRLB and asymptotic CRLB will be derived in Subsection~\ref{Precise CRLB} and Subsection~\ref{Asymptotic CRLB}, respectively. Finally, the mathematical properties of the obtained \ac{CRLB} and error analysis will be provided in Subsection~\ref{Properties of the CRLB}. 
+    Preliminaries about the \ac{CRLB} will be introduced in Subsection~\ref{The CRLB}, and then the exact and asymptotic expressions of the CRLB will be derived in Subsection~\ref{Precise CRLB} and Subsection~\ref{Asymptotic CRLB}, respectively. Finally, the mathematical properties of the obtained \ac{CRLB} and error analysis will be provided in Subsection~\ref{Properties of the CRLB}. 
 
 \subsection{The CRLB} \label{The CRLB}
     In the previous section, we have introduced three phase estimation methods. 
@@ -643,12 +631,12 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
     \end{equation}
     where $p_{\varphi}(x)$ is the distribution of $x$ when the parameter is $\varphi$, and in this paper $p_{\varphi}(x)$ obeys a non-central chi-squared distribution. 
 
-    The evaluation of CRLB in non-coherent parameter estimation was first formulated in \cite{jiang2016cramer}, where the authors introduced Gaussian approximation in order to obtain a simple closed-form CRLB expression. Unfortunately, this approximation only holds for very large non-centrality parameter $\lambda$, i.e., large interferential SNR $\gamma=\lambda/A\sigma_v^2$. Thus, precise CRLB analysis is required in our \ac{IRF} methods. However, without Gaussian approximation techniques, fatal complexity about Bessel functions will occur, making the analysis nearly intractable. 
+    The evaluation of CRLB in non-coherent parameter estimation was first formulated in \cite{jiang2016cramer}, where the authors introduced Gaussian approximation in order to obtain a simple closed-form CRLB expression. Unfortunately, this approximation only holds for very large non-centrality parameter $\lambda$, i.e., large interferential SNR $\gamma=\lambda/A\sigma_v^2$. Thus, an exact expression of the CRLB is required in our \ac{IRF} methods. However, without Gaussian approximation techniques, fatal complexity about Bessel functions will occur, making the analysis nearly intractable. 
 
-    To overcome this difficulty, we first perform precise analysis, and then approximated asymptotic analysis. The difficulty of manipulating Bessel functions is conquered by asymptotic expansion techniques \cite{silverman1972special}. Satisfactory asymtotic results are acquired in the absence of precise closed-form expression of CRLB. These results will be introduced in the following subsection.  
+    To overcome this difficulty, we first perform exact analysis, and then approximated asymptotic analysis. The difficulty of manipulating Bessel functions is conquered by asymptotic expansion techniques \cite{silverman1972special}. Satisfactory asymtotic results are acquired in the absence of exact closed-form expression of the CRLB. These results will be introduced in the following subsection.  
     %In the following two subsections, {\bf Theorem \ref{thm:precise CRLB}} reveals  
     
-\subsection{Precise CRLB} \label{Precise CRLB}
+\subsection{Exact Expression of the CRLB} \label{Precise CRLB}
     \begin{theorem}[Non-central Chi-Squared CRLB] \label{thm:precise CRLB}\mbox{}\par
         Suppose the probabilistic model is specified by \eqref{eqn:sensor power}, where $L$ observations are obtained at instants $t_l, \forall l\in P[0],\cdots,P[L-1]$. Then the CRLB of this $L$-point phase estimation problem is given by
         \begin{equation}
@@ -673,7 +661,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
         See {\bf Appendix \ref{appendix:proof of theorem1}}. 
     \end{IEEEproof}
 
-    In analogy to optics, the parameter $K$ in \eqref{eqn:precise_CRLB} is called the interferential contrast. And the parameter $\bar{\gamma}$ is the average interferential SNR, since $\gamma_l=\lambda_l/a = (\mu_{R}^2+\mu_{I}^2)/\sigma_v^2$ is the ratio of the noiseless power signal and the noise power. Thus, the CRLB expression \eqref{eqn:precise_CRLB} has strong physical meanings. However, this precise CRLB expression is difficult to evaluate due to the sophisticated evaluation of integral in \eqref{eqn:precise_g_function}, hence it is more feasible to obtain a simpler approximated CRLB with closed-form expression. 
+    In analogy to optics, the parameter $K$ in \eqref{eqn:precise_CRLB} is called the interferential contrast. And the parameter $\bar{\gamma}$ is the average interferential SNR, since $\gamma_l=\lambda_l/a = (\mu_{R}^2+\mu_{I}^2)/\sigma_v^2$ is the ratio of the noiseless power signal and the noise power. Thus, the CRLB expression \eqref{eqn:precise_CRLB} has strong physical meanings. However, this exact CRLB expression is difficult to evaluate due to the sophisticated evaluation of integral in \eqref{eqn:precise_g_function}, hence it is more feasible to obtain a simpler approximated CRLB with closed-form expression. 
 
 \subsection{Asymptotic CRLB}    \label{Asymptotic CRLB}
     \begin{theorem}[Asymptotic Evaluation of Noncentral Chi-Squared CRLB] \label{thm:asymptotic CRLB} \mbox{}\par
@@ -692,11 +680,11 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
         See {\bf Appendix \ref{Proof of Theorem 2}}. 
     \end{IEEEproof}
     \begin{remark}
-        The asymptotic result of CRLB still relies only on two parameters $K$ and $\bar{\gamma}$. But the calculation is much simpler compared to the precise CRLB. 
+        The asymptotic result of the CRLB still relies only on two parameters $K$ and $\bar{\gamma}$. But the calculation is much simpler compared to the exact expression of the CRLB. 
     \end{remark}
 
 \subsection{Properties of the CRLB} \label{Properties of the CRLB}
-    From the above analysis, we have obtained the precise and asymptotic versions of CRLB expressions. Furthermore, from these expressions, we can observe two properties of the phase estimation problem:
+    From the above analysis, we have obtained the exact and asymptotic CRLB expressions. Furthermore, from these expressions, we can observe two properties of the phase estimation problem:
     \begin{enumerate}
         \item The CRLB relies almost only on the physical parameters $K$ and $\bar{\gamma}$.
         \item The CRLB is insensitive to the value $\varphi$.
@@ -705,7 +693,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
     \begin{figure}[!t]
         \centering
         \myincludegraphics{data/CRLB.pdf}
-        \caption{Precise $1/{\rm CRLB}(\varphi)$ as a two-variable function of $K$ and $\bar{\gamma}$, calculated from \eqref{eqn:precise_CRLB}. The larger the value of reciprocal CRLB, the more precise an unbiased estimator can be. }
+        \caption{Precise $1/{\rm CRLB}(\varphi)$ as a two-variable function of $K$ and $\bar{\gamma}$, calculated from \eqref{eqn:precise_CRLB}. The larger the value of the reciprocal CRLB, the more precise an unbiased estimator can be. }
         \label{fig:CRLB two variable}
     \end{figure}
     The best prediction accuracy occurs when $\lvert K \rvert = 1$, i.e., the RIS-received signal from BS is as strong as that from the user. 
@@ -754,7 +742,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     In the simulations in Fig.~\ref{fig:phase estimation_gamma}, all the simulation parameters, except for $K$ and $\bar{\gamma}$, are the same with Fig.~\ref{fig:phase estimation_K}.
 
     From Fig.~\ref{fig:phase estimation_K} and Fig.~\ref{fig:phase estimation_gamma} we discover that the VM-EM algorithm has comparable performance with the Newton-ML algorithm, but the computational cost is significantly lower, since {\bf Algorithm \ref{alg:VM-EM}} does not require the evaluation of the complicated modified Bessel functions. 
-    Both the Newton-ML and VM-EM algorithms are close to CRLB, and both of them outperform the simple DFT algorithm\footnote{The DFT estimator in Fig.~\ref{fig:phase estimation_gamma} exhibits a near-constant performance gap towards the CRLB in the high-SNR region, while the Newton-ML and VM-EM estimators seem to bridge this gap and finally approaches the CRLB as $\bar{\gamma}\to\infty$.}. 
+    Both the Newton-ML and VM-EM algorithms are close to the CRLB, and both of them outperform the simple DFT algorithm\footnote{The DFT estimator in Fig.~\ref{fig:phase estimation_gamma} exhibits a near-constant performance gap towards the CRLB in the high-SNR region, while the Newton-ML and VM-EM estimators seem to bridge this gap and finally approaches the CRLB as $\bar{\gamma}\to\infty$.}. 
     The CRLB approximation is also satisfactory under a wide range of $K$ and $\bar{\gamma}$. 
 
 \subsection{Achievable Spectral Efficiency under IRF} \label{Achievable Spectral Efficiency under IRF}
@@ -777,10 +765,9 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     Fig.~\ref{fig:rate} shows the performance curve of the achievable spectral efficiency against the BS transmitted power. From this figure, we can conclude that the proposed IRF method with VM-EM phase estimation is nearly optimal, under extremely low pilot overhead. The proposed IRF method is even close to the oracle scheme, and has satisfactory performance among a wide range of the BS transmitted power. 
 
 
-
 \section{Conclusion}
 \label{Conclusion}
-    In this paper, we introduced a dimension-independent CSI acquisition method for sensing RIS-assisted MISO wireless communication systems. 
+    In this paper, we have introduced a dimension-independent CSI acquisition method for sensing RIS-assisted MISO wireless communication systems. 
     Combined with our proposed VM-EM phase estimation algorithm, the pilot overhead of our CSI acquisition method is made independent of the number of RIS elements with low computational cost, enabling the implementation of extremely large-scale RISs to achieve significant beamforming gain. 
     Both CRLB analysis and simulation results verified the near-optimality of our VM-EM algorithm. 
     Furthermore, due to the independent property of our \ac{IRF}-based CSI acquisition method, the near-field effect cannot corrupt the precision of the CSI. 
@@ -789,14 +776,14 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     
     For future work, the spatial interferential fringes on the sensing RIS may be exploited to recover the CSI at higher precision, and the data obtained by the power sensors may be utilized to perform joint channel estimation and beamforming together with traditional methods. 
     In addition, different interferential frequencies can be assigned to different users to perform multi-user CSI acquisition within a single time slot, but the waveforms should be re-designed to avoid interference among users. 
-    Furthermore, when equipped with a sensing RIS, traditional MIMO systems can also benefit from the additional CSI provided by the phase estimation methods of IRF.  
+    Furthermore, when equipped with a sensing RIS, traditional MIMO systems can also benefit from the additional CSI provided by the phase estimation methods based on the IRF.  
 % This is the end of the "Conclusion" part. 
 
 \appendices
 % Non-central Chi-Squared distribution. 
 \section{Proof of \textbf{Lemma 1}}
 \label{Proof of Lemma 1}
-        Denote $z=z_r + {\rm j} z_i$, then the posterior density $p(\theta | z) \propto p(\theta)p(z|\theta)$ can be expressed as
+        Denote $z=z_r + {\rm j} z_i$; then the posterior density $p(\theta | z) \propto p(\theta)p(z|\theta)$ can be expressed as
         \begin{equation}
             \begin{aligned}
                 p(\theta|z) & \propto \exp(\kappa \cos(\theta - \mu))\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right) \\
@@ -804,11 +791,11 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
                 & \propto \exp\left( \re\left[ e^{{\rm j} \theta}\left(\kappa e^{-{\rm j}\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
             \end{aligned}
         \end{equation}
-        Since the density of von Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{{\rm j} \theta}(\kappa e^{{\rm j} \mu})^* \right] \right)$, we can also parameterize the von Mises distribution by a single complex parameter $\kappa e^{{\rm j}\mu}$. Thus, the above $p(\theta|z)$ is a von Mises density with parameter $\kappa'e^{{\rm j}\mu'}$, satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} +2z/\sigma^2$. This completes the proof.
+        Since the density of the von Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{{\rm j} \theta}(\kappa e^{{\rm j} \mu})^* \right] \right)$, we can also parameterize the von Mises distribution by a single complex parameter $\kappa e^{{\rm j}\mu}$. Thus, the above $p(\theta|z)$ is a von Mises density with parameter $\kappa'e^{{\rm j}\mu'}$, satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} +2z/\sigma^2$. This completes the proof.
 
 
 \section{Proof of \textbf{Theorem 1}}\label{appendix:proof of theorem1}
-    According to the definition of CRLB \eqref{eqn:CRLB definition}, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\varphi$. Note that in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[P[l]\right]$, $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power} by the linearity of the expectation operation:
+    According to the definition of the CRLB \eqref{eqn:CRLB definition}, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\varphi$. Note that in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[P[l]\right]$, $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power} by the linearity of the expectation operation:
     \begin{equation}
         \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l.
         \label{eqn:expectation of P_l}
@@ -853,7 +840,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     \end{equation}
     where step $(a)$ comes from substituting these three types of expectation into \eqref{Second Derivative Likelihood}, and step $(b)$ comes from replacing the trickiest expectation by the definition of the function $g(\cdot)$ in \eqref{eqn:precise_g_function}.  
     
-    Note that the precise value of CRLB can be determined by the precise single-variable $g$ function \eqref{eqn:precise_g_function}, whose variable $\gamma_l = \lambda_l / a$ is the interferential SNR. After further derivations, it can be observed from the expressions that the CRLB only relies on two intrinsic physical parameters: the interferential SNR $\gamma_l$, and the interferential contrast $K$ \cite{louradour1993interference}, which coincides with the physical intuition. Imitating the notations in optics, we define the parameter $K$ to be  
+    Note that the precise value of the CRLB can be determined by the exact  single-variable $g$ function \eqref{eqn:precise_g_function}, whose variable $\gamma_l = \lambda_l / a$ is the interferential SNR. After further derivations, it can be observed from the expressions that the CRLB only relies on two intrinsic physical parameters: the interferential SNR $\gamma_l$, and the interferential contrast $K$ \cite{louradour1993interference}, which coincides with the physical intuition. Imitating the notations in optics, we define the parameter $K$ to be  
     \begin{equation}
         K = \frac{I_M - I_m}{I_M + I_m} = \frac{2\alpha\beta}{\alpha^2+\beta^2},
     \end{equation}
@@ -869,7 +856,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
 
 \section{Proof of \textbf{Theorem 2}}
 \label{Proof of Theorem 2}
-    Since the precise expression of $g(\gamma)$ in \eqref{eqn:precise_g_function} is difficult to calculate, we evaluate it approximately by utilizing the asymptotic expansion $x(1-R^2(2\sqrt{x})) \approx \sqrt{x}/2$ \cite{silverman1972special}. According to the definition, evaluating $g(\gamma)$ is the same as evaluating $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$. 
+    Since an exact expression of $g(\gamma)$ in \eqref{eqn:precise_g_function} is difficult to calculate, we evaluate it approximately by utilizing the asymptotic expansion $x(1-R^2(2\sqrt{x})) \approx \sqrt{x}/2$ \cite{silverman1972special}. According to the definition, evaluating $g(\gamma)$ is the same as evaluating $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$. 
     % Thus, by substituting $x=\lambda_lP[l]/a^2$ into the asymptotic expansion formula, we can further simplify the integrand of the expectation to be 
     % \begin{equation}
     %     \begin{aligned}
@@ -879,7 +866,6 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     %     \label{eqn:trickiest_expectation}
     % \end{equation}
     % where $a=A\sigma_v^2 \ll \lambda_l$, $h(\lambda_l, a)$ is a two-variable function\footnote{In fact, the two-variable function $g(\lambda, a)$ can be further simplified into a single-variable function $g(\cdot). $}, and $I_\nu$ is the $\nu$-th order  modified Bessel function of the first kind. For detailed proof of the calculation process and error analysis of \eqref{eqn:trickiest_expectation}, please refer to {\bf Appendix B}. 
-
 
     In order to evaluate the expectation $\mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l]$, we first introduce some preliminaries about the noncentral chi distribution $\nc_{\chi_k}(\lambda)$ with noncentrality parameter $\lambda>0$. The distribution $\nc_{\chi_k}(\lambda)$ is the law of the length (2-norm) of a $k$-dimensional standard normal distribution $\mathcal{N}({\bm \mu}, {\bm I}_k)$, with $\lambda = \Vert {\bm \mu} \Vert_2$. Specifically, we are interested in the case where $k=2$, since this is the case of the 2-dimensional complex plane. For  $k=2$, let $Y \sim \nc_{\chi_2}(m)$, then we have \cite{park1961moments}
     \begin{equation}
@@ -915,7 +901,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \end{aligned}
         \label{eqn:approx evaluation result}
     \end{equation}
-    Finally, substituting the approximation \eqref{eqn:approx evaluation result} into the precise CRLB \eqref{eqn:precise_CRLB} yields the conclusion \eqref{eqn:asymptotic CRLB}, which completes the proof. Note that the operation $(x)^+$ in \eqref{eqn:asymptotic CRLB} ensures that each term of the CRLB is non-negative. 
+    Finally, substituting the approximation \eqref{eqn:approx evaluation result} into the exact CRLB \eqref{eqn:precise_CRLB} yields the conclusion \eqref{eqn:asymptotic CRLB}, which completes the proof. Note that the operation $(x)^+$ in \eqref{eqn:asymptotic CRLB} ensures that each term of the CRLB is non-negative. 
 
 \section{Proof of \textbf{Theorem 3}}
 \label{Proof of Theorem 3}
@@ -925,7 +911,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \caption{The curve $x(1-R^2(2\sqrt{x}))-\sqrt{x}/2$, when $0\leq x\leq 5$. We can see from the curve that the approximation error $\delta \leq 0.07$.}
         \label{fig:asymptotic_expansion}
     \end{figure}
-    Since the only imprecise step of the above derivation is the asymptotic expansion, the approximation error of the expectation can be upper-bounded by the asymptotic expansion error. Assume that the asymptotic expansion error does not exceeds $\delta$, i.e.,
+    Since the only imprecise step of the above derivation is the asymptotic expansion, the approximation error of the expectation can be upper-bounded by the asymptotic expansion error. Assume that the asymptotic expansion error does not exceed $\delta$, i.e.,
     \begin{equation}
         \left\vert x\left(1-R^2(2\sqrt{x})\right)-\sqrt{x}/2 \right\vert \leq \delta.
         \label{eqn:asymptotic error}
@@ -974,7 +960,6 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
 \bibliography{SensingRIS, IEEEabrv}
 
 \end{document}
-
 
 
 
