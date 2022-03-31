@@ -450,27 +450,27 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     Thus, both the channel estimation and beamforming can be fulfilled within only three pilot symbols, as is depicted in Fig.~\ref{fig:protocol}. 
     Thus, the pilot overhead is independent of the RIS dimension $N$. 
     To the best of our knowledge, this dimension-independent property is unprecedented, if we cannot endure the cost of attaching a dedicated RF chain to every RIS element. Some hybrid solutions do exist, such as connecting all the RIS elements to several RF chains with analog combiners\cite{alexandropoulos2021hybrid,alexandropoulos2020hardware} to enable explicit channel estimation at RIS. Unfortunately, the cost of analog combiners and RF chains are usually higher than power sensors.
-
-    \begin{table}[!t]
-        \centering
-        \caption{Pilot Overhead Comparison of Different CSI Acquisition Methods}
-        \label{tab:pilot overhead comp CE}
-        \begin{tabular}{|c|c|c|c|}
+    
+    \begin{table}[t]
+\caption{Pilot Overhead Comparison of Different CSI Acquisition Methods}
+\label{tab:pilot overhead comp CE}
+\centering
+\begin{tabular}{|l|r|r|r|r|}
             \hline 
-            CSI acquisition method & Minimum pilot overhead & Applicable scenario \\ 
-            \hline 
-            Proposed IRF & 3 & Sensing-RIS  \\ 
+            CSI acquisition method & Minimum pilot overhead & Type of RIS& Channel assumption\\ 
             \hline
-            MVU\cite{jensen2020optimal}         & $NK+K$    & General  \\
+            MVU\cite{jensen2020optimal}         & $NK+K$    &RIS& General  \\
             \hline
-            Multi-user\cite{wang2020channel}  & $K+N+\max \lbrace K-1, \lceil \frac{(K-1)N}{M} \rceil \rbrace$ & General  \\
+            Multi-user\cite{wang2020channel}  & $K+N+ \lceil \frac{(K-1)N}{M} \rceil$ &RIS& General  \\
             \hline
-            CS\cite{wei2021channel}          & $\mathcal{O}(KS\log N)$ & Sparse \\
+            CS\cite{wei2021channel}          & $\mathcal{O}(KS\log N)$ &RIS& Sparse \\
             \hline 
-            Two-timescale\cite{Huchen} & $\frac{2(N+1)}{\alpha} + K\lceil N/M\rceil +K$ & Slow variation  \\
+            Two-timescale\cite{Huchen} & $\frac{2(N+1)}{\alpha} + K\lceil N/M\rceil +K$ &RIS& Slow variation  \\
             \hline 
-        \end{tabular}
-    \end{table}
+            Proposed IRF & 3 & Sensing RIS  &General\\ 
+            \hline
+    \end{tabular}
+\end{table}
 
     Table~\ref{tab:pilot overhead comp CE} compares the pilot overhead of our proposed IRF method with other different CSI acquisition methods. 
     $K$ denotes the number of users, $S$ is the sparsity of the channel assumption, $M$ is the number of antennas at BS, and $\alpha$ is the ratio of the large-timescale channel  coherence time and the small-timescale channel coherence time\cite{Huchen}. 
@@ -553,11 +553,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
         \end{aligned}
         \label{Second Derivative Likelihood}
     \end{equation}
-    where
-    \begin{equation}
-        z_l = \sqrt{P[l]\lambda(t_l)}/(A\sigma_v^2/2).
-        \label{eqn:def z_l}
-    \end{equation}
+    where $z_l = \sqrt{P[l]\lambda(t_l)}/(A\sigma_v^2/2)$.
     Then, we can perform the Newton iteration to obtain $\hat{\varphi}$, by iteratively using the updating formula
     \begin{equation}
         \hat{\varphi}^{(k+1)} = \hat{\varphi}^{(k)} - \frac{\mathcal{L}'(\hat{\varphi}^{(k)})}{\mathcal{L}''(\hat{\varphi}^{(k)})},
@@ -617,12 +613,12 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
         \begin{algorithmic}[1]
             \REQUIRE Incident wave intensity $\alpha$, $\beta$; sensor data $P[l]$; amplification factor $A$ and noise variance $\sigma_v^2$; predefined phase shifts $\psi_l=\omega t_l$.
             \ENSURE $\hat{\varphi}$
-            \STATE $s_l \leftarrow \sqrt{P[l]/A}, \forall l=0,1,\cdots,L-1$
+            \STATE $s_l \leftarrow \sqrt{P[l]/A}, \quad \forall l\in \{L\}$
             \STATE $\hat{\varphi} \leftarrow \arg\{{\rm FFT}(P)[1]\}$
             \STATE $\kappa \leftarrow 1$
             \WHILE {$\hat{\varphi}$ not convergence}
-                \STATE $\mu_l \leftarrow \alpha + \beta e^{{\rm j} (\hat{\varphi}+\psi_l)}, \forall l=0,1,\cdots,L-1$
-                \STATE $w_l \leftarrow s_l e^{{\rm j} \arg(\mu_l)} - \alpha, \forall l=0,1,\cdots,L-1$
+                \STATE $\mu_l \leftarrow \alpha + \beta e^{{\rm j} (\hat{\varphi}+\psi_l)}, \quad \forall l\in \{L\}$
+                \STATE $w_l \leftarrow s_l e^{{\rm j} \arg(\mu_l)} - \alpha, \quad \forall l\in \{L\}$
                 \STATE $z_\varphi \leftarrow \kappa e^{{\rm j} \hat{\varphi}} + \beta \left( \sum_{l=0}^{L-1}{w_l e^{-{\rm j} \psi_l}}\right) / (\sigma_v^2/2)$
                 \STATE $\hat{\varphi} \leftarrow \arg(z_\varphi)$
                 \STATE $\kappa \leftarrow |z_\varphi|$
@@ -826,17 +822,17 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \end{aligned}
         \label{eqn:expectation_second_kind_1}
     \end{equation}
-    Note that, because of the definition of $z_l$ \eqref{eqn:def z_l}, the expectation $\mathbb{E}\left[R(z_l)P[l]/z_l\right]$ is, intrinsically, of the same form as the expectation $\mathbb{E}\left[R(z_l) \sqrt{P[l]}\right]$. Thus, the expectation result is
+    According to the definition of $z_l$, the expectation $\mathbb{E}\left[R(z_l)P[l]/z_l\right]$ is of the same form as the expectation $\mathbb{E}\left[R(z_l) \sqrt{P[l]}\right]$. Thus, the expectation result is
     \begin{equation}
         \mathbb{E}\left[\frac{R(z_l)}{z_l} P[l]\right] = \frac{A\sigma_v^2}{2}.
         \label{eqn:expectation_second_kind_2}
     \end{equation}
-    The third kind of expectation $\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right]$ is the trickiest to calculate, since it has no closed-form expression. So we define the two-variable $g$ function to be 
+    As for the third kind of expectation $\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right]$, we first define 
     \begin{equation}
         g(\lambda_l, a) = \mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right].
         \label{eqn:two-variable g function}
     \end{equation}
-    It is not trivial to observe that the two-variable function $g(\lambda_l, a)$ is, in fact, a single-variable function $g(\gamma_l)$, with $\gamma_l=\lambda_l/a$. Let $x=\lambda_l t$, and write down the integral expression of \eqref{eqn:two-variable g function}, we obtain 
+    Let $x=\lambda_l t$, and write down the integral expression of \eqref{eqn:two-variable g function}, we obtain 
     \begin{equation}
         \begin{aligned}
         g(\lambda_l, a) & = \int_{0}^{+\infty} t(1-R^2(2\gamma_l\sqrt{t})) \frac{\lambda_l}{a} \exp\left(\frac{\lambda_l + \lambda_l t}{a}\right) I_0\left(2\gamma_l\sqrt{t}\right){\rm d}t \\
@@ -895,11 +891,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         L_{1/2}(x) = e^{x/2}\left[(1-x)I_0\left(-\frac{x}{2}\right)-xI_1\left(-\frac{x}{2}\right) \right].
         \label{eqn:Laguerre half order}
     \end{equation}
-    Recall that the asymptotic expansion holds for large $x$:
-    \begin{equation}
-        x(1-R^2(2\sqrt{x})) \sim \sqrt{x}/2,
-        \label{eqn:asym_expansion}
-    \end{equation}
+    Recall that the asymptotic expansion $x(1-R^2(2\sqrt{x})) \sim \sqrt{x}/2$ holds for large $x$,
     and the random variable $P[l]$ obeys a non-central chi-squared distribution which can be equivalently expressed as 
     \begin{equation}
         P[l] \sim A\left| \CN\left( (\alpha + \beta e^{{\rm j} (\psi_l + \varphi)}), \sigma_v^2 \right)\right|^2
