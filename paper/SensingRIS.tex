@@ -151,7 +151,7 @@ In other works \cite{wang2020compressed,wei2021channel}, by exploiting the spars
 In \cite{wang2020channel}, based on the shared reflected channels among multiple users, the authors proposed a three-phase channel estimation framework to further reduce the pilot overhead. 
 % Multi-user relevance, two-timescale channel property & channel sparsity. 
 
-Note that, in order to achieve high beamforming gain, all the above channel estimation methods are designed to estimate the full channel matrix as accurately as possible. However, since the channel matrix is at least of size $\mathcal{O}(N)$, where $N$ denotes the number of RIS elements, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,nguyen2021hybrid,Huchen,wang2020compressed,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent. This is unacceptable especially when the RIS is fabricated with a large number of elements (e.g. 1100 elements in \cite{pei2021ris}, 2304 elements in \cite{yangfan2020coding}, and 10240 elements in \cite{yang2018reconfigurable}).   % larger RIS! fabricated (how many elements?)
+Note that, in order to achieve high beamforming gain, all the above channel estimation methods are designed to estimate the full channel matrix as accurately as possible. However, since the channel matrix is at least of size $\mathcal{O}(N)$, where $N$ denotes the number of RIS elements, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,vlachos2019wideband,nguyen2021hybrid,Huchen,wang2020compressed,wang2020channel,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent. This is unacceptable especially when the RIS is fabricated with a large number of elements (e.g. 1100 elements in \cite{pei2021ris}, 2304 elements in \cite{yangfan2020coding}, and 10240 elements in \cite{yang2018reconfigurable}).   % larger RIS! fabricated (how many elements?)
 Therefore, the following question naturally arises: {\it Does there exist a dimension-independent approach where the required pilot overhead is independent of the number of RIS elements?}
 
 % In a nutshell, both the above two categories have two limitations:
@@ -288,10 +288,10 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     \begin{figure}[t]
         \centering
         \subfigure[Optical interference.]
-        {\includegraphics[width=.6\textwidth]{figures/scheme1.pdf}}
+        {\includegraphics[width=.58\textwidth]{figures/scheme1.pdf}}
         %\vspace{0.2mm}
         \subfigure[Electromagnetic interference.]
-        {\includegraphics[width=.6\textwidth]{figures/scheme2.pdf}}
+        {\includegraphics[width=.41\textwidth]{figures/scheme2.pdf}}
         \caption{Analogy between the optical interference and the \ac{IRF} phenomenon induced on the RIS.}
         \label{fig:scheme}
         %\vspace{-0.5em}
@@ -301,7 +301,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     If we represent both of the BS-RIS and user-RIS signals that appear on each RIS element by their baseband equivalent signals $E_{{\rm BB}}(t)$, 
     then the corresponding physical passband electric field induced on each RIS element is characterized by 
     \begin{equation}
-        E(t) = \sqrt{2} {\rm Re}\left( E_{{\rm BB}}(t)e^{{\rm j}\omega_c t} \right),
+        E(t) = \sqrt{2} \Re\left( E_{{\rm BB}}(t)e^{{\rm j}\omega_c t} \right),
         \label{baseband-passband relationship}
     \end{equation}
     where $\omega_c = 2\pi f_c$ denotes the carrier frequency, and the coefficient $\sqrt{2}$ ensures that the passband signal energy (power) is equal to the baseband signal energy (power), i.e., 
@@ -315,11 +315,8 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
             &=\bm g_{n}^{T}\bm w s+f_{n}^{*} w' s' +v(t),
         \end{aligned}
     \end{equation}
-    where $v(t)\sim \mathcal{CN}(0,\sigma_{v}^{2})$ is the electromagnetic noise signal in its baseband representation, $\bm w$ and $w'$ are the beamforming vector at the BS side and the user side, respectively, which satisfies
-    \begin{equation}
-    \label{power constraint}
-    \Vert \bm w \Vert_{2}^{2}\leq P_{\text{max}}, \quad |w'|^{2}\leq P'_{\text{max}}.
-    \end{equation}
+    where $v(t)\sim \mathcal{CN}(0,\sigma_{v}^{2})$ is the electromagnetic noise signal in its baseband representation,
+    $\bm w$ and $w'$ are the beamforming vector at the BS side and the user side satisfying $\Vert \bm w \Vert_{2}^{2}\leq P_{\text{max}}$ and $|w'|^{2}\leq P'_{\text{max}}$, respectively,
     $s$ is the symbol transmitted from the BS to RIS, and $s'=e^{{\rm j} \psi(t)}$ is the time-varying transmitted symbol from the user to the RIS.  
     Since the interference fringes are not sensitive to a global phase change, we can safely assume that $s=1$, and then the relative phase between the user and the BS can be fully characterized by a time-varying phase function $\psi(t)$.  
 
@@ -328,18 +325,13 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
         \label{eqn:power of interference}
         \begin{aligned}
             P(t)&=A \left| E_{{\rm BB, IRF}} (t)\right |^{2}+\zeta\\
-            &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{IRF power signal}}\\
-            &~~~+\underbrace{2A\text{Re}\left\{\left(\alpha+\beta e^{{\rm j}\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
+            &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{IRF power signal}}+\underbrace{2A\Re\left\{\left(\alpha+\beta e^{{\rm j}\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
         \end{aligned}
     \end{equation}
     where $\zeta$ is the noise introduced by digital signal processing after measuring the IRF power, $A$ is the amplification factor of the power sensor, and the equivalent electromagnetic noise $v'(t) = e^{{\rm j}{\rm arg}({\bm g}_n^T \bm w)}v^*(t)$ follows the same distribution as $v(t)$ for any time $t$.
     The name IRF comes from the randomness of the unknown $\varphi$, the unknown noise realization, and the interferential nature of the field.
 
-    The phase difference $\varphi$ defined here will play an important role in our following channel estimation, since it carries enough CSI for beamforming, which will be justified in the next section. To estimate the phase difference $\varphi$, we need enough observations from the sensor-detected power signal $P(t)$. For simplicity and without loss of generality, we can assume $\psi(t)=\omega t$ and $\omega=\frac{2\pi}{T_{s}}$, where $T_s$ is the symbol period. Furthermore, assume that $L$ observations $P[l]=P(t_{l})$ located at equally-spaced instants 
-    \begin{equation}
-        \label{observation time}
-        t_{l}=\frac{l}{L}T_{s},~\forall l\in \{L\}
-    \end{equation}
+    The phase difference $\varphi$ defined here will play an important role in our following channel estimation, since it carries enough CSI for beamforming, which will be justified in the next section. To estimate the phase difference $\varphi$, we need enough observations from the sensor-detected power signal $P(t)$. For simplicity and without loss of generality, we can assume $\psi(t)=\frac{2\pi}{T_{s}} t$, where $T_s$ is the symbol period. Furthermore, assume that $L$ observations $P[l]=P(t_{l})$ located at equally-spaced instants $t_{l}=\frac{l}{L}T_{s}$ for all $l\in \{L\}$
     are used for phase estimation $\varphi$.
 
 \subsection{Simultaneous Rotational Signaling and Interference Detection} \label{Simultaneous Rotational Signaling and Interference Detection}
