@@ -585,7 +585,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
         \label{eqn:M-step}
     \end{equation}
     where the coefficient $\beta/(\sigma_v^2/2)$ comes from scaling the phasor in Fig.~\ref{fig:phasor} by a factor $\beta^{-1}$ and applying {\bf Lemma \ref{lemma_1}}.
-    Performing E-step with \eqref{eqn:E-step} and M-step with \eqref{eqn:M-step} alternately, then the estimation precision for $\varphi$ can be iteratively improved. Note that although the modified Bessel functions appear in the density function of von Mises distribution, the bother is avoided in the von Mises-EM algorithm. The pseudo code of von Mises-EM algorithm\footnote{We need the interferential parameters $\alpha$ and $\beta$, which are channel gains that can be directly measured within two time slots, without simultaneous signaling of the BS and the user. } is collected in {\bf Algorithm \ref{alg:VM-EM}}.
+    Performing E-step with \eqref{eqn:E-step} and M-step with \eqref{eqn:M-step} alternately, then the estimation precision for $\varphi$ can be iteratively improved. Note that although the modified Bessel functions appear in the density function of von Mises distribution, the bother is avoided in the von Mises-EM algorithm. The pseudo code of von Mises-EM algorithm is collected in {\bf Algorithm \ref{alg:VM-EM}}.
 
     \begin{algorithm}[htbp] 
         \caption{von Mises-EM phase estimation (VM-EM algorithm)} \label{alg:VM-EM}
@@ -609,52 +609,55 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
     
 \section{Performance Analysis}
 \label{Performance Analysis}
-    In this section, we will derive the \ac{CRLB} of the phase estimation problem. 
-    Preliminaries about the \ac{CRLB} will be introduced in Subsection~\ref{The CRLB}, and then the exact and asymptotic expressions of the CRLB will be derived in Subsection~\ref{Precise CRLB} and Subsection~\ref{Asymptotic CRLB}, respectively. Finally, the mathematical properties of the obtained \ac{CRLB} and error analysis will be provided in Subsection~\ref{Properties of the CRLB}. 
+    In this section, we derive the exact expression of the CRLB in the phase estimation problem. 
+    To simplify the calculation, we provide an asymptotic expression of the CRLB.
+    Moreover, we also reveal the mathematical properties of the obtained CRLB and provide the error analysis.
 
-\subsection{The CRLB} \label{The CRLB}
-    In the previous section, we have introduced three phase estimation methods. 
-    A natural question is how accurate can these phase estimators be. 
-    From \eqref{eqn:sensor power}, we can discover that the phase estimation is, in fact, a probabilistic parameter estimation problem, where the distributions of the observable variables are controlled by the parameter $\varphi$. 
-    Thus, the ``best'' mean squared error of any unbiased estimator is lower-bounded by the CRLB \cite{casella2021statistical} 
-    \begin{equation}
-        \mathbb{E}\left(\hat{\varphi}-\varphi\right)^2 \geq {\rm CRLB}(\varphi) = -\frac{1}{\mathbb{E}_{x\sim p_\varphi}\left[\frac{\partial^2}{\partial\varphi^2}\log p_{\varphi}(x)\right]},
-        \label{eqn:CRLB definition}
-    \end{equation}
-    where $p_{\varphi}(x)$ is the distribution of $x$ when the parameter is $\varphi$, and in this paper $p_{\varphi}(x)$ obeys a non-central chi-squared distribution. 
-
-    The evaluation of CRLB in non-coherent parameter estimation was first formulated in \cite{jiang2016cramer}, where the authors introduced Gaussian approximation in order to obtain a simple closed-form CRLB expression. Unfortunately, this approximation only holds for very large non-centrality parameter $\lambda$, i.e., large interferential SNR $\gamma=\lambda/A\sigma_v^2$. Thus, an exact expression of the CRLB is required in our \ac{IRF} methods. However, without Gaussian approximation techniques, fatal complexity about Bessel functions will occur, making the analysis nearly intractable. 
-
-    To overcome this difficulty, we first perform exact analysis, and then approximated asymptotic analysis. The difficulty of manipulating Bessel functions is conquered by asymptotic expansion techniques \cite{silverman1972special}. Satisfactory asymtotic results are acquired in the absence of exact closed-form expression of the CRLB. These results will be introduced in the following subsection.  
-    %In the following two subsections, {\bf Theorem \ref{thm:precise CRLB}} reveals  
+%\subsection{The CRLB} \label{The CRLB}
+%    In the previous section, we have introduced three phase estimation methods. 
+%    A natural question is how accurate can these phase estimators be. 
+%    From \eqref{eqn:sensor power}, we can discover that the phase estimation is, in fact, a probabilistic parameter estimation problem, where the distributions of the observable variables are controlled by the parameter $\varphi$. 
+%    Thus, the ``best'' mean squared error of any unbiased estimator is lower-bounded by the CRLB \cite{casella2021statistical} 
+%    \begin{equation}
+%        \mathbb{E}\left(\hat{\varphi}-\varphi\right)^2 \geq {\rm CRLB}(\varphi) = -\frac{1}{\mathbb{E}_{x\sim p_\varphi}\left[\frac{\partial^2}{\partial\varphi^2}\log p_{\varphi}(x)\right]},
+%        \label{eqn:CRLB definition}
+%    \end{equation}
+%    where $p_{\varphi}(x)$ is the distribution of $x$ when the parameter is $\varphi$, and in this paper $p_{\varphi}(x)$ obeys a non-central chi-squared distribution. 
+%
+%    The evaluation of CRLB in non-coherent parameter estimation was first formulated in \cite{jiang2016cramer}, where the authors introduced Gaussian approximation in order to obtain a simple closed-form CRLB expression. Unfortunately, this approximation only holds for very large non-centrality parameter $\lambda$, i.e., large interferential SNR $\gamma=\lambda/A\sigma_v^2$. Thus, an exact expression of the CRLB is required in our \ac{IRF} methods. However, without Gaussian approximation techniques, fatal complexity about Bessel functions will occur, making the analysis nearly intractable. 
+%
+%    To overcome this difficulty, we first perform exact analysis, and then approximated asymptotic analysis. The difficulty of manipulating Bessel functions is conquered by asymptotic expansion techniques \cite{silverman1972special}. Satisfactory asymtotic results are acquired in the absence of exact closed-form expression of the CRLB. These results will be introduced in the following subsection.  
+%    %In the following two subsections, {\bf Theorem \ref{thm:precise CRLB}} reveals  
     
 \subsection{Exact Expression of the CRLB} \label{Precise CRLB}
+In Section \ref{Sensing RIS-Based Channel Estimation}, we have introduced three phase estimation methods to solve the probabilistic parameter estimation problem.
+We derive the CRLB \cite{casella2021statistical} of the estimation in \textbf{Theorem \ref{thm:precise CRLB}}.
+    
     \begin{theorem}[Non-central Chi-Squared CRLB] \label{thm:precise CRLB}\mbox{}\par
-        Suppose the probabilistic model is specified by \eqref{eqn:sensor power}, where $L$ observations are obtained at instants $t_l, \forall l\in P[0],\cdots,P[L-1]$. Then the CRLB of this $L$-point phase estimation problem is given by
+        Suppose the probabilistic model is specified by \eqref{eqn:sensor power}, where $L$ observations $P[0],\cdots,P[L-1]$ are obtained. Then the CRLB of this $L$-point phase estimation problem is given by
         \begin{equation}
             \frac{1}{{\rm CRLB}(\varphi)} = K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}\sin^2(\psi_l+\varphi)\left(1/\gamma_l-g(\gamma_l)\right),
             \label{eqn:precise_CRLB}
         \end{equation}
-        where $K=2\alpha\beta/(\alpha^2+\beta^2)$, $a=A\sigma_v^2$, $\gamma_l=\lambda_l/a=\left(\alpha^2+\beta^2+2\alpha\beta \cos(\psi_l+\varphi)\right)/\sigma_v^2$, and $\bar{\gamma}$ is the arithmetic mean of all the $\gamma_l, 0\leq l<L$. The function $g(\gamma)$ is defined as 
+        where $K=2\alpha\beta/(\alpha^2+\beta^2)$, $a=A\sigma_v^2$, $\gamma_l=\lambda_l/a=\left(\alpha^2+\beta^2+2\alpha\beta \cos(\psi_l+\varphi)\right)/\sigma_v^2$, and $\bar{\gamma}$ is the arithmetic mean of all the $\gamma_0,\cdots,\gamma_{L-1}$. The function $g(\gamma)$ is defined as 
         \begin{equation}
-            \begin{aligned}
-                g(\gamma) &= \mathbb{E}_{x\sim \nc_{\chi_2^2}(\lambda, a)}\left[\left(1-R^2\left(\frac{\sqrt{\lambda x}}{a/2}\right)\right)\frac{x}{\lambda}\right] \\
-                & = \int_{0}^{+\infty}\gamma t \, {\rm exp}(-\gamma(1+t))\, I_0\left(2\gamma\sqrt{t}\right)\,\left(1-R^2\left(2\gamma\sqrt{t}\right)\right){\rm d}t.
-            \end{aligned}
+                g(\gamma)  = \int_{0}^{+\infty}\gamma t \, {\rm exp}(-\gamma(1+t))\, I_0\left(2\gamma\sqrt{t}\right)\,\left(1-R^2\left(2\gamma\sqrt{t}\right)\right){\rm d}t.
             \label{eqn:precise_g_function}
         \end{equation}
-        Furthermore, $\bar{\gamma}$ is determined only by physical signal intensity
-        \begin{equation}
-            \bar{\gamma} = \frac{1}{L}\sum_{l=0}^{L-1}{\gamma_l} = \frac{\alpha^2+\beta^2}{\sigma_v^2}.
-        \end{equation}
-        The function $R(\cdot)$ is defined the same as in \eqref{eqn:R function derivative property}. Also note that the CRLB of the phase estimation problem is completely determined by the two parameters $K$ and $\bar{\gamma}$. 
+%        Furthermore, $\bar{\gamma}$ is determined only by physical signal intensity
+%        \begin{equation}
+%            \bar{\gamma} = \frac{1}{L}\sum_{l=0}^{L-1}{\gamma_l} = \frac{\alpha^2+\beta^2}{\sigma_v^2}.
+%        \end{equation}
+%    The function $R(\cdot)$ is defined the same as in \eqref{eqn:R function derivative property}.
     \end{theorem}
     \begin{IEEEproof}
         See {\bf Appendix \ref{appendix:proof of theorem1}}. 
     \end{IEEEproof}
 
-    In analogy to optics, the parameter $K$ in \eqref{eqn:precise_CRLB} is called the interferential contrast. And the parameter $\bar{\gamma}$ is the average interferential SNR, since $\gamma_l=\lambda_l/a = (\mu_{R}^2+\mu_{I}^2)/\sigma_v^2$ is the ratio of the noiseless power signal and the noise power. Thus, the CRLB expression \eqref{eqn:precise_CRLB} has strong physical meanings. However, this exact CRLB expression is difficult to evaluate due to the sophisticated evaluation of integral in \eqref{eqn:precise_g_function}, hence it is more feasible to obtain a simpler approximated CRLB with closed-form expression. 
-
+    From \textbf{Theorem \ref{thm:precise CRLB}}, we note that the CRLB of the phase estimation problem is completely determined by the two parameters $K$ and $\bar{\gamma}$, which are the interferential contrast and the average interferential SNR, respectively. 
+    However, this exact CRLB expression is difficult to calculate due to the sophisticated evaluation of the integral in \eqref{eqn:precise_g_function}.
+    Thus, we will provide a simpler approximated CRLB in the following Subsection \ref{Asymptotic CRLB}.
+    
 \subsection{Asymptotic CRLB}    \label{Asymptotic CRLB}
     \begin{theorem}[Asymptotic Evaluation of Noncentral Chi-Squared CRLB] \label{thm:asymptotic CRLB} \mbox{}\par
         Suppose the probabilistic model is specified by \eqref{eqn:sensor power}. Then the approximated CRLB of this $L$-point phase estimation problem is given by 
@@ -676,7 +679,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
     \end{remark}
 
 \subsection{Properties of the CRLB} \label{Properties of the CRLB}
-    From the above analysis, we have obtained the exact and asymptotic CRLB expressions. Furthermore, from these expressions, we can observe two properties of the phase estimation problem:
+    From the above analysis, we have obtained the exact and asymptotic CRLB expressions, where we can observe two properties of the phase estimation problem:
     \begin{enumerate}
         \item The CRLB relies almost only on the physical parameters $K$ and $\bar{\gamma}$.
         \item The CRLB is insensitive to the value $\varphi$.
