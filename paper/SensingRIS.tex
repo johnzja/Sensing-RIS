@@ -49,7 +49,8 @@ breaklinks=true}
 \acrodef{DL}[DL]{downlink}
 \acrodef{TA}[TA]{transmit antenna}
 \acrodef{RA}[RA]{receive antenna}
-\acrodef{LoS}[LoS]{line-of-sight}
+\acrodef{LOS}[LOS]{line-of-sight}
+\acrodef{NLOS}[NLOS]{none-line-of-sight}
 \acrodef{RC}[RC]{receiver combining}
 \acrodef{AWGN}[AWGN]{additive white Gaussian noise}
 \acrodef{DFT}[DFT]{discrete Fourier transform}
@@ -304,7 +305,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
         E(t) = \sqrt{2} \Re\left( E_{{\rm BB}}(t)e^{{\rm j}\omega_c t} \right),
         \label{baseband-passband relationship}
     \end{equation}
-    where $\omega_c = 2\pi f_c$ denotes the carrier frequency, and the coefficient $\sqrt{2}$ ensures that the passband signal energy (power) is equal to the baseband signal energy (power), i.e., 
+    where $\omega_c = 2\pi f_c$ denotes the carrier frequency, and the coefficient $\sqrt{2}$ ensures that the passband signal power is equal to the baseband signal power, i.e., 
     $\lVert E_{{\rm BB}}\rVert_2^2 = \lVert E\rVert_2^2$. 
     Thus, taking the square of the baseband signal is equivalent to calculating the power of the physical electromagnetic signal. 
     Now we consider the IRF case, where a superposition of the BS-RIS signal and the user-RIS signal is considered. 
@@ -364,13 +365,9 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     Note that the power of interference field measured at instant $t$, expressed by \eqref{eqn:power of interference}, exhibits a sinusoidal waveform in the time domain, as is shown in Fig.~\ref{fig:phasor}. 
     The initial phase ($t=0$) of this sinusoidal waveform is uniquely determined by $\varphi$.
     Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. 
-    However, according to \eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*w')$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we only need to obtain one of the phases of these two channels to perform optimal RIS beamforming. 
-    Though generally it is difficult to obtain the BS-RIS channel and the RIS-user channel, since the BS and RIS are installed at fixed locations, it is reasonable to assume that the BS-RIS channel is much more stable and predictable, compared to the RIS-user counterpart. 
-    Specifically, in a common mmWave scenario, the NLOS paths are often highly attenuated. 
-    Thus, the channel is mainly composed of only one LOS path, which is fully determined by its geometry \cite{bai2014coverage}, i.e., the locations of the BS and the RIS. 
-    Different from the fast time-varying nature of the user-RIS link, the BS-RIS channel often exhibits a quasi-static property \cite{Huchen}. 
-    This property significantly simplifies the channel estimation of the BS-RIS channel.
-    As a result, the phases of the BS-RIS link $\arg({\bm g}_n^{T}{\bm w})$ can be assumed to be known in our algorithms, and are calculated from the BS-RIS geometry in our simulations. 
+    However, according to \eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*w')$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, we assume the phase $\arg({\bm g}_n^{T}{\bm w})$ to be known in our algorithms in order to acquire the phase sum.
+    This is because, in contrast to the fast time-varying RIS-user link, the BS-RIS link often exhibits a quasi-static property, which provides an opportunity to simplify the phase estimation \cite{Huchen}.
+    In practice and our simulations, the phase $\arg({\bm g}_n^{T}{\bm w})$ is calculated based on the geometry, i.e., the locations of the BS and the RIS \cite{bai2014coverage}. 
 
 
 \section{Sensing RIS-Based Channel Estimation}
@@ -403,9 +400,9 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     In step 1), three power signals are recorded: $P_{\alpha}(t)$, $P_{\beta}(t)$, and $P(t)$. The IRF appears during the third signal $P(t)$. 
     In order to create an IRF, simultaneous rotational signaling must be performed. 
     In fact, the signaling requirements can be realized by transmitting a symbol $s=1$ on the zeroth subcarrier at the BS, while transmitting a symbol $s'=1$ on the $k$-th subcarrier at the user. 
-    As is mentioned above, if we denote the OFDM symbol period by $T_s$, then the equivalent IRF angular frequency $\omega$ is given by $\omega = 2\pi k /T_s$, which means the power signal exhibits exactly $k$ sine-shaped\footnote{The noiseless power signals are, in fact, strictly sinusoidal. } periods during an OFDM symbol. 
+    As is mentioned above, if we denote the OFDM symbol period by $T_s$, then the equivalent IRF angular frequency $\omega$ is given by $\omega = 2\pi k /T_s$, which means the noiseless power signal exhibits exactly $k$ sinusoidal periods during an OFDM symbol. 
     For calculation simplicity, in this paper, we always assume $k=1$. 
-    In fact, for multi-user MISO\footnote{In this paper, we assume that the user is equipped with a single antenna, but the number of antennas at BS is not restricted. Furthermore, for MIMO systems, since the user is equipped with multi-antennas, phase-tuning simply for constructive interference at the user is sub-optimal. Thus, IRF methods should be further improved to fully harness the multi-antenna space-multiplexing gains.} systems, different $k$ values can be assigned to different users in order to enable channel estimation and beamforming design for several users within a single OFDM symbol. 
+    In fact, for multi-user MISO systems\footnote{In this paper, we assume that the user is equipped with a single antenna, but the number of antennas at BS is not restricted. Furthermore, for MIMO systems, since the user is equipped with multiple antennas, phase-tuning simply for constructive interference at the user is sub-optimal. Thus, IRF methods should be further improved to fully harness the space-multiplexing gains of MIMO.}, different $k$ values can be assigned to different users in order to enable channel estimation and beamforming design for several users within a single OFDM symbol. 
     This can be done by Fourier analysis on the power signal $P(t)$ and extraction of phase angles for each user at distinct frequencies. 
 
     The second step 2) is called {\it phase estimation}. This step is designed to extract the phase difference $\varphi$ between the BS-RIS and RIS-user channel. 
@@ -566,9 +563,9 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
         \begin{IEEEproof}
         See {\bf Appendix \ref{Proof of Lemma 1}}. 
     \end{IEEEproof}
-    \begin{remark}
-        From the above proof, we can also denote the von Mises distribution $\VM(\mu, \kappa)$ as $\VM(\kappa e^{{\rm j}\mu})$. This representation is more convenient when manipulating the posterior distribution of an $\VM$ distribution in Bayesian inference.
-    \end{remark}
+    
+    In this paper, we also use $\VM(\kappa e^{{\rm j}\mu})$ to denote the von Mises distribution $\VM(\mu, \kappa)$. 
+    This representation provides convenience for the calculation of the posterior distribution of the von Mises distribution in Bayesian inference.
 
     \begin{lemma}[Noncentral $\CN$ posterior distribution on circle is $\VM$]\label{lemma_2} \mbox{}\par
         Suppose $z \sim \CN(z_0, \sigma^2)$, where $z_0 \in \mathbbm{C}$, and a positive radius $r>0$. Then the posterior distribution of angle $\theta= {\rm arg} (z)$, constrained on a circle $|z|=r$ obeys the von Mises distribution
@@ -579,6 +576,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
     \begin{IEEEproof}
         Replacing $z$ by $r e^{{\rm j} \theta}$ give rise to the conclusion immediately. 
     \end{IEEEproof}
+    
     Combining the results of {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}}, we can then construct the EM algorithm for estimating $\varphi$. Since the output of the power sensors $P[l]$ does not contain phase information, we can treat the phases as latent variables. Let $s_l = \sqrt{P[l]/A}$ be the noisy estimation for $|\alpha + \beta e^{{\rm j} (\varphi + \psi_l)} + v_l|$, and $\theta_l$ be the latent variables $\arg (\alpha + \beta e^{{\rm j} (\varphi + \psi_l)} + v_l)$ that are not observable. 
     Since the noise $v_l \sim {\rm i.i.d.}\;\CN(0, \sigma_v^2)$, then from {\bf Lemma \ref{lemma_2}}, $\theta_l | s_l, \varphi \sim \VM(\arg(\alpha + \beta e^{{\rm j} (\varphi + \psi_l)}), s_l |\alpha + \beta e^{{\rm j} (\varphi + \psi_l)}|/(\sigma_v^2/2))$. Thus, we can infer the latent variables by ML estimation 
     \begin{equation}
@@ -680,17 +678,18 @@ We derive the CRLB \cite{casella2021statistical} of the estimation in \textbf{Th
     \begin{IEEEproof}
         See {\bf Appendix \ref{Proof of Theorem 2}}. 
     \end{IEEEproof}
-    \begin{remark}
-        The asymptotic result of the CRLB still relies only on two parameters $K$ and $\bar{\gamma}$. But the calculation is much simpler compared to the exact expression of the CRLB. 
-    \end{remark}
-
+    
+        The asymptotic expression of the CRLB still relies only on two parameters $K$ and $\bar{\gamma}$. But the calculation is much simpler compared to the exact expression. 
+        The discussions of the properties of the exact and asymptotic expressions of CRLB are continued in Subsection \ref{Properties of the CRLB}.
+        
 \subsection{Properties of the CRLB} \label{Properties of the CRLB}
-    From the above analysis, we have obtained the exact and asymptotic CRLB expressions, where we can observe two properties of the phase estimation problem:
+    From the above analysis of CRLB, we can observe two properties of the phase estimation problem:
     \begin{enumerate}
         \item The CRLB relies almost only on the physical parameters $K$ and $\bar{\gamma}$.
         \item The CRLB is insensitive to the value $\varphi$.
     \end{enumerate}
-    The first point can be concluded from the expressions, and the second point comes from the symmetry of the $\sin^2(\cdot)$ function when $L$ is large enough. Thus, we can plot $1/{\rm CRLB}(\varphi)$ as a two-variable function (see Fig.~\ref{fig:CRLB two variable}). 
+    The first point can be concluded from the expressions, and the second point comes from the symmetry of the $\sin^2(\cdot)$ function when $L$ is large enough. 
+    We have plotted $1/{\rm CRLB}(\varphi)$ as a two-variable function in Fig.~\ref{fig:CRLB two variable}. 
     \begin{figure}[!t]
         \centering
         \myincludegraphics{data/CRLB.pdf}
@@ -700,7 +699,7 @@ We derive the CRLB \cite{casella2021statistical} of the estimation in \textbf{Th
     The best prediction accuracy occurs when $\lvert K \rvert = 1$, i.e., the RIS-received signal from BS is as strong as that from the user. 
     Also, the larger value of the average interferential SNR $\bar{\gamma}$ also contributes to a more accurate phase estimation. 
 
-    However, error analysis is vital to any kind of approximated analysis. Fortunately, our asymptotic expansion technique allows very good approximation, which is verified in the following {\bf Theorem 3}. 
+We also perform error analysis for the use of asymptotic expansion technique, which is stated in the following {\bf Theorem 3}. 
 
     \begin{theorem}[CRLB Approximation by Asymptotic Expansion is Asymptotically Optimal] \label{thm_error_analysis}
         The relative error $r$ of $1/\gamma - \hat{g}(\gamma)$, as an approximation of $1/\gamma - g(\gamma)$, decreases at a rate that is inverse proportional to the interferential SNR $\gamma$, i.e.,
@@ -711,9 +710,8 @@ We derive the CRLB \cite{casella2021statistical} of the estimation in \textbf{Th
     \begin{IEEEproof}
         See {\bf Appendix \ref{Proof of Theorem 3}}. 
     \end{IEEEproof}
-    \begin{remark}
-        From {\bf Theorem \ref{thm_error_analysis}} we can also conclude that the relative error of \eqref{eqn:asymptotic CRLB} is also of order $\mathcal{O}(1/\bar{\gamma})$ for any $K>0$. 
-    \end{remark}
+
+From {\bf Theorem 3}, we can conclude that our derived expression of approximated CRLB is asymptotically optimal.
 
 
 \section{Simulation Results}
@@ -753,7 +751,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \caption{Performance curve of the achievable spectral efficiency against the BS transmitted power $P_{\rm max}$.}
         \label{fig:rate}
     \end{figure}
-    All our simulation data are acquired under $f_c = 10\,{\rm GHz}$, $P_{\rm max}'=300 \,{\rm mW}$, $n_0=-174\,{\rm dBm/Hz}$, subcarrier bandwidth ${\rm BW} = 180\,{\rm kHz}$, thermal noise at the receiver $\sigma^2 = {\rm BW}\times n_0$, $\sigma_v^2=100\,{\rm MHz}\times n_0 F_p$, where $F_p=10\,{\rm dB}$ is the noise factor of the power sensor, and the BS-RIS and RIS-user channels are all assumed to be Rayleigh fading with 1 LOS path and 4 NLOS paths. 
+    All our simulation data are acquired under $f_c = 10\,{\rm GHz}$, $P_{\rm max}'=300 \,{\rm mW}$, $n_0=-174\,{\rm dBm/Hz}$, subcarrier bandwidth ${\rm BW} = 180\,{\rm kHz}$, thermal noise at the receiver $\sigma^2 = {\rm BW}\times n_0$, $\sigma_v^2=100\,{\rm MHz}\times n_0 F_p$, where $F_p=10\,{\rm dB}$ is the noise factor of the power sensor, and the BS-RIS and RIS-user channels are all assumed to be Rayleigh fading with 1 \ac{LOS} path and 4 \ac{NLOS} paths. 
     The Rician $\kappa$-factor is $\kappa=2$. 
     Both the BS and the RIS are equipped with $\lambda/2$-spaced uniform planar arrays (UPAs), while the user has a single antenna. 
     The BS is located at a distance from the RIS that is drawn from a uniform distribution between $20\,{\rm m}$ and $100\,{\rm m}$, and the angle of the BS is uniformly distributed. 
@@ -763,7 +761,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     However, for LS-CE methods, the number of pilots is $N=40\times 30$. 
 
     We compare our proposed \ac{IRF} channel estimation and beamforming method with classical LS-CE algorithm and other idealized settings in Fig.~\ref{fig:rate}. 
-    In the simulation of our IRF method, the VM-EM phase estimation algorithm is utilized with the assumption that the phases of the BS-RIS LOS path are known. 
+    In the simulation of our IRF method, the VM-EM phase estimation algorithm is utilized with the assumption that the phases of the BS-RIS \ac{LOS} path are known. 
     The black dashed line ``Oracle'' assumes perfectly-known CSI, thus perfect iterative beamforming can be performed. 
     In the LS-CE method, we first utilize \eqref{eqn:LS-CE} to obtain estimates for the cascaded channel \cite{kundu2021channel,wei2021channel}, and then perform iterative RIS beamforming based on the estimated channel. 
     In addition, we also consider the randomly-phased RIS scheme as a benchmark.  
