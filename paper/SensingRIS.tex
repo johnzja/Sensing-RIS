@@ -350,7 +350,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     To clarify this idea, we take only one RIS element into consideration. 
     As is introduced in the previous subsection, if we allow the BS and the user to transmit electromagnetic waves simultaneously, then the interference phenomenon will occur on each RIS element. 
     However, equal carrier frequencies of the BS and the user create stable interference fringes \cite{louradour1993interference} on the RIS, which do not carry information about the channel. 
-    In contrast, a rotational symbol $s'=e^{{\rm j}\psi(t)}$ at the user, which is equivalent to a slightly higher carrier frequency, enables the IRF power to vary in time. 
+    In contrast, a rotational symbol $s'=e^{{\rm j}\psi(t)}$ at the user, which is equivalent to a slightly higher carrier frequency, enables the IRF power to vary over time. 
     Thus, the desired CSI can be drawn from the varying IRF power signal received by sensing RIS. 
     Fig.~\ref{fig:protocol} shows the simultaneous rotational signaling procedure and the IRF waveform. 
 
@@ -364,7 +364,13 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     Note that the power of interference field measured at instant $t$, expressed by \eqref{eqn:power of interference}, exhibits a sinusoidal waveform in the time domain, as is shown in Fig.~\ref{fig:phasor}. 
     The initial phase ($t=0$) of this sinusoidal waveform is uniquely determined by $\varphi$.
     Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. 
-    However, according to \eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*w')$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we only need to obtain one of the phases of these two channels to perform optimal RIS beamforming. Though generally it is difficult to obtain the BS-RIS channel and the RIS-user channel, since the BS and RIS are installed at fixed locations, it is reasonable to assume that the BS-RIS channel is much more stable and predictable, compared to the RIS-user counterpart. As a result, the phases of the BS-RIS link $\arg({\bm g}_n^{T}{\bm w})$ can be assumed to be known in our algorithms. Due to the stability of this channel, the phases are mainly determined by geometric parameters, i.e., the location of the BS and RIS. 
+    However, according to \eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*w')$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we only need to obtain one of the phases of these two channels to perform optimal RIS beamforming. 
+    Though generally it is difficult to obtain the BS-RIS channel and the RIS-user channel, since the BS and RIS are installed at fixed locations, it is reasonable to assume that the BS-RIS channel is much more stable and predictable, compared to the RIS-user counterpart. 
+    Specifically, in a common mmWave scenario, the NLOS paths are often highly attenuated. 
+    Thus, the channel is mainly composed of only one LOS path, which is fully determined by its geometry \cite{bai2014coverage}, i.e., the locations of the BS and the RIS. 
+    Different from the fast time-varying nature of the user-RIS link, the BS-RIS channel often exhibits a quasi-static property \cite{Huchen}. 
+    This property significantly simplifies the channel estimation of the BS-RIS channel.
+    As a result, the phases of the BS-RIS link $\arg({\bm g}_n^{T}{\bm w})$ can be assumed to be known in our algorithms, and are calculated from the BS-RIS geometry in our simulations. 
 
 
 \section{Sensing RIS-Based Channel Estimation}
@@ -447,9 +453,9 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
             \hline
             CS\cite{wei2021channel}          & $\mathcal{O}(KS\log N)$ &RIS& Sparse \\
             \hline 
-            Two-timescale\cite{Huchen} & $\frac{2(N+1)}{\alpha} + K\lceil N/M\rceil +K$ &RIS& Slow variation  \\
+            Two-timescale\cite{Huchen} & $\frac{2(N+1)}{\alpha} + K\lceil N/M\rceil +K$ &RIS& Quasi-static BS-RIS  \\
             \hline 
-            Proposed IRF & 3 & Sensing RIS  &General\\ 
+            Proposed IRF & 3 & Sensing RIS  & Quasi-static BS-RIS\\ 
             \hline
     \end{tabular}
 \end{table}
@@ -463,7 +469,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     If all the RIS elements are collectively controlled by one processor, the computational time would be $\mathcal{O}(N)$, but the pilot overhead still remains $\mathcal{O}(1)$. 
     These conclusions of complexity can be easily extended to multi-RIS schemes, where multiple RISs are employed to serve a single user at the same time. 
     The independent nature of IRF methods allows the RISs to work without the need to exchange data with the BS or other RISs. 
-    This property makes it much easier to integrate a new RIS into an existing communication system, which greately enhances the extendibility of the system.
+    This property makes it much easier to integrate a new RIS into an existing communication system, which greatly enhances the extendibility of the system.
 
     
 \section{Phase Estimation Algorithms}
@@ -485,7 +491,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
         \label{LS estimate result}
         \hat{\varphi}=\arg\left(\frac{p[1]}{LA\alpha\beta}\right) = \arg\left(p[1]\right).
     \end{equation}
-    Note that this DFT method simply ignores the non-Gaussian noise. For Gaussian noise, the DFT method is optimal. However, in fact, the noise in \eqref{eqn:power of interference} contains a squared term of a Gaussian noise, resulting the noise to be non-Gaussian. Thus, we further conceive an ML method, as described in the following Subsection~\ref{ML method}. 
+    Note that this DFT method simply ignores the non-Gaussian noise. For Gaussian noise, the DFT method is optimal. However, in fact, the noise in \eqref{eqn:power of interference} contains a squared term of Gaussian noise, resulting in the noise being non-Gaussian. Thus, we further conceive an ML method, as described in the following Subsection~\ref{ML method}. 
 
 \subsection{Newton-ML method}  \label{ML method}
     Suppose the noise field $v'(t)=v'_R(t) + {\rm j}v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. 
@@ -543,7 +549,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
 
 \subsection{von Mises-EM method}    \label{von Mises-EM method}
     The Newton-ML algorithm, if convergent, is asymptotically optimal \cite{casella2021statistical}. 
-    However, the computation of the Newton-ML estimator is quite complicated due to intensive calculation of modified Bessel functions. 
+    However, the computation of the Newton-ML estimator is quite complicated due to the intensive calculation of modified Bessel functions. 
     Now we introduce an iterative method for estimating $\varphi$ without any computation of such special functions.
     Our method is based on the von Mises distributions \cite{gatto2007generalized}.
 
@@ -692,7 +698,7 @@ We derive the CRLB \cite{casella2021statistical} of the estimation in \textbf{Th
         \label{fig:CRLB two variable}
     \end{figure}
     The best prediction accuracy occurs when $\lvert K \rvert = 1$, i.e., the RIS-received signal from BS is as strong as that from the user. 
-    Also, the larger value of the average interferential SNR $\bar{\gamma}$ also contributes to more accurate phase estimation. 
+    Also, the larger value of the average interferential SNR $\bar{\gamma}$ also contributes to a more accurate phase estimation. 
 
     However, error analysis is vital to any kind of approximated analysis. Fortunately, our asymptotic expansion technique allows very good approximation, which is verified in the following {\bf Theorem 3}. 
 
@@ -737,7 +743,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     In the simulations in Fig.~\ref{fig:phase estimation_gamma}, all the simulation parameters, except for $K$ and $\bar{\gamma}$, are the same with Fig.~\ref{fig:phase estimation_K}.
 
     From Fig.~\ref{fig:phase estimation_K} and Fig.~\ref{fig:phase estimation_gamma} we discover that the VM-EM algorithm has comparable performance with the Newton-ML algorithm, but the computational cost is significantly lower, since {\bf Algorithm \ref{alg:VM-EM}} does not require the evaluation of the complicated modified Bessel functions. 
-    Both the Newton-ML and VM-EM algorithms are close to the CRLB, and both of them outperform the simple DFT algorithm\footnote{The DFT estimator in Fig.~\ref{fig:phase estimation_gamma} exhibits a near-constant performance gap towards the CRLB in the high-SNR region, while the Newton-ML and VM-EM estimators seem to bridge this gap and finally approaches the CRLB as $\bar{\gamma}\to\infty$.}. 
+    Both the Newton-ML and VM-EM algorithms are close to the CRLB, and both of them outperform the simple DFT algorithm\footnote{The DFT estimator in Fig.~\ref{fig:phase estimation_gamma} exhibits a near-constant performance gap toward the CRLB in the high-SNR region, while the Newton-ML and VM-EM estimators seem to bridge this gap and finally approaches the CRLB as $\bar{\gamma}\to\infty$.}. 
     The CRLB approximation is also satisfactory under a wide range of $K$ and $\bar{\gamma}$. 
 
 \subsection{Achievable Spectral Efficiency under IRF} \label{Achievable Spectral Efficiency under IRF}
@@ -748,16 +754,21 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \label{fig:rate}
     \end{figure}
     All our simulation data are acquired under $f_c = 10\,{\rm GHz}$, $P_{\rm max}'=300 \,{\rm mW}$, $n_0=-174\,{\rm dBm/Hz}$, subcarrier bandwidth ${\rm BW} = 180\,{\rm kHz}$, thermal noise at the receiver $\sigma^2 = {\rm BW}\times n_0$, $\sigma_v^2=100\,{\rm MHz}\times n_0 F_p$, where $F_p=10\,{\rm dB}$ is the noise factor of the power sensor, and the BS-RIS and RIS-user channels are all assumed to be Rayleigh fading with 1 LOS path and 4 NLOS paths. 
-    The LOS path has, on average, $\kappa$ times more energy than the NLOS paths together, and $\kappa=2$. Both the BS and the RIS are equipped with $\lambda/2$-spaced uniform planar arrays (UPAs), while the user has a single antenna. 
+    The Rician $\kappa$-factor is $\kappa=2$. 
+    Both the BS and the RIS are equipped with $\lambda/2$-spaced uniform planar arrays (UPAs), while the user has a single antenna. 
     The BS is located at a distance from the RIS that is drawn from a uniform distribution between $20\,{\rm m}$ and $100\,{\rm m}$, and the angle of the BS is uniformly distributed. 
     The user appears uniformly from $10\,{\rm m}$ to $100\,{\rm m}$, and the angle distribution of the user is also uniform. 
     The size of the RIS is set to be $40\times 30$, and that of the BS antenna is $4\times 2$. 
     For IRF methods, 3 pilots are used for CSI acquisition. 
     However, for LS-CE methods, the number of pilots is $N=40\times 30$. 
 
-    We compare our proposed \ac{IRF} channel estimation and beamforming method with classical LS-CE algorithm and other idealized settings in Fig.~\ref{fig:rate}. The black dashed line ``Oracle'' assumes perfectly-known CSI, thus perfect iterative beamforming can be performed. In the LS-CE method, we first utilize \eqref{eqn:LS-CE} to obtain estimates for the cascaded channel \cite{kundu2021channel,wei2021channel}, and then perform iterative RIS beamforming based on the estimated channel. In addition, we also consider the randomly-phased RIS scheme as a benchmark.  
+    We compare our proposed \ac{IRF} channel estimation and beamforming method with classical LS-CE algorithm and other idealized settings in Fig.~\ref{fig:rate}. 
+    In the simulation of our IRF method, the VM-EM phase estimation algorithm is utilized with the assumption that the phases of the BS-RIS LOS path are known. 
+    The black dashed line ``Oracle'' assumes perfectly-known CSI, thus perfect iterative beamforming can be performed. 
+    In the LS-CE method, we first utilize \eqref{eqn:LS-CE} to obtain estimates for the cascaded channel \cite{kundu2021channel,wei2021channel}, and then perform iterative RIS beamforming based on the estimated channel. 
+    In addition, we also consider the randomly-phased RIS scheme as a benchmark.  
 
-    Fig.~\ref{fig:rate} shows the performance curve of the achievable spectral efficiency against the BS transmitted power. From this figure, we can conclude that the proposed IRF method with VM-EM phase estimation is nearly optimal, under extremely low pilot overhead. The proposed IRF method is even close to the oracle scheme, and has satisfactory performance among a wide range of the BS transmitted power. 
+    Fig.~\ref{fig:rate} shows the performance curve of the achievable spectral efficiency against the BS transmitted power. From this figure, we can conclude that the proposed IRF method with VM-EM phase estimation is nearly optimal, under extremely low pilot overhead. The proposed IRF method is even close to the oracle scheme, and achieves satisfactory performance throughout a wide range of the BS transmitted power. 
 
 
 \section{Conclusion}
@@ -790,7 +801,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
 
 
 \section{Proof of \textbf{Theorem 1}}\label{appendix:proof of theorem1}
-    According to the definition of the CRLB \eqref{eqn:CRLB definition}, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\varphi$. Note that in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[P[l]\right]$, $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power} by the linearity of the expectation operation:
+    According to the definition of the CRLB, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\varphi$. Note that in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[P[l]\right]$, $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power} by the linearity of the expectation operation:
     \begin{equation}
         \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l.
         \label{eqn:expectation of P_l}
