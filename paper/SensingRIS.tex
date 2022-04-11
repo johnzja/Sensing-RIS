@@ -920,11 +920,11 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \left\vert x\left(1-R^2(2\sqrt{x})\right)-\sqrt{x}/2 \right\vert \leq \delta.
         \label{eqn:asymptotic error}
     \end{equation}
-    Then, according to \eqref{eqn:approx evaluation}, we have 
+    Then, by error analysis on \eqref{eqn:approx evaluation}, we have 
     \begin{equation}
         \left| g(\gamma) - \hat{g}(\gamma)\right| \leq \frac{1}{\gamma^2} \delta. 
     \end{equation}
-    It can be numerically discovered from Fig. \ref{fig:asymptotic_expansion} that $\delta \leq 0.07$, and that as $x\to \infty$, the approximation error tends to zero. Thus, \eqref{eqn:approx evaluation result} is a nearly perfect approximation when the interferential SNR $\gamma$ is large. To be more precise, at $\gamma \to +\infty$, the function $\hat{g}(\gamma)$ can be asymptotically expanded as
+    It can be numerically confirmed from Fig. \ref{fig:asymptotic_expansion} that $\delta \leq 0.07$, and that as $x\to \infty$, the approximation error tends to zero. Thus, \eqref{eqn:approx evaluation result} is a nearly perfect approximation when the interferential SNR $\gamma$ is large. To be more precise, at $\gamma \to +\infty$, the function $\hat{g}(\gamma)$ can be asymptotically expanded as
     \begin{equation}
         \hat{g}(\gamma) \sim \frac{1}{2}\left(\frac{1}{\gamma} + \frac{1}{4\gamma^2} + \mathcal O(\frac{1}{\gamma^3})\right).
         \label{eqn:g hat asymptotic expansion}
