@@ -1,5 +1,5 @@
 # Latex workspace & outputs.
-paper/SensingRIS.pdf
+paper/*.pdf
 paper/*.synctex.gz
 paper/*.thm
 paper/*.aux
