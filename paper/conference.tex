@@ -209,9 +209,9 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     \end{equation}
     where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave departure angle $\alpha$ of the BS antenna array, and $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$. Note that the optimal RIS phase is only determined by $\arg\left(f_{n}^{*}\bm g_{n}^{T}\bm w\right)$, i.e., the phase difference between the BS-RIS channel $\bm g_n^T$ and the user-RIS channel $f_n^*$. 
 
-\section{Interference Random Field}
-\label{Interference Random Field}
-    In this section, the signal model for the \ac{IRF} will be first introduced in Subsection~\ref{Models for IRFs}. Then, in order to acquire the CSI, the simultaneous rotational signaling method will be proposed in Subsection~\ref{Simultaneous Rotational Signaling and Interference Detection}. 
+% \section{Interference Random Field}
+% \label{Interference Random Field}
+%     In this section, the signal model for the \ac{IRF} will be first introduced in Subsection~\ref{Models for IRFs}. Then, in order to acquire the CSI, the simultaneous rotational signaling method will be proposed in Subsection~\ref{Simultaneous Rotational Signaling and Interference Detection}. 
 
 \subsection{Signal Model for IRF}
 \label{Models for IRFs}
@@ -241,6 +241,31 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     The phase difference $\varphi$ defined here will play an important role in our following channel estimation, since it carries enough CSI for beamforming, which will be justified in the next section. To estimate the phase difference $\varphi$, we need enough observations from the sensor-detected power signal $P(t)$. For simplicity and without loss of generality, we can assume $\psi(t)=\frac{2\pi}{T_{s}} t$, where $T_s$ is the symbol period. Furthermore, assume that $L$ observations $P[l]=P(t_{l})$ located at equally-spaced instants $t_{l}=\frac{l}{L}T_{s}$ for all $l\in \{L\}$
     are used for estimation of the phase difference $\varphi$.
 
+
+
+
+\section{Sensing RIS-Based Channel Estimation}
+\label{Sensing RIS-Based Channel Estimation}
+In this section, we will first briefly introduce the hardware architecture required for detecting the \ac{IRF} in Subsection~\ref{Hardware Architecture of Sensing RIS}. 
+Then, the signaling procedure for creating an \ac{IRF} will be introduced in Subsection~\ref{Simultaneous Rotational Signaling and Interference Detection}.
+The core concept of IRF channel estimation and beamforming procedures will be introduced in Subsection~\ref{IRF Channel Estimation and Beamforming}. 
+Finally, Subsection~\ref{Pilot Overhead} will include the analysis on pilot overhead and computational complexity of our proposed IRF-based CSI acquisition methods. 
+
+\subsection{Hardware Architecture of Sensing RIS} \label{Hardware Architecture of Sensing RIS}
+
+    \begin{figure}[!t]
+        \centering
+        \includegraphics[width=.45\textwidth]{figures/hardware.pdf}
+        \centerline{(a)~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~(b)}
+        \caption{Comparison of hardware architectures. (a) Traditional RIS. (b) Proposed sensing RIS.}
+        \label{fig:hardware}
+    \end{figure}
+    
+To obtain the amplitude of the induced \ac{IRF}, inspired by the sensing metasurface \cite{ma2019smart}, we propose a hardware architecture named sensing RIS.
+In contrast to traditional RIS architecture shown in Fig.~\ref{fig:hardware}~(a), where each RIS element includes a phase-shift circuit and a patch antenna, each sensing RIS element additionally integrates a power sensor which is responsible for detecting the amplitude of the IRF \cite{ma2020smartsensing}, as shown in Fig.~\ref{fig:hardware}~(b).
+Since all of the RIS elements can sense and adjust the phase independently from one another, low-cost microcontroller units (MCUs) can be attached locally to each RIS element to allow parallel computation of the optimal phases. 
+However, for extremely large-scale RIS systems, sparse sensing and controlling may be preferred to reduce cost and hardware complexity. 
+
 \subsection{Simultaneous Rotational Signaling and Interference Detection} \label{Simultaneous Rotational Signaling and Interference Detection}
     \begin{figure}[!t]
         \centering
@@ -266,26 +291,6 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     However, according to \eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*w')$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we have to assume that the phase $\arg({\bm g}_n^{T}{\bm w})$ is known in advance. 
     This assumption is reasonable, because the BS-RIS link often exhibits a quasi-static property \cite{Huchen}, and can be calculated from the geometry, i.e., the locations of the BS and the RIS \cite{bai2014coverage}. 
 
-
-\section{Sensing RIS-Based Channel Estimation}
-\label{Sensing RIS-Based Channel Estimation}
-In this section, we will first briefly introduce the hardware architecture required for detecting the \ac{IRF} in Subsection~\ref{Hardware Architecture of Sensing RIS}. Then, the core concept of IRF channel estimation and beamforming procedures will be introduced in Subsection~\ref{IRF Channel Estimation and Beamforming}. Finally, Subsection~\ref{Pilot Overhead} will include the analysis on pilot overhead and computational complexity of our proposed IRF-based CSI acquisition methods. 
-
-\subsection{Hardware Architecture of Sensing RIS} \label{Hardware Architecture of Sensing RIS}
-
-    \begin{figure}[!t]
-        \centering
-        \includegraphics[width=.45\textwidth]{figures/hardware.pdf}
-        \centerline{(a)~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~(b)}
-        \caption{Comparison of hardware architectures. (a) Traditional RIS. (b) Proposed sensing RIS.}
-        \label{fig:hardware}
-    \end{figure}
-    
-To obtain the amplitude of the induced \ac{IRF}, inspired by the sensing metasurface \cite{ma2019smart}, we propose a hardware architecture named sensing RIS.
-In contrast to traditional RIS architecture shown in Fig.~\ref{fig:hardware}~(a), where each RIS element includes a phase-shift circuit and a patch antenna, each sensing RIS element additionally integrates a power sensor which is responsible for detecting the amplitude of the IRF \cite{ma2020smartsensing}, as shown in Fig.~\ref{fig:hardware}~(b).
-Since all of the RIS elements can sense and adjust the phase independently from one another, low-cost microcontroller units (MCUs) can be attached locally to each RIS element to allow parallel computation of the optimal phases. 
-However, for extremely large-scale RIS systems, sparse sensing and controlling may be preferred to reduce cost and hardware complexity. 
-
 \subsection{IRF Channel Estimation and Beamforming} \label{IRF Channel Estimation and Beamforming}
     The \ac{IRF} channel estimation and beamforming procedure can be divided into three steps:
     \begin{enumerate}
@@ -293,13 +298,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         \item Phase estimation based on power data;
         \item Integrate phase information and other CSI to perform beamforming. 
     \end{enumerate} 
-    In step 1), three power signals are recorded: $P_{\alpha}(t)$, $P_{\beta}(t)$, and $P(t)$. The IRF appears during the third signal $P(t)$, as is illustrated in \ref{fig:protocol}. 
-    In order to create an IRF, simultaneous rotational signaling must be performed. 
-    The second step 2) is called {\it phase estimation}. This step is designed to extract the phase difference $\varphi$ between the BS-RIS and RIS-user channel. 
-    This is the key step of dimension-independent IRF channel estimation and beamforming, since this step can be done independently among all the RIS elements. 
-    The third step 3) is to utilize the phase information provided by step 2) and calculate the near-optimal phase shifts for each RIS element in order to perform beamforming. The additional CSI refers to the phase information ${\rm arg}({\bm g}_n^T {\bm w})$. 
-
-    Step 2) and step 3) are executed by processors, so we collect these two steps into pseudo codes shown in {\bf Algorithm~\ref{alg:IRF-Beamforming}}:
+    For the sake of clarity, we present the complete IRF-based RIS beamforming procedure by pseudo codes, which is shown in {\bf Algorithm~\ref{alg:IRF-Beamforming}}:
     \begin{algorithm}[H] 
         \caption{Near-optimal RIS Beamforming by IRF} \label{alg:IRF-Beamforming}
         \setstretch{1.1}
@@ -573,7 +572,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     In the simulations in Fig.~\ref{fig:phase estimation_gamma}, all the simulation parameters, except for $K$ and $\bar{\gamma}$, are the same with Fig.~\ref{fig:phase estimation_K}.
 
     From Fig.~\ref{fig:phase estimation_K} and Fig.~\ref{fig:phase estimation_gamma} we discover that the VM-EM algorithm has comparable performance with the Newton-ML algorithm, but the computational cost is significantly lower, since {\bf Algorithm \ref{alg:VM-EM}} does not require the evaluation of the complicated modified Bessel functions. 
-    Both the Newton-ML and VM-EM algorithms are close to the CRLB, and both of them outperform the simple DFT algorithm\footnote{The DFT estimator in Fig.~\ref{fig:phase estimation_gamma} exhibits a near-constant performance gap toward the CRLB in the high-SNR region, while the Newton-ML and VM-EM estimators seem to bridge this gap and finally approaches the CRLB as $\bar{\gamma}\to\infty$.}. 
+    Both the Newton-ML and VM-EM algorithms are close to the CRLB, and both of them outperform the simple DFT algorithm. 
     The CRLB approximation is also satisfactory under a wide range of $K$ and $\bar{\gamma}$. 
 
 \subsection{Achievable Spectral Efficiency under IRF} \label{Achievable Spectral Efficiency under IRF}
@@ -590,7 +589,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     The user appears uniformly from $10\,{\rm m}$ to $100\,{\rm m}$, and the angle distribution of the user is also uniform. 
     The size of the RIS is set to be $40\times 30$, and that of the BS antenna is $4\times 2$. 
     For IRF methods, 3 pilots are used for CSI acquisition. 
-    However, for LS-CE methods, the number of pilots is $N=40\times 30$. 
+    However, for least square channel estimation (LS-CE) methods, the number of pilots is $N=40\times 30$. 
 
     We compare our proposed \ac{IRF} channel estimation and beamforming method with classical LS-CE algorithm and other idealized settings in Fig.~\ref{fig:rate}. 
     In the simulation of our IRF method, the VM-EM phase estimation algorithm is utilized with the assumption that the phases of the BS-RIS \ac{LOS} path are known. 
