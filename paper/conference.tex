@@ -1,5 +1,5 @@
-\documentclass[journal,twocolumn]{IEEEtran}
-% documentclass[journal, twocolumn]{IEEEtran}
+\documentclass[conference,10pt,twocolumn]{IEEEtran}
+\IEEEoverridecommandlockouts
 \usepackage{amsfonts}
 \usepackage{amsmath,amssymb}
 \usepackage{acronym}  % make an acronym
@@ -94,13 +94,13 @@ breaklinks=true}
 \fi
 \hyphenation{op-tical net-works semi-conduc-tor}
 \begin{document}
-\title{Sensing RISs: Enabling Dimension-Independent CSI Acquisition for Beamforming}
+\title{Interference Random Field-Based CSI Acquisition for RIS-Aided Wireless Communications}
 \author{\IEEEauthorblockN{Jieao~Zhu$^*$, Kunzan~Liu$^*$, Zhongzhichao~Wan$^*$, Linglong~Dai$^*$, Tie Jun Cui$^\dagger$, and H.~Vincent~Poor$^\ddagger$}\\
 \IEEEauthorblockA{ 
     $^*$Beijing National Research Center for Information Science and Technology (BNRist), \\Department of Electronic Engineering, Tsinghua University, Beijing 100084, China \\
-    $^\dagger$ State Key Laboratory of Millimeter Waves, Southeast University, China \\
-    $^\ddagger$ Department of Electrical and Computer Engineering, Princeton University, USA \\
-    E-mail: zja21@mails.tsinghua.edu.cn \\
+    $^\dagger$ State Key Laboratory of Millimeter Waves, Southeast University, Nanjing 210096, China \\
+    $^\ddagger$ Department of Electrical and Computer Engineering, Princeton University, NJ 08544, USA \\
+    E-mails: \{zja21, lkz18, wzzc20\}@mails.tsinghua.edu.cn, tjcui@seu.edu.cn, poor@princeton.edu
 }
 % \thanks{J. Zhu, K. Liu, Z. Wan, and L. Dai are with the Beijing National Research Center for Information Science and Technology (BNRist) as well as the Department of Electronic Engineering, Tsinghua University, Beijing 100084, China (e-mails: \{zja21, lkz18, wzzc20\}@mails.tsinghua.edu.cn, daill@tsinghua.edu.cn).
 
@@ -116,7 +116,6 @@ breaklinks=true}
 \begin{abstract}
 Reconfigurable intelligent surfaces (RISs) are envisioned as a potentially transformative technology for future wireless communications.
 However, RIS's inability to process signals and their attendant increased channel dimension have brought new challenges to RIS-assisted systems, which greatly increases the pilot overhead required for channel estimation.
-To address these problems, several prior contributions that enhance the hardware architecture of RISs or develop algorithms to exploit the channels' mathematical properties have been made, where the required pilot overhead is reduced to be proportional to the number of RIS elements.
 In this paper, we propose a dimension-independent channel state information (CSI) acquisition approach in which the required pilot overhead is independent of the number of RIS elements.
 In order to achieve this dimension-independent property, we propose a novel signaling method in which signals are transmitted from the base station (BS) and the user simultaneously during CSI acquisition.
 Under this method, an electromagnetic interference random field (IRF) will be induced on the RIS, and we employ a sensing RIS to capture its features.
@@ -134,47 +133,29 @@ The characteristics of low cost and power consumption make RISs a promising solu
 Specifically, an RIS is a large-scale array composed of passive elements, which can achieve significant beamforming gain by appropriately imposing phase shifts on the incident electromagnetic waves \cite{di2020smart}.
 To achieve this beamforming gain, accurate \ac{CSI} should be acquired beforehand, which makes channel estimation an essential problem for RIS-assisted communications \cite{wei2021channel}.
 
-Although channel estimation has been well investigated in conventional communication systems, the additional employment of RISs brings about two challenges \cite{weili2021channel}.
+Although channel estimation has been well investigated in conventional communication systems, the additional employment of RISs brings about two challenges.
 Firstly, in contrast to traditional antenna array capable of transmitting, receiving, and processing the signals, RISs can only passively reflect the incident signals.
 Secondly, since the number of RIS elements is usually large, the dimensions of the channels increase sharply compared with conventional communication systems, which results in unacceptably high pilot overhead for channel estimation.
 These two main challenges result in the need for new channel estimation techniques for beamforming in RIS-assisted communications.
 
-\subsection{Prior Works}
-\label{Prior Works}
-% Add here
-Generally, for RIS-assisted systems, channel estimation and beamforming are two separate procedures.
-Channel estimation is performed first, and then the obtained \ac{CSI} is utilized for beamforming.
-The beamforming gain relies heavily on the channel estimation accuracy.
-
-To tackle the challenges mentioned above in channel estimation for RIS-assisted communications, some solutions have been proposed, which can be generally divided into two categories.
+To tackle the challenges in channel estimation for RIS-assisted communications, some solutions have been proposed, which can be generally divided into two categories.
 The first category modifies the hardware architecture of the RIS, which enables some signal processing capability.
 For example, by sparsely replacing some of the RIS elements with active sensors capable of baseband processing, the authors of \cite{taha2021enabling} proposed a compressive sensing and deep learning-based channel estimation scheme with negligible pilot overhead. 
-To further reduce the number of active sensors, in \cite{alexandropoulos2020hardware} the authors proposed an alternating direction method-based channel estimation procedure with a single \ac{RF} chain, with the help of an extended analog combiner \cite{vlachos2019wideband}. 
-
+To further reduce the number of active sensors, in \cite{alexandropoulos2020hardware} the authors proposed an alternating direction method-based channel estimation procedure with a single \ac{RF} chain, with the help of an extended analog combiner.
 The second category preserves the original hardware architecture of RISs, while conceiving new algorithms to exploit the specific features that RISs bring about.
 Exploiting the two-timescale channel property in the RIS-assisted system, the authors of \cite{Huchen} proposed a two-timescale channel estimation algorithm that reduces the pilot overhead in the time-averaged sense.
-In other works \cite{wang2020compressed,wei2021channel}, by exploiting the sparsity of channels in the angular domain, compressive sensing-based algorithms are developed with reduced pilot overhead.
+In \cite{wang2020compressed}, compressive sensing-based algorithms are developed with reduced pilot overhead by exploiting the sparsity of channels in the angular domain.
 
 Note that, in order to achieve high beamforming gain, all the above channel estimation methods are designed to estimate the full channel matrix as accurately as possible. 
 However, since the channel matrix is at least of size $\mathcal{O}(N)$, where $N$ denotes the number of RIS elements, the required pilot overhead for channel estimation is usually proportional to the number of RIS elements \cite{taha2021enabling,alexandropoulos2020hardware,vlachos2019wideband,nguyen2021hybrid,Huchen,wang2020compressed,wang2020channel,kundu2021channel} in practical systems, which makes most of the existing channel estimation schemes dimension-dependent. 
-This is unacceptable especially when the RIS is fabricated with a large number of elements (e.g. 1100 elements in \cite{pei2021ris}, 2304 elements in \cite{yangfan2020coding}, and 10240 elements in \cite{yang2018reconfigurable}). 
+This is unacceptable especially when the RIS is fabricated with a large number of elements (e.g. 2304 elements in \cite{yangfan2020coding}). 
 Therefore, the following question naturally arises: {\it Does there exist a dimension-independent approach where the required pilot overhead is independent of the number of RIS elements?}
 
-\subsection{Our Contributions}
-\label{Our Contributions}
-
-We point out that the main drawback of conventional channel estimation methods is that they only extract the mathematical features of channels, while neglecting their electromagnetic nature. Thus, we propose an \ac{IRF}-based approach, where the \ac{IRF} induced on an RIS is utilized for channel estimation\footnote{Simulation codes will be provided to reproduce the results in this paper: \url{http://oa.ee.tsinghua.edu.cn/dailinglong/publications/publications.html}.}.
-Specifically, the contributions of this paper can be summarized as follows.
-    \begin{itemize}
-        \item We reveal that phase information about the channel can also be gathered from the phenomenon of electromagnetic interference that occurs on RISs, which we name the \ac{IRF}. To induce the \ac{IRF} on an RIS, we propose a novel pilot transmission method called simultaneous rotational signaling.
-        \item
-        To exploit this \ac{IRF} for CSI acquisition, we employ a sensing RIS that integrates power detectors into the RIS elements to capture the features of the \ac{IRF}. Each of the power detectors can acquire its phase information independently from the \ac{IRF}, so that the required pilot overhead is independent of the number of RIS elements. 
-        We then develop phase estimation algorithms to extract the phase information from the power detector signals in order to perform beamforming. 
-        \item
-        We derive the \ac{CRLB} of the phase estimation problem based on the \ac{IRF}, and its approximated asymptotic expression for channel estimation in the sensing RIS-assisted system.
-        Our numerical results verify that our developed algorithms are close to the \ac{CRLB},  
-        and our \ac{IRF}-based methods can realize dimension-independent CSI acquisition for beamforming, while achieving near-optimal spectral efficiency. 
-    \end{itemize}
+We point out that the main drawback of conventional channel estimation methods is that they only extract the mathematical features of channels, while neglecting their electromagnetic nature. 
+In this paper, we first reveal that phase information about the channel can also be gathered from the phenomenon of electromagnetic interference that occurs on RISs, which we name the \ac{IRF}. To induce the \ac{IRF} on an RIS, we propose a novel pilot transmission method called simultaneous rotational signaling.
+To exploit this \ac{IRF} for CSI acquisition, we employ a sensing RIS that integrates power detectors into the RIS elements to capture the features of the \ac{IRF}. Each of the power detectors can acquire its phase information independently from the \ac{IRF}, so that the required pilot overhead is independent of the number of RIS elements. 
+Moreover, we develop algorithms and derive the \ac{CRLB} for the phase estimation based on the detected power detector to perform beamforming.
+Numerical results verify that our developed algorithms are close to the \ac{CRLB}, and our \ac{IRF}-based methods can realize dimension-independent CSI acquisition for beamforming, while achieving near-optimal spectral efficiency. 
 
 \textit{Notation:}
 $\{L\}$ represents the set of integers $\{0,1,\cdots,L-1\}$; 
@@ -289,7 +270,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     The initial phase ($t=0$) of this sinusoidal waveform is uniquely determined by $\varphi$.
     Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. 
     However, according to \eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*w')$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, in order to acquire the phase sum, we have to assume that the phase $\arg({\bm g}_n^{T}{\bm w})$ is known in advance. 
-    This assumption is reasonable, because the BS-RIS link often exhibits a quasi-static property \cite{Huchen}, and can be calculated from the geometry, i.e., the locations of the BS and the RIS \cite{bai2014coverage}. 
+    This assumption is reasonable, because the BS-RIS link often exhibits a quasi-static property \cite{Huchen}, and can be calculated from the geometry, i.e., the locations of the BS and the RIS. 
 
 \subsection{IRF Channel Estimation and Beamforming} \label{IRF Channel Estimation and Beamforming}
     The \ac{IRF} channel estimation and beamforming procedure can be divided into three steps:
@@ -410,7 +391,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
     % \end{equation}
 
 \subsection{von Mises-EM method}    \label{von Mises-EM method}
-    The Newton-ML algorithm, if convergent, is asymptotically optimal \cite{casella2021statistical}. 
+    The Newton-ML algorithm is asymptotically optimal. 
     However, the computation of the Newton-ML estimator is quite complicated due to the intensive calculation of modified Bessel functions. 
     Now we introduce an iterative method for estimating $\varphi$ without any computation of such special functions.
     Our method is based on the von Mises distributions \cite{gatto2007generalized}.
@@ -499,7 +480,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
     
 \subsection{Exact Expression of the CRLB} \label{Precise CRLB}
 In Section \ref{Sensing RIS-Based Channel Estimation}, we have introduced three phase estimation methods to solve the probabilistic parameter estimation problem.
-We derive the CRLB \cite{casella2021statistical} of the estimation in \textbf{Theorem \ref{thm:precise CRLB}}.
+We derive the CRLB of the estimation in \textbf{Theorem \ref{thm:precise CRLB}}.
     
     \begin{theorem}[Non-central Chi-Squared CRLB] \label{thm:precise CRLB}\mbox{}\par
         Suppose the probabilistic model is specified by \eqref{eqn:sensor power}, where $L$ observations $P[0],\cdots,P[L-1]$ are obtained. Then the CRLB of this $L$-point phase estimation problem is given by
@@ -558,22 +539,15 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \label{fig:phase estimation_K}
     \end{figure}
     % Insert the comparison figure w.r.t \bar{\gamma}.
-    \begin{figure}[!t]
-        \centering
-        \myincludegraphics{data/pe_gamma.pdf}
-        \caption{Performance comparison of phase estimation algorithms. $x$-axis represents the average interferential SNR $\bar{\gamma}$; $y$-axis represents the MSE of the estimators. The interferential contrast $K=0.6$. }
-        \label{fig:phase estimation_gamma}
-    \end{figure}
     In all the simulations for phase estimation algorithms, the amplification factor $A$ is fixed to be $1$, the number of power samples\footnote{In practical OFDM systems, the number of signal samples within the duration of an OFDM symbol is usually $\sim 2048$. Considering that the power sensor is usually slower than the baseband ADC, it is reasonable to assume a 32-times slower sampling rate of the power sensor. Thus, $L=64$ is a reasonable number of acquired power samples during one time slot.} is fixed to $L=2^6=64$, and $\sigma_\zeta=0.05$; 
     The interferential SNR $\bar{\gamma}=20$ in Fig.~\ref{fig:phase estimation_K}. 
     The CRLB and CRLB-approx curves are calculated from \eqref{eqn:precise_CRLB} and \eqref{eqn:asymptotic CRLB}, respectively. 
     For Newton-ML algorithm, the Newton iteration is performed 4 times according to \eqref{eqn:Newton-ML renewal formula}. 
     For VM-EM algorithm, the iteration number is also fixed to 4. The true value of random variable $\varphi$ under estimation is drawn from a uniform distribution on $[0,2\pi]$. 
-    In the simulations in Fig.~\ref{fig:phase estimation_gamma}, all the simulation parameters, except for $K$ and $\bar{\gamma}$, are the same with Fig.~\ref{fig:phase estimation_K}.
 
-    From Fig.~\ref{fig:phase estimation_K} and Fig.~\ref{fig:phase estimation_gamma} we discover that the VM-EM algorithm has comparable performance with the Newton-ML algorithm, but the computational cost is significantly lower, since {\bf Algorithm \ref{alg:VM-EM}} does not require the evaluation of the complicated modified Bessel functions. 
+    From Fig.~\ref{fig:phase estimation_K}, we discover that the VM-EM algorithm has comparable performance with the Newton-ML algorithm, but the computational cost is significantly lower, since {\bf Algorithm \ref{alg:VM-EM}} does not require the evaluation of the complicated modified Bessel functions. 
     Both the Newton-ML and VM-EM algorithms are close to the CRLB, and both of them outperform the simple DFT algorithm. 
-    The CRLB approximation is also satisfactory under a wide range of $K$ and $\bar{\gamma}$. 
+    The CRLB approximation is also satisfactory under a wide range of $K$. 
 
 \subsection{Achievable Spectral Efficiency under IRF} \label{Achievable Spectral Efficiency under IRF}
     \begin{figure}[!t]
@@ -617,7 +591,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
 \appendices
 
 \section*{Acknowledgment}
-    This work was supported in part by the National Key Research and Development Program of China (Grant No.2020YFB1807201), in part by the National Natural Science Foundation of China (Grant No. 62031019), and in part by the European Commission through the H2020-MSCA-ITN META WIRELESS Research Project under Grant 956256.
+    This work was supported in part by the National Key Research and Development Program of China (Grant No.2020YFB1807201), in part by the National Natural Science Foundation of China (Grant No. 62031019), and in part by the European Commission through the H2020-MSCA-ITN META WIRELESS Research Project (Grant No. 956256).
 
 \footnotesize
 \balance 
