@@ -16,6 +16,7 @@ paper/*.out
 .vscode/
 *.asv
 *.xdv
+*.zip 
 
 # Data storage.
 code/data/
