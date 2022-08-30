@@ -275,6 +275,10 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
         \label{eqn:LS-CE}
     \end{equation}
     which provides a feasible solution to channel estimation in this RIS-assisted MISO system. In this paper, we name it the least-square channel estimation (LS-CE) method. 
+    It is worth noting that, in order to determine the RIS-user channel $\bm{f}\in\mathbb{C}^{N\times 1}$, at least $P = \lceil N/M \rceil = {\Theta}(N)$ pilots are required, even with the assumption that the slow-varying \cite{Huchen} BS-RIS channel $\bm G$ is known in advance. 
+    In fact, without exploiting the sparsity of $\bm f$, it seems impossible to obtain the $N$ channel coefficients with pilot overhead smaller than $\Theta(N)$. 
+    However, in the following section, we will show that it is possible to realize dimension-independent CSI acquisition by exploiting a common physical phenomenon in electrodynamics. 
+
 
 \section{Interference Random Field}
 \label{Interference Random Field}
@@ -283,7 +287,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
 \subsection{Signal Model for IRF}
 \label{Models for IRFs}
 
-    Physical intuition is vital in designing RIS-aided systems \cite{najafi2020physics}, and interference is a fundamental physical phenomenon in all kinds of waves. The most well-known example is the double-slit optical interference \cite{louradour1993interference}, as is shown in Fig.~\ref{fig:scheme}~(a), where the interference fringes created during the wave superposition reveal the phase difference of the two optical paths. Similarly, the same interference phenomenon occurs when two RF electromagnetic waves meet together on the RIS, as is shown in Fig.~\ref{fig:scheme}~(b), and the \ac{IRF} created by this interference reveals the \ac{CSI}. 
+    Physical intuition is vital in designing RIS-aided systems \cite{najafi2020physics}, and interference is a fundamental physical phenomenon that appears in all kinds of waves. The most well-known example is the double-slit optical interference \cite{louradour1993interference}, as is shown in Fig.~\ref{fig:scheme}~(a), where the interference fringes created during the wave superposition reveal the phase difference of the two optical paths. Similarly, the same interference phenomenon occurs when two RF electromagnetic waves meet together on the RIS, as is shown in Fig.~\ref{fig:scheme}~(b), and the \ac{IRF} created by this interference reveals the \ac{CSI}. 
     \begin{figure}[t]
         \centering
         \subfigure[Optical interference.]
@@ -395,11 +399,11 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         \item Integrate phase information and other CSI to perform beamforming. 
     \end{enumerate} 
 
-    In step 1), three power signals are recorded: $P_{\alpha}(t)$, $P_{\beta}(t)$, and $P(t)$. The IRF appears during the third signal $P(t)$. 
+    In step 1), three power signals are recorded: $P_{\alpha}(t)$, $P_{\beta}(t)$, and $P(t)$ (see Fig.~\ref{fig:protocol} for details). The IRF appears during the third signal $P(t)$. 
     In order to create an IRF, simultaneous rotational signaling must be performed. 
     In fact, the signaling requirements can be realized by transmitting a symbol $s=1$ on the zeroth subcarrier at the BS, while transmitting a symbol $s'=1$ on the $k$-th subcarrier at the user. 
     As is mentioned above, if we denote the OFDM symbol period by $T_s$, then the equivalent IRF angular frequency $\omega$ is given by $\omega = 2\pi k /T_s$, which means the noiseless power signal exhibits exactly $k$ sinusoidal periods during an OFDM symbol. 
-    For calculation simplicity, in this paper, we always assume $k=1$. 
+    Without loss of generality, in this paper, we always assume $k=1$. 
     In fact, for multi-user MISO systems\footnote{In this paper, we assume that the user is equipped with a single antenna, but the number of antennas at BS is not restricted. Furthermore, for MIMO systems, since the user is equipped with multiple antennas, phase-tuning simply for constructive interference at the user is sub-optimal. Thus, IRF methods should be further improved to fully harness the space-multiplexing gains of MIMO.}, different $k$ values can be assigned to different users in order to enable channel estimation and beamforming design for several users within a single OFDM symbol. 
     This can be done by Fourier analysis on the power signal $P(t)$ and extraction of phase angles for each user at distinct frequencies. 
 
