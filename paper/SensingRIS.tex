@@ -364,8 +364,8 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     The initial phase ($t=0$) of this sinusoidal waveform is uniquely determined by $\varphi$.
     Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. 
     However, according to \eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n^{T}{\bm w})+\arg(f_n^*w')$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}^{T}\bm w\right)$, we assume the phase $\arg({\bm g}_n^{T}{\bm w})$ to be known in our algorithms in order to acquire the phase sum.
-    This is because, in contrast to the fast time-varying RIS-user link, the BS-RIS link often exhibits a quasi-static property, which provides an opportunity to simplify the phase estimation \cite{Huchen}.
-    In practice and our simulations, the phase $\arg({\bm g}_n^{T}{\bm w})$ is calculated based on the geometry, i.e., the locations of the BS and the RIS \cite{bai2014coverage}. 
+    The underlying reason for this assumption is that, in contrast to the fast time-varying RIS-user link, the BS-RIS link often exhibits a quasi-static property, thus two-timescale methods in \cite{Huchen} can be applied to solely estimate the BS-RIS channel.
+    In our simulations, the phase $\arg({\bm g}_n^{T}{\bm w})$ is calculated based on the geometry, i.e., the locations of the BS and the RIS \cite{bai2014coverage}. 
 
 
 \section{Sensing RIS-Based Channel Estimation}
