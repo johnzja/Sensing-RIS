@@ -1,3 +1,5 @@
+\def\onecol{}
+
 \ifx\onecol\undefined
 \documentclass[journal,twocolumn]{IEEEtran}
 \else 
@@ -92,7 +94,11 @@ breaklinks=true}
 \newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}   %Use Input in the format of Algorithm
 \renewcommand{\algorithmicensure}{\textbf{Output:}}  %UseOutput in the format of Algorithm
+\ifx\onecol\undefined
 \newcommand{\myincludegraphics}[2][width=1\linewidth]{\includegraphics[#1]{#2}}
+\else 
+\newcommand{\myincludegraphics}[2][width=0.8\linewidth]{\includegraphics[#1]{#2}}
+\fi
 % 12cm for onecolumn,
 
 \ifCLASSINFOpdf
@@ -874,7 +880,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     Combined with our proposed vM-EM phase estimation algorithm, the pilot overhead of our CSI acquisition method is made independent of the number of RIS elements with low computational cost, enabling the implementation of extremely large-scale RISs to achieve significant beamforming gain. 
     Both CRLB analysis and simulation results verified the near-optimality of our vM-EM algorithm. 
     Furthermore, due to the independent property of our \ac{IRF}-based CSI acquisition method, the near-field effect cannot corrupt the precision of the CSI. 
-    Also due to the simultaneous signaling protocol, the “multiplicative fading” effect of RIS \cite{zhang2021active,liu2021active} during channel estimation is automatically avoided. 
+    Also due to the simultaneous signaling protocol, the ``multiplicative fading'' effect of RIS \cite{zhang2021active,liu2021active} during channel estimation is automatically avoided. 
     Thus, the \ac{IRF} method has a promising future in high-frequency large-scale systems. 
     
     For future work, the spatial interferential fringes on the sensing RIS may be exploited to recover the CSI at higher precision, and the data obtained by the power sensors may be utilized to perform joint channel estimation and beamforming together with traditional methods. 
