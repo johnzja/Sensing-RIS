@@ -11,6 +11,10 @@ paper/*.out
 
 *.log
 *.mat
+*.synctex.gz 
+*.aux 
+*.out 
+resp_letter/*.pdf 
 
 .DS_Store
 .vscode/
