@@ -1,4 +1,4 @@
-\def\onecol{}
+% \def\onecol{}
 
 \ifx\onecol\undefined
 \documentclass[journal,twocolumn]{IEEEtran}
@@ -92,6 +92,8 @@ breaklinks=true}
 \def \ch {\textcolor{red}{(cite here) }}
 
 \newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+\def\AutoColumn#1#2{{\ifx\onecol\undefined {#2} \else {#1} \fi}}
+
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}   %Use Input in the format of Algorithm
 \renewcommand{\algorithmicensure}{\textbf{Output:}}  %UseOutput in the format of Algorithm
 \ifx\onecol\undefined
@@ -223,6 +225,7 @@ $\bm I_{L}$ denotes the $L\times L$ identity matrix;
 %disjunction, respectively.
 $x_{\rm BB}(t)$ denotes the baseband representation of a passband signal $x(t)$;
 $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind. 
+
 
 
 \section{System Model}  \label{System Model}
@@ -893,13 +896,25 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
 \section{Proof of \textbf{Lemma 1}}
 \label{Proof of Lemma 1}
         Denote $z=z_r + {\rm j} z_i$; then the posterior density $p(\theta | z) \propto p(\theta)p(z|\theta)$ can be expressed as
-        \begin{equation}
-            \begin{aligned}
-                p(\theta|z) & \propto \exp(\kappa \cos(\theta - \mu))\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right) \\
-                & \propto \exp\left( \kappa \cos(\theta - \mu) + \frac{2}{\sigma^2}(z_r \cos\theta + z_i\sin\theta) \right) \\
-                & \propto \exp\left( \re\left[ e^{{\rm j} \theta}\left(\kappa e^{-{\rm j}\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
-            \end{aligned}
-        \end{equation}
+        \AutoColumn{
+            \begin{equation}
+                \begin{aligned}
+                    p(\theta|z) & \propto \exp(\kappa \cos(\theta - \mu))\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right) \\
+                    & \propto \exp\left( \kappa \cos(\theta - \mu) + \frac{2}{\sigma^2}(z_r \cos\theta + z_i\sin\theta) \right) \\
+                    & \propto \exp\left( \re\left[ e^{{\rm j} \theta}\left(\kappa e^{-{\rm j}\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
+                \end{aligned}
+            \end{equation}
+        }{
+            \begin{equation}
+                \begin{aligned}
+                    p(\theta|z) & \propto \exp(\kappa \cos(\theta - \mu)) \\
+                    &~~~\times \exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right) \\
+                    & \propto \exp\left( \kappa \cos(\theta - \mu) + \frac{2}{\sigma^2}(z_r \cos\theta + z_i\sin\theta) \right) \\
+                    & \propto \exp\left( \re\left[ e^{{\rm j} \theta}\left(\kappa e^{-{\rm j}\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
+                \end{aligned}
+            \end{equation}
+        }
+
         Since the density of the von Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{{\rm j} \theta}(\kappa e^{{\rm j} \mu})^* \right] \right)$, we can also parameterize the von Mises distribution by a single complex parameter $\kappa e^{{\rm j}\mu}$. Thus, the above $p(\theta|z)$ is a von Mises density with parameter $\kappa'e^{{\rm j}\mu'}$, satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} +2z/\sigma^2$. This completes the proof.
 
 
@@ -910,14 +925,28 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \label{eqn:expectation of P_l}
     \end{equation}
     The expectation $\mathbb{E}\left[R(z_l) \sqrt{P[l]}\right]$ can be evaluated by calculating the derivative w.r.t $\lambda_l$ on both sides of the identity $\mathbb{E}_{\lambda_l, A\sigma_v^2}[e^{\lambda_l/(A\sigma_v^2)}]=e^{\lambda_l/(A\sigma_v^2)}$:
-    \begin{equation}
-        \begin{aligned}
-            \mathbb{E}\left[R(z_l) \sqrt{P[l]}\right] & = e^{-\lambda_l/(A\sigma_v^2)}\int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x} \\
-            & = e^{-\lambda_l/(A\sigma_v^2)} A\sigma_v^2 \sqrt{\lambda_l} \frac{\partial}{\partial\lambda_l} \int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_0\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right) {\rm d}x}\\
-            & = \sqrt{\lambda_l}.\\
-        \end{aligned}
-        \label{eqn:expectation_second_kind_1}
-    \end{equation}
+    \AutoColumn{
+        \begin{equation}
+            \begin{aligned}
+                \mathbb{E}\left[R(z_l) \sqrt{P[l]}\right] & = e^{-\lambda_l/(A\sigma_v^2)}\int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x} \\
+                & = e^{-\lambda_l/(A\sigma_v^2)} A\sigma_v^2 \sqrt{\lambda_l} \frac{\partial}{\partial\lambda_l} \int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_0\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right) {\rm d}x}\\
+                & = \sqrt{\lambda_l}.\\
+            \end{aligned}
+            \label{eqn:expectation_second_kind_1}
+        \end{equation}
+    }{
+        \begin{equation}
+            \begin{aligned}
+                \mathbb{E}\left[R(z_l) \sqrt{P[l]}\right] & = e^{-\lambda_l/(A\sigma_v^2)}\times \int_{0}^{+\infty} \\
+                & {\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_1\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right)\sqrt{x}{\rm d}x} \\
+                & = e^{-\lambda_l/(A\sigma_v^2)} A\sigma_v^2 \sqrt{\lambda_l} \times \\
+                &\frac{\partial}{\partial\lambda_l} \int_{0}^{+\infty}{\frac{1}{A\sigma_v^2}\exp\left(-\frac{x}{A\sigma_v^2}\right)I_0\left(\frac{\sqrt{\lambda_l x}}{A\sigma_v^2/2}\right) {\rm d}x}\\
+                & = \sqrt{\lambda_l}.\\
+            \end{aligned}
+            \label{eqn:expectation_second_kind_1}
+        \end{equation}
+    }
+    
     According to the definition of $z_l$, the expectation $\mathbb{E}\left[R(z_l)P[l]/z_l\right]$ is of the same form as the expectation $\mathbb{E}\left[R(z_l) \sqrt{P[l]}\right]$. Thus, the expectation result is
     \begin{equation}
         \mathbb{E}\left[\frac{R(z_l)}{z_l} P[l]\right] = \frac{A\sigma_v^2}{2}.
@@ -929,24 +958,50 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \label{eqn:two-variable g function}
     \end{equation}
     Let $x=\lambda_l t$, and write down the integral expression of \eqref{eqn:two-variable g function}, we obtain 
-    \begin{equation}
-        \begin{aligned}
-        g(\lambda_l, a) & = \int_{0}^{+\infty} t(1-R^2(2\gamma_l\sqrt{t})) \frac{\lambda_l}{a} \exp\left(\frac{\lambda_l + \lambda_l t}{a}\right) I_0\left(2\gamma_l\sqrt{t}\right){\rm d}t \\
-        & = \int_{0}^{+\infty}\gamma_l t \, \exp(-\gamma_l(1+t))\, I_0\left(2\gamma_l\sqrt{t}\right)\,\left(1-R^2\left(2\gamma_l\sqrt{t}\right)\right){\rm d}t \\
-        & = g(\gamma_l).
-        \end{aligned}
-        \label{eqn:proof precise g function}
-    \end{equation}
+    \AutoColumn{
+        \begin{equation}
+            \begin{aligned}
+            g(\lambda_l, a) & = \int_{0}^{+\infty} t(1-R^2(2\gamma_l\sqrt{t})) \frac{\lambda_l}{a} \exp\left(\frac{\lambda_l + \lambda_l t}{a}\right) I_0\left(2\gamma_l\sqrt{t}\right){\rm d}t \\
+            & = \int_{0}^{+\infty}\gamma_l t \, \exp(-\gamma_l(1+t))\, I_0\left(2\gamma_l\sqrt{t}\right)\,\left(1-R^2\left(2\gamma_l\sqrt{t}\right)\right){\rm d}t \\
+            & = g(\gamma_l).
+            \end{aligned}
+            \label{eqn:proof precise g function}
+        \end{equation}
+    }{
+        \begin{equation}
+            \begin{aligned}
+            g(\lambda_l, a) & = \int_{0}^{+\infty} t(1-R^2(2\gamma_l\sqrt{t})) \frac{\lambda_l}{a} \exp\left(\frac{\lambda_l + \lambda_l t}{a}\right) \\
+            & \times I_0\left(2\gamma_l\sqrt{t}\right){\rm d}t \\
+            & = \int_{0}^{+\infty}\gamma_l t \, \exp(-\gamma_l(1+t))\, I_0\left(2\gamma_l\sqrt{t}\right)\\
+            &\times \left(1-R^2\left(2\gamma_l\sqrt{t}\right)\right){\rm d}t \\
+            & = g(\gamma_l).
+            \end{aligned}
+            \label{eqn:proof precise g function}
+        \end{equation}
+    }
     
     Combining the above equations of expectations \eqref{eqn:expectation of P_l}, \eqref{eqn:expectation_second_kind_1}, \eqref{eqn:expectation_second_kind_2} and \eqref{eqn:proof precise g function}, we obtain
-    \begin{equation}
-        \begin{aligned}
-        \frac{1}{{\rm CRLB}(\varphi)} %& = -\mathbb{E}\left[\frac{\partial^2\mathcal{L}}{\partial\varphi^2}\right] \\
-        & \overset{(a)}{=}  -\frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] - \frac{a}{\lambda_l}\right) } \\
-        & \overset{(b)}{=} \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\frac{a}{\lambda_l}-g(\lambda_l/a)\right)},
-        \end{aligned}
-        \label{eqn:CRLB}
-    \end{equation}
+    \AutoColumn{
+        \begin{equation}
+            \begin{aligned}
+            \frac{1}{{\rm CRLB}(\varphi)} %& = -\mathbb{E}\left[\frac{\partial^2\mathcal{L}}{\partial\varphi^2}\right] \\
+            & \overset{(a)}{=}  -\frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] - \frac{a}{\lambda_l}\right) } \\
+            & \overset{(b)}{=} \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\frac{a}{\lambda_l}-g(\lambda_l/a)\right)},
+            \end{aligned}
+            \label{eqn:CRLB}
+        \end{equation}
+    }{
+        \begin{equation}
+            \begin{aligned}
+            \frac{1}{{\rm CRLB}(\varphi)} 
+            & \overset{(a)}{=}  -\frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1} \sin^2(\psi(t_l)+\varphi) \\
+            & \times \left(\mathbb{E}\left[(1-R^2(z_l))\frac{P[l]}{\lambda_l}\right] - \frac{a}{\lambda_l}\right)  \\
+            & \overset{(b)}{=} \frac{4\alpha^2\beta^2}{\sigma_v^4}\sum_{l=0}^{L-1}{ \sin^2(\psi(t_l)+\varphi) \left(\frac{a}{\lambda_l}-g(\lambda_l/a)\right)},
+            \end{aligned}
+            \label{eqn:CRLB}
+        \end{equation}
+    }
+
     where step $(a)$ comes from substituting these three types of expectation into \eqref{Second Derivative Likelihood}, and step $(b)$ comes from replacing the trickiest expectation by the definition of the function $g(\cdot)$ in \eqref{eqn:precise_g_function}.  
     
     Note that the precise value of the CRLB can be determined by the exact  single-variable $g$ function \eqref{eqn:precise_g_function}, whose variable $\gamma_l = \lambda_l / a$ is the interferential SNR. After further derivations, it can be observed from the expressions that the CRLB only relies on two intrinsic physical parameters: the interferential SNR $\gamma_l$, and the interferential contrast $K$ \cite{louradour1993interference}, which coincides with the physical intuition. Imitating the notations in optics, we define the parameter $K$ to be  
@@ -988,10 +1043,20 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     \end{equation}
     Recall that the asymptotic expansion $x(1-R^2(2\sqrt{x})) \sim \sqrt{x}/2$ holds for large $x$,
     and the random variable $P[l]$ obeys a non-central chi-squared distribution which can be equivalently expressed as 
-    \begin{equation}
-        P[l] \sim A\left| \CN\left( (\alpha + \beta e^{{\rm j} (\psi_l + \varphi)}), \sigma_v^2 \right)\right|^2
-        \sim \frac{a}{2} \left| \CN\left((\alpha + \beta e^{{\rm j} (\psi_l + \varphi)})/(\sigma_v / \sqrt{2}), 2\right)\right|^2.
-    \end{equation}
+    \AutoColumn{
+        \begin{equation}
+            P[l] \sim A\left| \CN\left( (\alpha + \beta e^{{\rm j} (\psi_l + \varphi)}), \sigma_v^2 \right)\right|^2
+            \sim \frac{a}{2} \left| \CN\left((\alpha + \beta e^{{\rm j} (\psi_l + \varphi)})/(\sigma_v / \sqrt{2}), 2\right)\right|^2.
+        \end{equation}
+    }{
+        \begin{equation}
+            \begin{aligned}
+            P[l] &\sim A\left| \CN\left( (\alpha + \beta e^{{\rm j} (\psi_l + \varphi)}), \sigma_v^2 \right)\right|^2 \\
+            & \sim \frac{a}{2} \left| \CN\left((\alpha + \beta e^{{\rm j} (\psi_l + \varphi)})/(\sigma_v / \sqrt{2}), 2\right)\right|^2.
+            \end{aligned}
+        \end{equation}
+    }
+
     Thus, we obtain
     \begin{equation}
         \begin{aligned}
@@ -1002,14 +1067,27 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \label{eqn:approx evaluation}
     \end{equation}
     where $m=\lvert\alpha + \beta e^{{\rm j} (\psi_l + \varphi)}\rvert/(\sigma_v / \sqrt{2}) = \sqrt{2\lambda_l/a} = \sqrt{2\gamma_l}$, and thus $m^2/2=\gamma_l$. Plugging \eqref{eqn:noncentral chi mean} and \eqref{eqn:Laguerre half order} into \eqref{eqn:approx evaluation}, we obtain the final expression 
-    \begin{equation}
-        \begin{aligned}
-        \mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l] & \approx \frac{1}{2}\frac{\sqrt{\lambda_l}}{a}\left(\frac{a}{\lambda_l}\right)^2 \sqrt{\frac{a}{2}} \sqrt{\frac{\pi}{2}} e^{-\gamma_l/2}\left[(1+\gamma_l)I_0(\gamma_l/2)+\gamma_l I_1(\gamma_l/2)\right] \\
-        & = \frac{1}{4}\sqrt{\frac{\pi}{\gamma_l}}e^{-\gamma_l/2}\left[(1+\gamma_l^{-1})I_0(\gamma_l/2)+ I_1(\gamma_l/2)\right] \\
-        & := \hat{g}(\gamma_l).
-        \end{aligned}
-        \label{eqn:approx evaluation result}
-    \end{equation}
+    \AutoColumn{
+        \begin{equation}
+            \begin{aligned}
+            \mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l] & \approx \frac{1}{2}\frac{\sqrt{\lambda_l}}{a}\left(\frac{a}{\lambda_l}\right)^2 \sqrt{\frac{a}{2}} \sqrt{\frac{\pi}{2}} e^{-\gamma_l/2}\left[(1+\gamma_l)I_0(\gamma_l/2)+\gamma_l I_1(\gamma_l/2)\right] \\
+            & = \frac{1}{4}\sqrt{\frac{\pi}{\gamma_l}}e^{-\gamma_l/2}\left[(1+\gamma_l^{-1})I_0(\gamma_l/2)+ I_1(\gamma_l/2)\right] \\
+            & := \hat{g}(\gamma_l).
+            \end{aligned}
+            \label{eqn:approx evaluation result}
+        \end{equation}
+    }{
+        \begin{equation}
+            \begin{aligned}
+            & \mathbb{E}[(1-R^2(z_l))P[l]/\lambda_l] \\
+            & \approx \frac{1}{2}\frac{\sqrt{\lambda_l}}{a}\left(\frac{a}{\lambda_l}\right)^2 \sqrt{\frac{a\pi}{4}} e^{-\gamma_l/2}\left[(1+\gamma_l)I_0(\gamma_l/2)+\gamma_l I_1(\gamma_l/2)\right] \\
+            & = \frac{1}{4}\sqrt{\frac{\pi}{\gamma_l}}e^{-\gamma_l/2}\left[(1+\gamma_l^{-1})I_0(\gamma_l/2)+ I_1(\gamma_l/2)\right] \\
+            & := \hat{g}(\gamma_l).
+            \end{aligned}
+            \label{eqn:approx evaluation result}
+        \end{equation}
+    }
+
     Finally, substituting the approximation \eqref{eqn:approx evaluation result} into the exact CRLB \eqref{eqn:precise_CRLB} yields the conclusion \eqref{eqn:asymptotic CRLB}, which completes the proof. Note that the operation $(x)^+$ in \eqref{eqn:asymptotic CRLB} ensures that each term of the CRLB is non-negative. 
 
 \section{Proof of \textbf{Theorem 3}}

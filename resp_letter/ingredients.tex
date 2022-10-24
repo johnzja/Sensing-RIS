@@ -1,0 +1,166 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{color}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{ulem}
+\usepackage{booktabs}
+\usepackage[Symbol]{upgreek}
+\usepackage{subfigure}
+\usepackage{bm}
+\usepackage{cite}
+\usepackage{stfloats}
+\usepackage{threeparttable}
+\usepackage{theorem}
+\usepackage{dcolumn}
+\usepackage{multirow}
+\usepackage{amsfonts}
+\usepackage[boxed]{algorithm2e}
+\usepackage{framed}
+% Enable Hyper-references.
+\usepackage{hyperref}
+\hypersetup{hidelinks, 
+colorlinks=true,
+allcolors=black,
+pdfstartview=Fit,
+breaklinks=true}
+
+
+\newtheorem{theorem}{\bf Theorem}
+\newtheorem{proposition}{\bf Proposition}
+\newtheorem{lemma}{\bf Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{\bf Remark}
+
+\setlength{\textheight}{245mm}
+\setlength{\textwidth}{170mm}
+\setlength{\topmargin}{-15mm}
+\setlength{\oddsidemargin}{-5mm}
+\setlength{\evensidemargin}{-5mm}
+\flushbottom
+\setlength{\parindent}{0pt}
+\setlength{\baselineskip}{17pt}
+\setlength{\parskip}{3mm}
+\setlength{\columnsep}{8mm}
+\renewcommand{\baselinestretch}{1.65}
+\hyphenation{op-tical net-works semi-conduc-tor IEEEtran}
+\DeclareGraphicsRule{.png}{eps}{.bb}{}
+
+\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+\newcolumntype{C}[1]{>{\PreserveBackslash\centering}p{#1}}
+\newcolumntype{R}[1]{>{\PreserveBackslash\raggedleft}p{#1}}
+\newcolumntype{L}[1]{>{\PreserveBackslash\raggedright}p{#1}}
+
+\def \T {^{\mathsf{T}}}
+\def \H {^{\mathsf{H}}}
+\def \ri {{\rm i}}
+
+
+\begin{document}
+    
+\begin{center}
+    {\Large\bf Some Theorems}
+\end{center}
+
+\section{RIS Achievable Bound}
+RIS-aided communication systems are expected to achieve an order of $\Omega(N^2)$ SNR gain when the direct BS-user link is blocked, where $N$ denotes the number of RIS elements. However, the phase-shift of each RIS element need to be properly configured to achieve such quadratic gain. To calculate these phase shifts, accurate channel matrix is a prerequisite. Thus, channel estimation have to be made as accurate as possible to ensure the quadratic scaling law. 
+
+However, we show by the following {\bf Theorem~\ref{thm1}} that, even with noisy channel estimators, the RIS can still achieve the quadratic SNR gain. 
+\begin{theorem} \label{thm1}
+    A pilot-based RIS-aided system achieves an SNR gain of order $\Omega(N^2)$ even if the channel estimators are corrupted by Gaussian noise of arbitrarily strong power. 
+\end{theorem}
+
+Note that we focus on the SISO model for simplicity. The BS-RIS channel is denoted by ${\bm g}\in\mathbb{C}^{N\times 1}$, the RIS-user channel is denoted by ${\bm f}\in\mathbb{C}^{N\times 1}$, and the cascaded channel is derived as ${\bm h} = {\bm f}\odot {\bm g}$. Assume that ${\bm h}\sim {\mathcal{CN}}({\bm 0},\sigma_h^2 {\bm I}_N)$, and the channel estimator $\hat{\bm h}$ is unbiased. The RIS phase-shift is simply ${\bm \theta} = -{\rm arg}(\hat{\bm h})\in {\mathbb{T}}^N$. In order to analyze the achievable SNR gain of this simple scheme, we first introduce {\bf Lemma~1} to illustrate the achievable gain of a single channel coefficient estimator. 
+
+\begin{lemma}
+    Suppose $h\sim \mathcal{CN}(0,\sigma_h^2)$, and the channel estimation error $\epsilon\sim \mathcal{CN}(0,\sigma^2)$, with the channel estimator being modeled by an independent sum of the true value and the noise, i.e., $\hat{h} = h+\epsilon$. 
+    Then, the mean of the phase-calibrated channel gain $g:=h\exp(-\ri\,{\rm arg}(\hat{h}) )$ is given by  
+    \begin{equation}
+        \mathbb{E}\left[ g \right] = \sqrt{\frac{\pi}{4}}\frac{\sigma_h}{\sqrt{1+\sigma^2/\sigma_h^2}}.
+    \end{equation}
+\end{lemma}
+
+{\it Proof.} Let the true phase-shift $\theta = {\rm arg}(h)$, and the estimated phase-shift $\varphi = {\rm arg}(\hat{h})$. To characterize the impact of the phase estimation error on the calibrated channel gain $g$, we first compute the conditional expectation $\mathbb{E}[\exp(\ri (\varphi-\theta)) | h]$. 
+Since $\hat{h} | h \sim \mathcal{CN}(h, \sigma^2)$, the conditional p.d.f. of $\hat{h}|h$ is given by  
+\begin{equation}
+    p(\hat{h}|h) = \frac{1}{\pi\sigma^2}\exp\left( -\frac{1}{\sigma^2}|\hat{h}-h|^2 \right).
+\end{equation}
+By applying polar coordinate transformation, the above p.d.f. $p(\hat{h}|h)$ is equivalently expressed in the polar coordinate $(r=|\hat{h}|, \varphi)$ as 
+\begin{equation}
+    p(r, \varphi | h) = \frac{r}{\pi\sigma^2}\exp\left( -\frac{1}{\sigma^2}(r^2+|h|^2-2r|h|\cos(\varphi-\theta)) \right).
+    \label{eqn:polar_coordinate}
+\end{equation}
+One can observe from~\eqref{eqn:polar_coordinate} that, $\varphi|r, h$ obeys a von Mises distribution $\mathcal{VM}(\theta, 2r|h|/\sigma^2)$. As a result, the conditional expectation of $\varphi$, conditioned on $r$ and $h$, is given by 
+\begin{equation}
+    \mathbb{E}\left[ \exp(\ri\varphi) | r, h \right] = e^{\ri\theta} \frac{I_1\left({2r|h|}/{\sigma^2}\right)}{I_0\left({2r|h|}/{\sigma^2}\right)}.
+\end{equation}
+Then, avaraging over $p(r|h) = \int_0^{2\pi}p(r,\varphi|h){\rm d}\varphi$ yields the desired conditional expectation $\mathbb{E}\left[ \exp(\ri\varphi)|h \right]$. The p.d.f. $p(r|h)$ is a non-central chi-squared distribution expressed as 
+\begin{equation}
+    p(r|h) = \frac{2r}{\sigma^2}\exp(-(r^2+|h|^2)/\sigma^2)I_0\left(2r|h|/\sigma^2\right), r\geq 0. 
+\end{equation}
+Then, 
+\begin{equation}
+    \begin{aligned}
+        \mathbb{E}\left[ \exp(\ri\varphi)|h \right] &= \int_{0}^{+\infty} \mathbb{E}\left[ \exp(\ri\varphi) | r, h \right] p(r|h){\rm d}r \\
+        &= \frac{e^{\ri \theta}}{\sigma^2} \exp(-|h|^2/\sigma^2) \int_{0}^{+\infty}\exp(-u/\sigma^2)I_1(2|h|\sqrt{u}/\sigma^2) {\rm d}u. \\
+        &= \frac{e^{\ri \theta}}{\sigma^2} \exp(-|h|^2/\sigma^2)\mathcal{L}\left[I_1(2|h|\sqrt{t}/\sigma^2)\right](1/\sigma^2).
+    \end{aligned}
+\end{equation}
+With the Laplace transform formula 
+\begin{equation}
+    \mathcal{L}\left[I_\nu(a\sqrt{t})\right](p) = \frac{1}{4}a\sqrt{\pi}p^{-3/2}\exp(a^2/8p)\left[ I_{(\nu-1)/2}(a^2/8p)+I_{(\nu+1)/2}(a^2/8p) \right],
+\end{equation}
+we get 
+\begin{equation}
+    \begin{aligned}
+        \mathbb{E}\left[ \exp(\ri\varphi)|h \right] &= e^{\ri \theta}\sqrt{\frac{\pi|h|^2}{4\sigma^2}}\exp(-|h|^2/2\sigma^2)\left[I_0(|h|^2/2\sigma^2) + I_1(|h|^2/2\sigma^2)\right] \\
+        &:= e^{\ri \theta}M(\gamma),
+    \end{aligned}
+    \label{eqn:inner_cond_expectation}
+\end{equation}
+where $\gamma = |h|^2/\sigma^2$ is the SNR. Then, by taking the conjugate of both sides of~\eqref{eqn:inner_cond_expectation}, we obtain 
+\begin{equation}
+    \begin{aligned}
+        \mathbb{E}\left[g\right] &= \mathbb{E}\left[h\mathbb{E}\left[\exp(-\ri \varphi)|h\right]\right] \\
+        &= \mathbb{E}\left[ he^{-\ri \theta}M(\gamma) \right] \\
+        &= \mathbb{E}\left[ |h|M(|h|^2/\sigma^2) \right].
+    \end{aligned}
+\end{equation}
+Since $|h|$ obeys a Rayleigh distribution $p(|h|) = 2|h|/\sigma_h^2\exp(-|h|^2/\sigma_h^2)$, the expectation $\mathbb{E}\left[ |h|M(|h|^2/\sigma^2) \right]$ is evaluated to be 
+\begin{equation}
+    \begin{aligned}
+        \mathbb{E}\left[ |h|M(|h|^2/\sigma^2) \right] &= \int_0^{+\infty} \frac{2|h|^2}{\sigma_h^2}\exp(-|h|^2/\sigma_h^2) M(|h|^2/\sigma^2) {\rm d}|h| \\
+        &= \int_0^{+\infty} \frac{u}{\sigma_h^2}\exp(-u/\sigma_h^2) \sqrt{\frac{\pi }{4\sigma^2}}\exp(-u/2\sigma^2)\left[I_0(u/2\sigma^2) + I_1(u/2\sigma^2)\right] {\rm d}u \\
+        &\overset{(a)}{=} \sqrt{\frac{\pi}{4}}\frac{\sigma^3}{\sigma_h^2} \mathcal{L}_{\gamma}\left[N(\gamma)\right](\sigma^2/\sigma_h^2),
+    \end{aligned}
+\end{equation}
+where ($a$) is due to change of integral variable $u=\sigma^2\gamma$, and $N(\gamma) = \gamma\exp(-\gamma/2)[I_0(\gamma/2)+I_1(\gamma/2)$. 
+Again from the Laplace transform formula for modified Bessel functions $I_\nu(\cdot)$, we obtain 
+\begin{equation}
+    \mathcal{L}_{\gamma}\left[N(\gamma)\right](p) = \frac{1}{\sqrt{p^3(1+p)}},~{\Re(p)>0},
+\end{equation}
+then the final answer is obtained by setting $p=\sigma^2/\sigma_h^2$, i.e., 
+\begin{equation}
+    \mathbb{E}[g] = \sqrt{\frac{\pi}{4}}\frac{\sigma_h}{\sqrt{1+\sigma^2/\sigma_h^2}}.
+\end{equation}
+
+
+\appendix
+\section{Proof of Theorem 1}
+{\it {Proof.}} The SNR $\gamma$ of the received signal is expressed as 
+\begin{equation}
+    \gamma = \frac{1}{\sigma^2}\left| \sum_{n=1}^{N}h_n e^{-\ri \theta_n} \right|^2,
+\end{equation}
+where $h_n$ is the cascaded channel of the $n$-th RIS element. Then, by applying $\mathbb{E}|X|^2\geq (\mathbb{E}|X|)^2$ and {\bf Lemma~1}, we obtain 
+\begin{equation}
+    \begin{aligned}
+    \mathbb{E}[\gamma] &\geq \frac{1}{\sigma^2}\left| \sum_{n=1}^{N}\mathbb{E}\left[h_n e^{-\ri \theta_n}\right] \right|^2 \\
+    &= \frac{N^2}{\sigma^2} \left| \sqrt{\frac{\pi}{4}}\frac{\sigma_h}{\sqrt{1+\sigma^2/\sigma_h^2}} \right|^2 \\
+    &= \Omega(N^2),
+    \end{aligned}
+\end{equation}
+this completes the proof. 
+
+\end{document}
