@@ -1,4 +1,4 @@
-function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np)
+function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np, channel_type)
     % Fix the BS precoding to steer the beam at RIS.
     BS_pos_sph = BS_conf.BS_pos_sph;
     theta_BS = BS_pos_sph(2); psi_BS = BS_pos_sph(3);
@@ -6,11 +6,17 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np)
     Ny = RIS_conf.Ny; Nz = RIS_conf.Nz; N_ris = RIS_conf.N;
     
     % Calculate the estimated optimal precoding directly from the BS-RIS geometries.
-    w = kron(exp(1j*pi*sin(psi_BS)*(0:Mz-1)), exp(1j*pi*cos(psi_BS)*sin(theta_BS)*(0:My-1))).';
-    w = sqrt(BS_conf.Pt_BS)*w/norm(w);
+    if strcmp(channel_type, 'SV')
+        w = kron(exp(1j*pi*sin(psi_BS)*(0:Mz-1)), exp(1j*pi*cos(psi_BS)*sin(theta_BS)*(0:My-1))).';
+        w = sqrt(BS_conf.Pt_BS)*w/norm(w);
+    elseif strcmp(channel_type, 'rayleigh')
+        [~, ~, V] = svd(G);
+        w = V(:,1);
+        w = sqrt(BS_conf.Pt_BS)*w;
+    end
     
     A = 1;
-    L = 256;
+    L = 256;        % L samples within one OFDM symbol. 
 	sigma_v = RIS_conf.sigma_v;
     
     psi_arr = 2*pi*(0:L-1).'/L;
@@ -41,7 +47,7 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np)
     end
     
     % Estimate the phase difference varphi for each of the RIS elements.
-    varphi = zeros(N_ris,1);
+    varphi = zeros(N_ris, 1);
     for n=1:N_ris
         SensingRIS_param.alpha	= abs(s_alpha(n)+sigma_v*(randn()+1j*randn())/sqrt(2*L));  
         % Noises should also be added here.
@@ -59,13 +65,18 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np)
     % fprintf('K_mean = %f, \\gamma_bar_mean = %f\n', K_mean, gamma_bar_mean);
     
     % Calculate the (invariant) G.
-    phase_G = kron(exp(1j*pi*sin(psi_BS)*(0:Nz-1)), exp(1j*pi*cos(psi_BS)*sin(theta_BS)*(0:Ny-1)));
-    phase_BS = kron(exp(-1j*pi*sin(psi_BS)*(0:Mz-1)), exp(-1j*pi*cos(psi_BS)*sin(theta_BS)*(0:My-1)));
-    G_phases_only = kron(phase_G.', phase_BS);  % size(G) = [N, M].
+    if strcmp(channel_type, 'SV')
+        phase_G = kron(exp(1j*pi*sin(psi_BS)*(0:Nz-1)), exp(1j*pi*cos(psi_BS)*sin(theta_BS)*(0:Ny-1)));
+        phase_BS = kron(exp(-1j*pi*sin(psi_BS)*(0:Mz-1)), exp(-1j*pi*cos(psi_BS)*sin(theta_BS)*(0:My-1)));
+        G_phases_only = kron(phase_G.', phase_BS);  % size(G) = [N, M].
+
+        % Calculate the best RIS phases theta_vec, directly on the RIS.
+        arg_gnT_w = angle(G_phases_only*w);
+    elseif strcmp(channel_type, 'rayleigh')
+        arg_gnT_w = angle(G*w);
+    end
     
-    % Calculate the best RIS phases theta_vec, directly on the RIS.
-    arg_gnT_w = angle(G_phases_only*w);
-    theta_vec = -varphi-2*arg_gnT_w;
+    theta_vec = -varphi - 2*arg_gnT_w;
     
     P_recv = abs(f'*diag(exp(1j*theta_vec))*G*w)^2;
     sigma_noise = BS_conf.sigma_noise;      % Thermal noise.

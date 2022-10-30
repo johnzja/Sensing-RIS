@@ -1,48 +1,66 @@
-function [P_recv, Rate] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Np)
+function [P_recv, Rate] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np, BL)
     % Extract necessary parameters.
     N = RIS_conf.N;
+    M = BS_conf.M;
+    lambda = RIS_conf.lambda;
+    
     F = dftmtx(N);
-    Thetas = F(:, 1:Np);    
+    pilot_power = Ep/Np*BS_conf.Pt_UE;
+    data_power = Ed/(BL-Np)*BS_conf.Pt_BS;  % downlink power. 
+    
+    if Np <= N
+        Thetas = F(:, 1:Np);    
+    else
+        Thetas = zeros(N, Np);
+        Thetas(:,1:N) = F;
+        Thetas(:, N+1:end) = exp(1j*2*pi*rand([N, Np-N]));
+    end
+    
     sigma_noise = BS_conf.sigma_noise;
     P_noise = BS_conf.sigma_noise^2;
-    M = BS_conf.M;
     
     % Channel estimation scheme: Just estimate fk and G together, for each user.
-    H = (G.') * diag(conj(f));
-    tmp = sqrt(BS_conf.Pt_UE)*H*Thetas;
+    HT = (G.') * diag(conj(f));
+    tmp = sqrt(pilot_power)*HT*Thetas;
     Y = tmp + sigma_noise * (randn([M, Np])+1j*randn([M, Np])/sqrt(2));
-    H_hat = Y*Thetas'/Np/sqrt(BS_conf.Pt_UE);   % LS-CE. 
     
+    HT_hat_LS = Y*Thetas'/Np/sqrt(pilot_power);   % LS-CE (approx)  
+    
+    FFH = Thetas*Thetas';
+    sigma2_h = (lambda/(4*pi*100))^4;
+    HT_hat_LS_precise = Y*Thetas'/(FFH)/sqrt(pilot_power);
+    HT_hat_MMSE = sqrt(pilot_power)*Y*Thetas'/(FFH*pilot_power + P_noise/sigma2_h*eye(N));
 
     % Calculate estimation noise here, in NMSE. 
-    nmse_pow = (norm(H_hat-H, 'fro')/norm(H,'fro'))^2;
-    nmse_db = pow2db(nmse_pow);
-    % report NMSE.
-    % disp(nmse_db);
+    nmse_db_LS = pow2db((norm(HT_hat_LS-HT, 'fro')/norm(HT,'fro'))^2);
+    nmse_db_LSp = pow2db((norm(HT_hat_LS_precise-HT, 'fro')/norm(HT,'fro'))^2);
+    nmse_db_MMSE = pow2db((norm(HT_hat_MMSE-HT, 'fro')/norm(HT,'fro'))^2);
     
-    % Perform beamforming based on H_hat. The model is: y_UE = theta.' * (H).' *w*s + n
+    % Perform beamforming based on the best HT_hat_MMSE. The model is: y_UE = theta.' * (H).' *w*s + n
     theta = exp(1j*2*pi*rand(N, 1));
     iter = 10;
-    Pt_BS = BS_conf.Pt_BS;
     
-    % Assume that s=1.
+    % Assume that E|s|^2 = 1.
+    HT_hat = HT_hat_MMSE;
     objective = zeros(2*iter, 1);
     threshold = 0.01;
+    
     for idx = 1:iter
         % update w
-        w = (theta' * H_hat').';
-        w = sqrt(Pt_BS)*w/norm(w);
-        objective(2*idx-1) = abs(theta.'*H_hat.'*w)^2;
+        w = (theta' * HT_hat').';
+        w = sqrt(data_power)*w/norm(w);             % Transmit power integrated. 
+        objective(2*idx-1) = abs(theta.'*HT_hat.'*w)^2;
         % update theta
-        theta = exp(-1j*angle(H_hat.'*w));
-        t = theta.'*H_hat.'*w;
+        theta = exp(-1j*angle(HT_hat.'*w));
+        t = theta.'*HT_hat.'*w;
         objective(2*idx) = abs(t)^2;
         if abs(objective(2*idx)-objective(2*idx-1))/objective(2*idx) < threshold
-            P_recv = abs(theta.'*H.'*w)^2;         % Incorporate the true channel.
+            P_recv = abs(theta.'*HT.'*w)^2;         % Incorporate the true channel.
             Rate = log2(1+P_recv/P_noise);
             return;
         end
     end
-    P_recv = abs(theta.'*H.'*w)^2;
+    
+    P_recv = abs(theta.'*HT.'*w)^2;
     Rate = log2(1+P_recv/P_noise);  % In fact, this is the spectral efficiency.
 end

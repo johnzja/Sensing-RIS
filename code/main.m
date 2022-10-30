@@ -1,13 +1,19 @@
 %% Construct MISO Single-user RIS Channel Estimation-Beamforming platform.
 clear; clc;
 c = 299792458;
-fc = 10e9;
+fc = 3.5e9;
 lambda = c/fc;
 
-Ny = 40;
-Nz = 30;
+Ny = 20;
+Nz = 10;
 N = Ny * Nz;
 M = 8;              % Number of antennas at BS.
+
+channel_type = 'rayleigh'; 
+BL = 1000;              % Transmit blocklength.
+Ep = 50;                % 50 unit energy for transmitting pilots. 
+Ed = BL-Ep;             % energy for transmitting data. 
+% (Ep) to joules: related to the transmitted power. 
 
 % lambda/2-spaced RIS.
 RIS_conf.Ny = Ny;
@@ -33,7 +39,13 @@ P_noise = PSD_noise * BW;       % Thermo-noise for BS receiver equipped with M R
 Pt_UE = 300e-3;                 % 300mW UE transmit power.
 sigma_noise = sqrt(P_noise);
 RIS_conf.sigma_v = sqrt(PSD_noise * 100e6)*db2mag(10);     % 100M BW for IRF-sensing elements.
-    
+
+fprintf('Receiver noise power for each subcarrier = %.3f dBm\n', mag2db(sigma_noise)+30);
+fprintf('RF sensor noise power = %.3f dBm\n', mag2db(RIS_conf.sigma_v)+30);
+fprintf('User transmit power = %.3f dBm\n', pow2db(Pt_UE)+30);
+fprintf('Typical path loss@200m = %.3f dB\n', mag2db(lambda/(4*pi*200)));
+fprintf('Typical double-fading loss@(100m, 100m) = %.3f dB\n', mag2db((lambda/(4*pi*100))^2*N));
+
 N_sim = 200;
 
 Pt_BS_range = logspace(-1,1, 10);
@@ -41,14 +53,14 @@ scan_len = length(Pt_BS_range);
 SE = zeros(scan_len, 4);
 
 fprintf('Start simulating...\n');
-parfor idx_scan = 1:scan_len
+for idx_scan = 1:scan_len
     % Pt_BS = 1;      % Total transmit power is 1W. (distributed on M transmit antennas).
     Pt_BS = Pt_BS_range(idx_scan);
     
     L1 = 4;         % Number of BS-RIS NLOS paths.
     L2 = 4;         % Number of RIS-UE NLOS paths.
-    kappa = 2;    % LOS ratio.
-    Np = N;         % Number of pilots in traditional beamforming.
+    kappa = 2;      % LOS ratio.
+    Np_MMSE = N;         
     
     BS_conf         = struct();
     BS_conf.My      = M;            % Assume the BS is equipped with lambda/2 ULA.
@@ -69,32 +81,40 @@ parfor idx_scan = 1:scan_len
 
         [R_UE, theta_UE, psi_UE] = randPos(R_UE_range, theta_UE_range, psi_UE_range);
         pos_UE = R_UE*[cos(psi_UE)*cos(theta_UE), cos(psi_UE)*sin(theta_UE), sin(psi_UE)];
-
+        user_conf.pos_UE = pos_UE;
+        user_conf.user_pos_sph = [R_UE, theta_UE, psi_UE]; 
+        
         % Calculate the channel G, h(k), and the parameters alpha and beta.
         % (Based on the Friis transmission formula.)
         % The "channels" are complex power-based transfer functions.
         % Notice: The channel G must be highly structured and predictable.
-        [f_LOS, G_LOS] = generate_channel_los(RIS_conf, BS_conf, [R_BS, theta_BS, psi_BS], [R_UE, theta_UE, psi_UE]);
-        [f_NLOS, G_NLOS] = generate_channel_multipath([Ny, Nz], [M, 1], RIS_conf, pos_BS, [0,0,0], pos_UE, L1, L2);
-        f = sqrt(kappa/(1+kappa))*f_LOS + sqrt(1/(1+kappa))*f_NLOS;
-        G = sqrt(kappa/(1+kappa))*G_LOS + sqrt(1/(1+kappa))*G_NLOS;
+        
+        if strcmp(channel_type, 'SV')
+            [f_LOS, G_LOS] = generate_channel_los(RIS_conf, BS_conf, [R_BS, theta_BS, psi_BS], [R_UE, theta_UE, psi_UE]);
+            [f_NLOS, G_NLOS] = generate_channel_multipath([Ny, Nz], [M, 1], RIS_conf, pos_BS, [0,0,0], pos_UE, L1, L2);
+            f = sqrt(kappa/(1+kappa))*f_LOS + sqrt(1/(1+kappa))*f_NLOS;
+            G = sqrt(kappa/(1+kappa))*G_LOS + sqrt(1/(1+kappa))*G_NLOS;
+        elseif strcmp(channel_type, 'rayleigh')
+            [f, G] = generate_channel_Rayley(RIS_conf, BS_conf, user_conf);
+        else
+            error('channel_type not correct.');
+        end
 
         % Baseline 1: Random phasing, random precoding...
         w = (randn([M,1])+1j*randn([M,1]))/sqrt(2);
         w = sqrt(Pt_BS)*w/norm(w);
         theta = exp(1j*2*pi*rand([N,1]));
         y = f'*diag(theta)*G*w;
-        Rate_random = log2(1+abs(y)^2/P_noise);
-        Rates(idx_sim, 1) = Rate_random;
+        Rate_random = log2(1+abs(y)^2/P_noise); % bit per transmitted symbol. 
+        Rates(idx_sim, 1) = Rate_random;    
 
         % Baseline 2: Perform channel estimation by traditional methods: Orthogonal
-        % pilots, LS-CE/MMSE. Assume the RIS to be continuously adjustable within
-        % [0,2pi].
-        [P_recv_traditional, Rate_traditional] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Np);
+        % pilots, LS-CE/MMSE. (1) MMSE for H; (2) MMSE for f only. 
+        [P_recv_traditional, Rate_traditional] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np_MMSE, BL);
         Rates(idx_sim, 2) = Rate_traditional;
 
         % Use IRF to directly perform beamforming, using only 3 pilots.
-        [P_recv_IRF, Rate_IRF] = IRF_CE_BF(RIS_conf, BS_conf, f, G, 3);
+        [P_recv_IRF, Rate_IRF] = IRF_CE_BF(RIS_conf, BS_conf, f, G, 3, channel_type);
         Rates(idx_sim, 3) = Rate_IRF;
 
         % Genie told me the channel.
