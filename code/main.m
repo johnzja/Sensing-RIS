@@ -68,6 +68,7 @@ for idx_scan = 1:scan_len
     BS_conf.M       = BS_conf.My*BS_conf.Mz;
     BS_conf.Pt_BS   = Pt_BS;
     BS_conf.Pt_UE   = Pt_UE;
+    BS_conf.BL      = BL;
     BS_conf.sigma_noise = sigma_noise;
 
     %% Run simulations.
@@ -109,12 +110,12 @@ for idx_scan = 1:scan_len
         Rates(idx_sim, 1) = Rate_random;    
 
         % Baseline 2: Perform channel estimation by traditional methods: Orthogonal
-        % pilots, LS-CE/MMSE. (1) MMSE for H; (2) MMSE for f only. 
-        [P_recv_traditional, Rate_traditional] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np_MMSE, BL);
+        % pilots, LS-CE/MMSE. (1) MMSE for H; (2) MMSE for f only.  
+        [P_recv_traditional, Rate_traditional] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np_MMSE);
         Rates(idx_sim, 2) = Rate_traditional;
 
         % Use IRF to directly perform beamforming, using only 3 pilots.
-        [P_recv_IRF, Rate_IRF] = IRF_CE_BF(RIS_conf, BS_conf, f, G, 3, channel_type);
+        [P_recv_IRF, Rate_IRF] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, 3, channel_type);
         Rates(idx_sim, 3) = Rate_IRF;
 
         % Genie told me the channel.
@@ -125,6 +126,8 @@ for idx_scan = 1:scan_len
     SE(idx_scan, :) = R;
     fprintf('Pt_{BS} = %.3f dB sim complete. %d/%d\n', pow2db(Pt_BS), idx_scan, scan_len);
 end
+
+%% Save Data. 
 disp('sim complete. Files saved at data/.');
 save('data/IRF_sim.mat', 'Pt_BS_range', 'SE', 'M', 'Pt_UE', 'RIS_conf', 'sigma_noise', 'N_sim');
 

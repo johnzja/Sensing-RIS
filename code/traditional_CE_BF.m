@@ -1,8 +1,9 @@
-function [P_recv, Rate] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np, BL)
+function [P_recv, Rate] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np)
     % Extract necessary parameters.
     N = RIS_conf.N;
     M = BS_conf.M;
     lambda = RIS_conf.lambda;
+    BL = BS_conf.BL; 
     
     F = dftmtx(N);
     pilot_power = Ep/Np*BS_conf.Pt_UE;
@@ -56,11 +57,11 @@ function [P_recv, Rate] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np,
         objective(2*idx) = abs(t)^2;
         if abs(objective(2*idx)-objective(2*idx-1))/objective(2*idx) < threshold
             P_recv = abs(theta.'*HT.'*w)^2;         % Incorporate the true channel.
-            Rate = log2(1+P_recv/P_noise);
+            Rate = (BL-Np)/BL*log2(1+P_recv/P_noise);
             return;
         end
     end
     
     P_recv = abs(theta.'*HT.'*w)^2;
-    Rate = log2(1+P_recv/P_noise);  % In fact, this is the spectral efficiency.
+    Rate = (BL-Np)/BL*log2(1+P_recv/P_noise);  % In fact, this is the spectral efficiency.
 end

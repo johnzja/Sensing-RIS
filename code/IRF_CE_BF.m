@@ -1,9 +1,10 @@
-function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np, channel_type)
+function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np, channel_type)
     % Fix the BS precoding to steer the beam at RIS.
     BS_pos_sph = BS_conf.BS_pos_sph;
     theta_BS = BS_pos_sph(2); psi_BS = BS_pos_sph(3);
     My = BS_conf.My; Mz = BS_conf.Mz;
     Ny = RIS_conf.Ny; Nz = RIS_conf.Nz; N_ris = RIS_conf.N;
+    BL = BS_conf.BL;    % Total blocklength. 
     
     % Calculate the estimated optimal precoding directly from the BS-RIS geometries.
     if strcmp(channel_type, 'SV')
@@ -12,11 +13,12 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np, channel_type)
     elseif strcmp(channel_type, 'rayleigh')
         [~, ~, V] = svd(G);
         w = V(:,1);
-        w = sqrt(BS_conf.Pt_BS)*w;
+        w = sqrt(BS_conf.Pt_BS)*w;  % Determine the sub-optimal precoder. 
     end
+    % Ensure ||w||^2 == Pt_BS. 
     
     A = 1;
-    L = 256;        % L samples within one OFDM symbol. 
+    L = 256;                        % L samples within one OFDM symbol. 
 	sigma_v = RIS_conf.sigma_v;
     
     psi_arr = 2*pi*(0:L-1).'/L;
@@ -24,16 +26,16 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np, channel_type)
     SensingRIS_param.psi_arr    = psi_arr;
     SensingRIS_param.A          = A;
     SensingRIS_param.L          = L;
-    SensingRIS_param.sigma_v    = sigma_v;
+    SensingRIS_param.sigma_v    = sigma_v;  
     
     % Generate & Measure the interferential random field (IRF) on each RIS
     % element.
     
     % Calculate the alpha-field.
-    s_alpha = G*w;
+    s_alpha = G*w*sqrt(Ep/3);
     
     % Calculate the beta-field.
-    s_beta = conj(f)*sqrt(BS_conf.Pt_UE);
+    s_beta = conj(f)*sqrt(BS_conf.Pt_UE)*sqrt(Ep/3);
 
     % Report the mean interferential SNR. 
     gamma_bar_arr = zeros(N_ris, 1);
@@ -78,8 +80,9 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Np, channel_type)
     
     theta_vec = -varphi - 2*arg_gnT_w;
     
-    P_recv = abs(f'*diag(exp(1j*theta_vec))*G*w)^2;
+    P_recv = abs(f'*diag(exp(1j*theta_vec))*G*w*sqrt(Ed/(BL-3)))^2; 
     sigma_noise = BS_conf.sigma_noise;      % Thermal noise.
     P_noise = sigma_noise^2;
-    Rate = log2(1+P_recv/P_noise);  % In fact, this is the spectral efficiency.
+    Rate = (BL-3)/BL*log2(1+P_recv/P_noise);  % In fact, this is the spectral efficiency.
 end
+

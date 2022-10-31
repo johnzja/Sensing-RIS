@@ -33,6 +33,6 @@ function [P_recv, Rate] = traditional_BF(RIS_conf, BS_conf, f, G)
         end
     end
     P_recv = abs(theta.'*H.'*w)^2;
-    Rate = log2(1+P_recv/P_noise);  % In fact, this is the spectral efficiency.
+    Rate = log2(1+P_recv/P_noise);  
 end
 
