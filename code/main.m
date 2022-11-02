@@ -50,7 +50,7 @@ N_sim = 200;
 
 Pt_BS_range = logspace(-1,1, 10);
 scan_len = length(Pt_BS_range);
-SE = zeros(scan_len, 4);
+SE = zeros(scan_len, 5);
 
 fprintf('Start simulating...\n');
 parfor idx_scan = 1:scan_len
@@ -74,7 +74,7 @@ parfor idx_scan = 1:scan_len
     user_conf = struct();
 
     %% Run simulations.
-    Rates = zeros(N_sim, 4);
+    Rates = zeros(N_sim, 5);
     rng(0);
     for idx_sim =  1:N_sim
         [R_BS, theta_BS, psi_BS] = randPos(R_BS_range, theta_BS_range, psi_BS_range);
@@ -112,20 +112,25 @@ parfor idx_scan = 1:scan_len
         Rates(idx_sim, 1) = Rate_random;    
 
         % Baseline 2: Perform channel estimation by traditional methods: Orthogonal
-        % pilots, LS-CE/MMSE. (1) MMSE for H; (2) MMSE for f only.  
+        % pilots, LS-CE/LMMSE. (1) LMMSE for H;  
         [P_recv_traditional, Rate_traditional] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np_MMSE);
         Rates(idx_sim, 2) = Rate_traditional;
-
+        
+        % (2) MMSE for f only. Assume that G is known. 
+        [f_hat, Np_LMMSE_f] = LMMSE_estimate_f(RIS_conf, BS_conf, f, G, Ep, Ed);
+        [w, theta]          = RIS_precode(RIS_conf, f_hat, G);
+        Rate_LMMSE_f        = calc_rate(BS_conf, G, f, w, theta, Np_LMMSE_f);
+        Rates(idx_sim, 3)   = Rate_LMMSE_f;
+        
         % Use IRF to directly perform beamforming, using only 3 pilots.
         [P_recv_IRF, Rate_IRF] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, 3, channel_type);
-        Rates(idx_sim, 3) = Rate_IRF;
+        Rates(idx_sim, 4) = Rate_IRF;
 
         % Genie told me the f-channel + iterate between \theta and w. 
         [P_recv_Oracle, Rate_Oracle] = traditional_BF(RIS_conf, BS_conf, f, G);
-        Rates(idx_sim, 4) = Rate_Oracle;
+        Rates(idx_sim, 5) = Rate_Oracle;
     end
-    R = mean(Rates);
-    SE(idx_scan, :) = R;
+    SE(idx_scan, :) = mean(Rates);
     fprintf('Pt_{BS} = %.3f dB sim complete. %d/%d\n', pow2db(Pt_BS), idx_scan, scan_len);
 end
 
@@ -146,14 +151,16 @@ set(0,'defaultfigurecolor','w');
 
 figure('color',[1 1 1]); hold on;
 
-plot(dbP, SE(:,4), 'ko-.','MarkerSize',6);
-plot(dbP, SE(:,3), 'ro-','MarkerSize',6);
-plot(dbP, SE(:,2), 'color', [0, 0, 1], 'LineStyle', '-', 'marker', 'x','MarkerSize',6);
+plot(dbP, SE(:,5), 'ko-.','MarkerSize',6);
+plot(dbP, SE(:,4), 'ro-','MarkerSize',6);
+plot(dbP, SE(:,3), 'color', [0, 0, 1], 'LineStyle', '-', 'marker', 'x','MarkerSize',6);
+plot(dbP, SE(:,2), 'color', [0, 1, 1], 'LineStyle', '-', 'marker', 'x','MarkerSize',6);
 plot(dbP, SE(:,1), 'color', [1, 0, 0.9], 'LineStyle', '-', 'marker', 'x', 'MarkerSize',6);
+
 
 set(gca,'FontName','Times New Roman');
 grid on; box on;
-legend('Oracle', 'Proposed-IRF + VM-EM','MMSE-CE','Random');
+legend('Oracle', 'Proposed-IRF + VM-EM', 'MMSE f','LMMSE H', 'Random');
 xlabel('BS transmit power (dBW)', 'interpreter', 'latex');
 ylabel('Capacity (bps/Hz)', 'interpreter', 'latex');
 

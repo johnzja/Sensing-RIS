@@ -1,21 +1,13 @@
 function [P_recv, Rate] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np)
     % Extract necessary parameters.
-    N = RIS_conf.N;
-    M = BS_conf.M;
+    N = RIS_conf.N;  M = BS_conf.M;
     lambda = RIS_conf.lambda;
     BL = BS_conf.BL; 
     
-    F = dftmtx(N);
     pilot_power = Ep/Np*BS_conf.Pt_UE;
     data_power = Ed/(BL-Np)*BS_conf.Pt_BS;  % downlink power. 
     
-    if Np <= N
-        Thetas = F(:, 1:Np);    
-    else
-        Thetas = zeros(N, Np);
-        Thetas(:,1:N) = F;
-        Thetas(:, N+1:end) = exp(1j*2*pi*rand([N, Np-N]));
-    end
+    Thetas = generate_RIS_codebook(N, Np);
     
     sigma_noise = BS_conf.sigma_noise;
     P_noise = BS_conf.sigma_noise^2;

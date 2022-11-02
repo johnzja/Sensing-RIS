@@ -155,16 +155,55 @@ Since it is possible to retrieve the $K$-sparse ${\bm x}$ with $M\geq 4K-2$ powe
 2) One advantage that's lack mentioning is that the proposed scheme require less number of time slots for channel estimation, which should be used to normalize the SNR for performance comparison.
 
 {\color{blue}{\textbf{Authors: } 
-Thanks for the reviewer's insightful suggestions! 
+Thanks for the reviewer's insightful suggestions. In order to ensure fair comparison between different channel estimation schemes, we have conducted new simulations and tested all these schemes with a unified assumption. To be specific, we assume a block-fading Rayleigh channel with $B$ symbols for each block, i.e., the random channel matrices $\bm G$ and $\bm f$ are generated once for every consecutive $B$ symbols. Within these $B$ symbols, the pilot symbols have a total energy of $E_p$, and the data symbols have a total energy of $E_d$, and it is assumed that
+\begin{equation}
+    P=\frac{E_p+E_d}{B},
+\end{equation}
+ensuring that the average nominal transmit power is $P$ within every block. Thus, if the number of pilot symbols $N_p$ (the number of pilot time slots) are smaller for some scheme, then the average pilot signal-to-noise ratio (SNR) $\gamma_p = E_p/N_p$ would be automatically higher, ensuring fair comparison.   
+
+According to the reviewer's advice, we have improved our simulation by taking to consideration the normalized pilot SNR $\gamma_p=E_p/N_p$ and the normalized data SNR $\gamma_d=E_d/N_d$ ($B=N_p+N_d$). Since our proposed scheme requires simultaneous signaling from both the BS and the user, the actual transmit power is determined by 
+\begin{equation}
+    \begin{aligned}
+        P_{{\rm BS}, p} &= \frac{E_p}{N_p}P_{\rm BS},\quad P_{{\rm BS}, d} = \frac{E_d}{N_d}P_{\rm BS}, \\
+        P_{{\rm u}, p} &= \frac{E_p}{N_p}P_{\rm u},\quad P_{{\rm u}, d} = \frac{E_d}{N_d}P_{\rm u},
+    \end{aligned}
+\end{equation}
+which incorporates both the overall power budgets $P_{\rm BS}, P_{\rm u}$, and the power allocation between pilot symbols and data symbols. 
+The simulation parameters are summarized in the following table:
+\begin{table}[t]
+    \caption{Pilot Overhead Comparison of Different CSI Acquisition Methods}
+    \label{tab:pilot overhead comp CE}
+    \centering
+    \begin{tabular}{|l|r|r|r|r|}
+        \hline 
+        CSI acquisition method & Minimum pilot overhead & Type of RIS& Channel assumption\\ 
+        \hline
+        LS        & $NK+K$    &RIS& General  \\
+        \hline
+        Multi-user  & $K+N+ \lceil \frac{(K-1)N}{M} \rceil$ &RIS& General  \\
+        \hline
+        CS         & $\mathcal{O}(KS\log N)$ &RIS& Sparse \\
+        \hline 
+        Two-timescale & $\frac{2(N+1)}{\alpha} + K\lceil N/M\rceil +K$ &RIS& Quasi-static BS-RIS  \\
+        \hline 
+        Proposed IRF & 3 & Sensing RIS  & Quasi-static BS-RIS\\ 
+        \hline
+    \end{tabular}
+\end{table}
+
+
+\begin{itemize}
+    \item MMSE channel estimation: 
+\end{itemize} 
 
 
 }}
 
 \textbf{Reviewer 1:}
-It is understood that the conventional channel estimation technique of Sec.II.B requires P time slots. How is P determined? If P equals to the time slots/pilot cost of the proposed scheme, how would the performance comparison be?
+It is understood that the conventional channel estimation technique of Sec.II.B requires $P$ time slots. How is $P$ determined? If $P$ equals to the time slots/pilot cost of the proposed scheme, how would the performance comparison be?
 
 {\color{blue}{\textbf{Authors: } 
-
+Thanks to the reviewer for pointing out the vague explanation about the number of required pilot slots $P$ in Sec.II.B. For the MVU (equivalent to the least-square, LS) estimator, the number of pilot slots required is $P=N$, since there are 
 
 
 }}
