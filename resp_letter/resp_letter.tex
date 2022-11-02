@@ -127,24 +127,47 @@ After obtaining the estimators of these two links, the global phase $\phi$ shoul
 \end{equation}
 Though the final solution $\exp(\ri \hat{\phi}) {\bm \Theta}$ for the RIS phase-shift matrix is suboptimal in general, it only consumes two additional 2 slots, resulting in 5 time slots in total for configuring $N$ reflective elements of the RIS. This pilot overhead is still dimension-independent. 
 
-1.3) The assumption that the number of sensors is dimension-dependent in exchange of saving pilots. In general, it is impossible to correctly configure all the $N$ reflective RIS elements if we only have a dimension-independent number of observations available and without any other knowledge about the channel. However, if we assume the channel is sparse in the virtual domain [R2], then the number of observations needed, i.e., the number of sensors in the proposed scheme, can be significantly reduced, while the benefit of dimension-independent pilot overhead is preserved. Without loss of generality, let us consider a RIS-aided SISO scheme with the BS-RIS channel denoted by ${\bm g}\in\mathbb{C}^{N\times 1}$, and the RIS-user link is ${\bm h}\in\mathbb{C}^{N\times 1}$. Further assume that both of the channels are sparse in the angular domain, i.e., ${\bm g} = {\bm A}\tilde{\bm g}$ and ${\bm h} = {\bm A}\tilde{\bm h}$ for some sparse dictionary matrix ${\bm A}$, where $\tilde{\bm g}$ and $\tilde{\bm h}$ are sparse. Then, the power observation $\bm p$ can be represented as 
+1.3) The assumption that the number of sensors is dimension-dependent in exchange of saving pilots. In general, it is impossible to correctly configure all the $N$ reflective RIS elements if we only have a dimension-independent number of observations available and without any other knowledge about the channel. However, if we assume the channel is sparse in the virtual domain [R2], then the number of observations needed, i.e., the number of sensors in the proposed scheme, can be significantly reduced, while the benefit of dimension-independent pilot overhead is preserved. Without loss of generality, let us consider a RIS-aided SISO scheme with the BS-RIS channel denoted by ${\bm g}\in\mathbb{C}^{N\times 1}$, and the RIS-user link is ${\bm h}\in\mathbb{C}^{N\times 1}$. Further assume that both of the channels are sparse in the angular domain, i.e., ${\bm g} = {\bm A}\tilde{\bm g}$ and ${\bm h} = {\bm A}\tilde{\bm h}$ for some sparse dictionary matrix ${\bm A}$, where $\tilde{\bm g}$ and $\tilde{\bm h}$ are sparse. Then, the power observation ${\bm p}\in\mathbb{R}_{+}^N$ can be represented as 
 \begin{equation}
-    {\bm p} = \left|{\rm blkdiag}(e^{\ri \delta}{\bm A}, {\bm A}) \begin{bmatrix} \tilde{\bm g} \\ \tilde{\bm h}\end{bmatrix} \right|_2^2,
+    {\bm p}(\delta) = \left|{\rm blkdiag}(e^{\ri \delta}{\bm A}, {\bm A}) \begin{bmatrix} \tilde{\bm g} \\ \tilde{\bm h}\end{bmatrix} \right|_2^2,
 \end{equation}
-where $\delta$ is a tunable global phase at the BS transmitter. 
+where $\delta$ is a tunable global phase at the BS transmitter. Thus, by changing $\delta$ within some predefined index set $\Delta$, one can obtain a series of different power observations $\{{\bm p}(\delta)\}_{\delta\in\Delta}$, which corresponds to different IRF patterns. 
+Thus, the goal is to retrieve the complex sparse vectors $\tilde{\bm g}$ and $\tilde{\bm h}$ from the phaseless observations $\{{\bm p}(\delta)\}_{\delta\in\Delta}$. 
 
+Fortunately, this problem is usually termed {\it sparse phase retrieval}, and is well-addressed in [R3]. The standard problem formulation for dictionary matrix ${\bm A}\in\mathbb{C}^{M\times N}$ and compressed observations ${\bm y}\in\mathbb{R}_{+}^{M}$ ($M\ll N$) is given by  
+\begin{equation}
+    \begin{aligned}
+        &{\text{find sparse}}~~{\bm x\in\mathbb{C}^N},\\
+        &{\text{s.t.}}~~~~~~~~~~~~~~{\bm y} = \left|{\bm A}{\bm x}\right|.
+    \end{aligned}
+\end{equation}
+Since it is possible to retrieve the $K$-sparse ${\bm x}$ with $M\geq 4K-2$ power measurements [R3], we can significantly reduce the number of power sensors on sensing RIS from $N$ to approximately $4K-2$, where $K$ is the sparsity of the concatenated vector ${\bm x} = [\tilde{\bm g}\T, \tilde{\bm f}\T]\T$. In conclusion, with the sparse assumption on the channel, it is possible to significantly reduce the number of required sensors from a dimension-dependent value $N$ to a sparsity-dependent value $4K-2$. 
 
 [R1] C. Hu, L. Dai, S. Han, and X. Wang, ``Two-timescale channel estimation for  reconfigurable intelligent  surface  aided  wireless  communications,'' {\it IEEE Trans. Commun.}, vol. 69, no. 11, pp. 7736-7747, Nov. 2021.
 
 [R2] V. V. Veeravalli, Y. Liang, and A. M. Sayeed, ``Correlated MIMO wireless channels: capacity, optimal signaling, and asymptotics,'' {\it IEEE Trans. Inf. Theory}, vol. 51, no. 6, pp. 2058-2072, Jun. 2005. 
 
-[R3]
+[R3] P. Schniter, and S. Rangan, ``Compressive phase retrieval via generalized approximate message passing,'' {\it IEEE Trans. Signal Process.}, vol. 63, no. 4, pp. 1043-1055, Apr. 2014. 
 
 }}
 
 \textbf{Reviewer 1:}
+2) One advantage that's lack mentioning is that the proposed scheme require less number of time slots for channel estimation, which should be used to normalize the SNR for performance comparison.
+
+{\color{blue}{\textbf{Authors: } 
+Thanks for the reviewer's insightful suggestions! 
 
 
+}}
+
+\textbf{Reviewer 1:}
+It is understood that the conventional channel estimation technique of Sec.II.B requires P time slots. How is P determined? If P equals to the time slots/pilot cost of the proposed scheme, how would the performance comparison be?
+
+{\color{blue}{\textbf{Authors: } 
+
+
+
+}}
 
 
 \begin{theorem} 
