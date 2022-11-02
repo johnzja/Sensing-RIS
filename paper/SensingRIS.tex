@@ -68,7 +68,7 @@ breaklinks=true}
 \acrodef{CRLB}[CRLB]{Cram{\'e}r-Rao lower bound}
 \acrodef{UPA}[UPA]{uniform planar array}
 
-\def \H {^H}
+
 \def \opt {^{\text{opt}}}
 \def \v {\bm v}
 \def \w {\bm w}
@@ -90,6 +90,9 @@ breaklinks=true}
 \def \re {\text{Re}}
 \def \nc {\mathcal{NC}}
 \def \ch {\textcolor{red}{(cite here) }}
+\def \T {^{\mathsf{T}}}
+\def \H {^{\mathsf{H}}}
+\def \ri {{\rm i}}
 
 \newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
 \def\AutoColumn#1#2{{\ifx\onecol\undefined {#2} \else {#1} \fi}}
@@ -257,17 +260,17 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
             \end{align}
         \end{subequations}
         
-    In this paper, we assume that the locations of the \ac{BS} and the RIS are unchanged, which can provide us a beamforming approach expressed as
+    In this paper, we assume that the locations of the \ac{BS} and the RIS are unchanged, which can provide us a feasible beamforming approach expressed as
     \begin{equation}
         \label{traditional beamforming}
-        \bm w=\sqrt{P_{\rm max}}\bm a\left(\alpha\right),~ \theta_{n} = \exp\left(-{\rm j} \arg\left(f_{n}^{*}\bm g_{n}^{T}\bm w\right)\right),~\forall n\in \{N\},
+        \bm w=\sqrt{P_{\rm max}}\bm a\left(\alpha\right),~ \theta_{n} = \exp\left(-{\rm j} \arg\left(f_{n}^{*}\bm g_{n}\T \bm w\right)\right),~\forall n\in \{N\},
     \end{equation}
     where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave departure angle $\alpha$ of the BS antenna array, and $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]^{T}$.
 
 \subsection{Channel Estimation}
 \label{Channel Estimation}
-    Observe from \eqref{traditional beamforming} that, the estimation for the cascade channel ${\bm H} = {\rm diag}({\bm f}^{*})\bm G$ is enough for beamforming design.
-    To accurately acquire this cascade channel, the user generally sends pilot signal $x$ to the BS under $P$ different RIS configurations which are the first $P$ columns of the DFT matrix $\bm F_N$, denoted as $\bm F_{N,P}$. 
+    Observe from \eqref{traditional beamforming} that, the estimation for the cascaded channel ${\bm H} = {\rm diag}({\bm f}^{*})\bm G$ is enough for beamforming design.
+    To accurately acquire this cascaded channel, the user generally sends pilot signal $x$ to the BS under $P$ different RIS configurations which are the first $P$ columns of the DFT matrix $\bm F_N$, denoted as $\bm F_{N,P}$. 
     Due to the channel reciprocity, the received signal at the BS with the $p$-th RIS configuration $\bm \Theta_{p}=\diag({\bm \theta}_p)$ can be written as \cite{atapattu2020reconfigurable}
     \begin{equation}
     \label{CE received signal}
@@ -469,7 +472,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
 
     The third step 3) is to utilize the phase information provided by step 2) and calculate the near-optimal phase shifts for each RIS element in order to perform beamforming. The additional CSI refers to the phase information ${\rm arg}({\bm g}_n^T {\bm w})$. 
 
-    Step 2) and step 3) are executed by processors, so we collect these two steps into pseudo codes shown in {\bf Algorithm~\ref{alg:IRF-Beamforming}}:
+    Step 2) and step 3) are executed by processors, so we collect these two steps together into pseudo codes shown in {\bf Algorithm~\ref{alg:IRF-Beamforming}}:
     \begin{algorithm}[t] 
         \caption{Near-optimal RIS Beamforming by IRF} \label{alg:IRF-Beamforming}
         \setstretch{1.35}
@@ -487,6 +490,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
         \end{algorithmic}
     \end{algorithm}
     Note that in each iteration $n$ of {\bf Algorithm~\ref{alg:IRF-Beamforming}}, the data $P(t)$ is independent of other iterations. Thus, we can perform the calculations in parallel for each phase-shift $\theta_n$. For example, we can install an MCU for each of the elements on the RIS. Each MCU is only responsible for gathering the data from its own power sensor and adjusting the phase-shift of its own RIS element. Since all MCUs can work in parallel, the computational time is independent of the number of RIS elements, resulting in an $\mathcal{O}(1)$ time complexity. 
+
 
 \subsection{Pilot Overhead and Computational Complexity}\label{Pilot Overhead}
     In our proposed IRF-based CSI acquisition method, the pilot overhead is fixed to $\mathcal{O}(1)$, which is independent of the RIS dimension $N$. 
@@ -526,6 +530,14 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     These conclusions of complexity can be easily extended to multi-RIS schemes, where multiple RISs are employed to serve a single user at the same time. 
     The independent nature of IRF methods allows the RISs to work without the need to exchange data with the BS or other RISs. 
     This property makes it much easier to integrate a new RIS into an existing communication system, which greatly enhances the extendibility of the system.
+
+    Note that this IRF-based CSI acquisition scheme can be easily extended to the case where the direct BS-user link is not completely blocked, i.e., the downlink channel is represented as 
+    \begin{equation}
+        y = ({\bm h}_{\rm d} + {\bm f}\H {\bm \Theta}{\bm G}){\bm w}s + z,
+    \end{equation}
+    where ${\bm h}_{\rm d}\in\mathbb{C}^{1\times M}$ is the direct BS-user link. 
+    The only additional goal is to align the phase between the direct-link term ${\bm h}_{\rm d}$ and the reflective-link term ${\bm f}\H {\bm \Theta}{\bm G}$. 
+    After the IRF-based phase estimation and beamforming within 3 pilots, the phase shifts $\theta_n$ of all the RIS elements are simultaneously determined, up to a global phase.  
 
     
 \section{Phase Estimation Algorithms}

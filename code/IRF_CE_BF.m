@@ -13,7 +13,7 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np, channel
     elseif strcmp(channel_type, 'rayleigh')
         [~, ~, V] = svd(G);
         w = V(:,1);
-        w = sqrt(BS_conf.Pt_BS)*w;  % Determine the sub-optimal precoder. 
+        w = sqrt(BS_conf.Pt_BS)*w;  % Determine the sub-optimal precoder based on the prior knowledge of G. 
     end
     % Ensure ||w||^2 == Pt_BS. 
     
@@ -26,7 +26,7 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np, channel
     SensingRIS_param.psi_arr    = psi_arr;
     SensingRIS_param.A          = A;
     SensingRIS_param.L          = L;
-    SensingRIS_param.sigma_v    = sigma_v;  
+    SensingRIS_param.sigma_v    = sigma_v*sqrt(L);  
     
     % Generate & Measure the interferential random field (IRF) on each RIS
     % element.
@@ -63,8 +63,9 @@ function [P_recv, Rate] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np, channel
     
     K_mean = mean(K_arr);
     gamma_bar_mean = mean(gamma_bar_arr);
-    % report the results. 
-    % fprintf('K_mean = %f, \\gamma_bar_mean = %f\n', K_mean, gamma_bar_mean);
+    % report the results.
+    
+    %fprintf('K_mean = %f, \\gamma-bar-mean = %.2f dB\n', K_mean, pow2db(gamma_bar_mean));
     
     % Calculate the (invariant) G.
     if strcmp(channel_type, 'SV')

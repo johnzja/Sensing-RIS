@@ -1,5 +1,5 @@
 %% Construct MISO Single-user RIS Channel Estimation-Beamforming platform.
-clear; clc;
+clear; clc;  
 c = 299792458;
 fc = 3.5e9;
 lambda = c/fc;
@@ -53,7 +53,7 @@ scan_len = length(Pt_BS_range);
 SE = zeros(scan_len, 4);
 
 fprintf('Start simulating...\n');
-for idx_scan = 1:scan_len
+parfor idx_scan = 1:scan_len
     % Pt_BS = 1;      % Total transmit power is 1W. (distributed on M transmit antennas).
     Pt_BS = Pt_BS_range(idx_scan);
     
@@ -70,6 +70,8 @@ for idx_scan = 1:scan_len
     BS_conf.Pt_UE   = Pt_UE;
     BS_conf.BL      = BL;
     BS_conf.sigma_noise = sigma_noise;
+
+    user_conf = struct();
 
     %% Run simulations.
     Rates = zeros(N_sim, 4);
@@ -118,7 +120,7 @@ for idx_scan = 1:scan_len
         [P_recv_IRF, Rate_IRF] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, 3, channel_type);
         Rates(idx_sim, 3) = Rate_IRF;
 
-        % Genie told me the channel.
+        % Genie told me the f-channel + iterate between \theta and w. 
         [P_recv_Oracle, Rate_Oracle] = traditional_BF(RIS_conf, BS_conf, f, G);
         Rates(idx_sim, 4) = Rate_Oracle;
     end
@@ -151,7 +153,7 @@ plot(dbP, SE(:,1), 'color', [1, 0, 0.9], 'LineStyle', '-', 'marker', 'x', 'Marke
 
 set(gca,'FontName','Times New Roman');
 grid on; box on;
-legend('Oracle', 'Proposed-IRF + VM-EM','LS-CE','Random');
+legend('Oracle', 'Proposed-IRF + VM-EM','MMSE-CE','Random');
 xlabel('BS transmit power (dBW)', 'interpreter', 'latex');
 ylabel('Capacity (bps/Hz)', 'interpreter', 'latex');
 

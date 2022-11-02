@@ -1,5 +1,6 @@
 \documentclass[a4paper,12pt]{article}
 \usepackage{latexsym}
+\usepackage{array}
 \usepackage{amsmath}
 \usepackage{color}
 \usepackage{times}
@@ -39,8 +40,11 @@
 \renewcommand{\baselinestretch}{1.65}
 \hyphenation{op-tical net-works semi-conduc-tor IEEEtran}
 \DeclareGraphicsRule{.png}{eps}{.bb}{}
-\usepackage{array}
-\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+
+\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+
+
 \newcolumntype{C}[1]{>{\PreserveBackslash\centering}p{#1}}
 \newcolumntype{R}[1]{>{\PreserveBackslash\raggedleft}p{#1}}
 \newcolumntype{L}[1]{>{\PreserveBackslash\raggedright}p{#1}}
@@ -80,7 +84,69 @@ Based on my own detailed reading of the paper and the reviewers' comments, I rec
 
 One of the reviewers has expressed support for the paper, so I hope you will take a step back and consider revisiting the paper to address all the concerns in a significant manner.
 
-{\color{blue}}{\textbf{Ingredients}}
+\begin{center}
+    {\Large\bf Response to Reviewer 1's Comments}
+\end{center}
+
+{\textbf{Reviewer 1:}}
+This work presents a very interesting idea of enabling CSI acquisition at the RIS without dimension dependent amount of pilots. There's no such work in literature right now so this idea is likely to get a lot of attentions for citations. However, I have the following concerns for the authors to consider. 
+
+{\color{blue}{\textbf{Authors: } 
+We appreciate the reviewer's concise summary of the key points of this paper and the positive evaluations on our work. We have tried our best to revise the paper according to the reviewer's valuable comments, and our responses are provided in a point-to-point manner as follows. 
+}}
+
+\textbf{Reviewer 1:}
+1) Compared to the conventional RIS channel estimation performed at the receiver, this proposed scheme has the following limitations: 1.1) assuming BS-RIS link is known; 1.2) assuming direct BS-user link is blocked; 1.3) the number of sensors is dimension-dependent in exchange of saving pilot. It would be helpful if the authors can list these disadvantages and discuss how to mitigate them if the assumptions cannot be met. For example, would learning help in reducing sensors?
+
+{\color{blue}{\textbf{Authors: } 
+Much thanks for pointing out these three limitations of our proposed sensing RIS-based channel estimation scheme. Our thoughts to mitigate these disadvantages are listed as follows: 
+
+1.1) The assumption of a known BS-RIS link. There are three possible ways to mitigate the requirement of this prior knowledge. 
+First, we can exploit the geometry associated with the BS and RIS. Usually, the location, orientation, aperture size and antenna spacing are fixed after the installation of the BS and RIS, and the BS-RIS link is often free of unpredictable obstructions. 
+As a result, the channel phase-shifts between the BS and RIS, i.e., the phases of the channel $\bm G$ in our paper \red{fix here}, are uniquely determined by the above geometric parameters and the operating wavelength. 
+Second, even if it is sometimes difficult to obtain the geometric data, we can estimate the channel $\bm G$ with a much longer period thanks to the quasi-static, i.e., slow-varying  property of the BS-RIS link [R1]. This quasi-static property is due to the immobile nature of the BS and the RIS. 
+Thus, we can mitigate the additional channel estimation overhead for the BS-RIS channel in a long-term time-averaged sense.
+
+1.2) The assumption that the direct BS-user link is blocked. Thanks again for pointing out this problem, and we have conceived a possible solution to integrate the direct BS-RIS link ${\bm h}_{\rm d}\in\mathbb{C}^{M\times 1}$ into our proposed scheme. Since the direct link does not affect the creation of the IRF, the RIS phase-shift matrix $\bm \Theta$ can be obtained as if there were no such direct link, up to an undetermined global phase $e^{\ri \phi}$. Note that this IRF-based procedure consumes 3 time slots. After this procedure, two uplink training symbol can be transmitted at the user. The uplink channel model is 
+\begin{equation}
+    \begin{aligned}
+        {\bm y}_{\rm BS} &= ({\bm h}_{\rm d} + e^{\ri \phi}{\bm G}\T {\bm \Theta} {\bm f}^*) s' + {\bm n} \\
+        &= ({\bm h}_{\rm d} + e^{\ri \phi}{\bm h}_{\rm RIS})s' + {\bm n}.
+    \end{aligned}  
+\end{equation}
+In the first symbol period $\phi$ is set to 0, and in the second $\phi=\pi$. Thus, the direct BS-user link ${\bm h}_{\rm d}$ and the reflective link ${\bm h}_{\rm RIS}$ can be recovered by 
+\begin{equation}
+    \begin{aligned}
+        \hat{\bm h}_{\rm d} &= \frac{{\bm y}_{{\rm BS}, 1} + {\bm y}_{{\rm BS}, 2}}{2},\\
+        \hat{\bm h}_{\rm RIS} &= \frac{{\bm y}_{{\rm BS}, 1} - {\bm y}_{{\rm BS}, 2}}{2}. 
+    \end{aligned}
+\end{equation}
+After obtaining the estimators of these two links, the global phase $\phi$ should be tuned to maximize the total channel energy $\| {\bm h}_{\rm d} + e^{\ri \phi}{\bm h}_{\rm RIS} \|^2$, and this is done by setting 
+\begin{equation}
+    \hat{\phi} = \arg(\hat{\bm h}_{\rm RIS}\H \hat{\bm h}_{\rm d}).
+\end{equation}
+Though the final solution $\exp(\ri \hat{\phi}) {\bm \Theta}$ for the RIS phase-shift matrix is suboptimal in general, it only consumes two additional 2 slots, resulting in 5 time slots in total for configuring $N$ reflective elements of the RIS. This pilot overhead is still dimension-independent. 
+
+1.3) The assumption that the number of sensors is dimension-dependent in exchange of saving pilots. In general, it is impossible to correctly configure all the $N$ reflective RIS elements if we only have a dimension-independent number of observations available and without any other knowledge about the channel. However, if we assume the channel is sparse in the virtual domain [R2], then the number of observations needed, i.e., the number of sensors in the proposed scheme, can be significantly reduced, while the benefit of dimension-independent pilot overhead is preserved. Without loss of generality, let us consider a RIS-aided SISO scheme with the BS-RIS channel denoted by ${\bm g}\in\mathbb{C}^{N\times 1}$, and the RIS-user link is ${\bm h}\in\mathbb{C}^{N\times 1}$. Further assume that both of the channels are sparse in the angular domain, i.e., ${\bm g} = {\bm A}\tilde{\bm g}$ and ${\bm h} = {\bm A}\tilde{\bm h}$ for some sparse dictionary matrix ${\bm A}$, where $\tilde{\bm g}$ and $\tilde{\bm h}$ are sparse. Then, the power observation $\bm p$ can be represented as 
+\begin{equation}
+    {\bm p} = \left|{\rm blkdiag}(e^{\ri \delta}{\bm A}, {\bm A}) \begin{bmatrix} \tilde{\bm g} \\ \tilde{\bm h}\end{bmatrix} \right|_2^2,
+\end{equation}
+where $\delta$ is a tunable global phase at the BS transmitter. 
+
+
+[R1] C. Hu, L. Dai, S. Han, and X. Wang, ``Two-timescale channel estimation for  reconfigurable intelligent  surface  aided  wireless  communications,'' {\it IEEE Trans. Commun.}, vol. 69, no. 11, pp. 7736-7747, Nov. 2021.
+
+[R2] V. V. Veeravalli, Y. Liang, and A. M. Sayeed, ``Correlated MIMO wireless channels: capacity, optimal signaling, and asymptotics,'' {\it IEEE Trans. Inf. Theory}, vol. 51, no. 6, pp. 2058-2072, Jun. 2005. 
+
+[R3]
+
+}}
+
+\textbf{Reviewer 1:}
+
+
+
+
 \begin{theorem} 
     Suppose all the entries of ${\bm G}\in\mathbb{C}^{N\times M}$ and ${\bm f}\in\mathbb{C}^{N\times 1}$ obey ${\mathcal{CN}(0,1)}$ distribution, and the channel noise ${\bm N}\sim \mathcal{CN}(0,\sigma^2)$. 
     Then, the LS channel estimator is given by 
