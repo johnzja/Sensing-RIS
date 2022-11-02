@@ -4,7 +4,7 @@ function [f_hat, Np] = LMMSE_estimate_f(RIS_conf, BS_conf, f, G, Ep, Ed)
     Np = ceil(N/M);
     sigma_noise = BS_conf.sigma_noise;
     
-    Thetas = generate_RIS_codebook(N, Np);
+    Thetas = generate_RIS_codebook(N, Np, 'random');
     
     pilot_power = Ep/Np*BS_conf.Pt_UE;      % uplink channel estimation. 
     data_power = Ed/(BL-Np)*BS_conf.Pt_BS;  % downlink data transfer. 

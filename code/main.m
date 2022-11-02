@@ -36,7 +36,7 @@ psi_UE_range = [-pi/3, pi/3];
 PSD_noise = db2pow(-174-30);    % Setup the PSD of the thermo-noise.
 BW = 180e3;                     % System baseband BW on each subcarrier = 180kHz.
 P_noise = PSD_noise * BW;       % Thermo-noise for BS receiver equipped with M RF-chains.
-Pt_UE = 300e-3;                 % 300mW UE transmit power.
+Pt_UE = 100e-3;                 % 300mW UE transmit power.
 sigma_noise = sqrt(P_noise);
 RIS_conf.sigma_v = sqrt(PSD_noise * 100e6)*db2mag(10);     % 100M BW for IRF-sensing elements.
 
@@ -48,12 +48,12 @@ fprintf('Typical double-fading loss@(100m, 100m) = %.3f dB\n', mag2db((lambda/(4
 
 N_sim = 200;
 
-Pt_BS_range = logspace(-1,1, 10);
+Pt_BS_range = flip(logspace(-1, 1, 10));
 scan_len = length(Pt_BS_range);
-SE = zeros(scan_len, 5);
+SE = zeros(scan_len, 8);
 
 fprintf('Start simulating...\n');
-parfor idx_scan = 1:scan_len
+for idx_scan = 1:scan_len
     % Pt_BS = 1;      % Total transmit power is 1W. (distributed on M transmit antennas).
     Pt_BS = Pt_BS_range(idx_scan);
     
@@ -69,12 +69,14 @@ parfor idx_scan = 1:scan_len
     BS_conf.Pt_BS   = Pt_BS;
     BS_conf.Pt_UE   = Pt_UE;
     BS_conf.BL      = BL;
+    BS_conf.Ep      = Ep;
+    BS_conf.Ed      = Ed;
     BS_conf.sigma_noise = sigma_noise;
 
     user_conf = struct();
 
     %% Run simulations.
-    Rates = zeros(N_sim, 5);
+    Rates = zeros(N_sim, 8);
     rng(0);
     for idx_sim =  1:N_sim
         [R_BS, theta_BS, psi_BS] = randPos(R_BS_range, theta_BS_range, psi_BS_range);
@@ -106,33 +108,50 @@ parfor idx_scan = 1:scan_len
         % Baseline 1: Random phasing, random precoding...
         w = (randn([M,1])+1j*randn([M,1]))/sqrt(2);
         w = sqrt(Pt_BS)*w/norm(w);
-        theta = exp(1j*2*pi*rand([N,1]));
-        y = f'*diag(theta)*G*w;
+        theta0 = exp(1j*2*pi*rand([N,1]));
+        y = f'*diag(theta0)*G*w;
         Rate_random = log2(1+abs(y)^2/P_noise); % bit per transmitted symbol. 
         Rates(idx_sim, 1) = Rate_random;    
 
         % Baseline 2: Perform channel estimation by traditional methods: Orthogonal
         % pilots, LS-CE/LMMSE. (1) LMMSE for H;  
-        [P_recv_traditional, Rate_traditional] = traditional_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, Np_MMSE);
-        Rates(idx_sim, 2) = Rate_traditional;
+        [Y, Thetas] = transmit_pilot(RIS_conf, BS_conf, f, G, N); 
+
+        [HT_hat, nmse_MF]   = estimate_HT(RIS_conf, BS_conf, Y, Thetas, f, G, N, 'MF');
+        [w, theta]          = RIS_precode(RIS_conf, HT_hat, theta0);
+        Rate_MF             = calc_rate(BS_conf, G, f, w, theta, N);
+        Rates(idx_sim, 2)   = Rate_MF;  
+
+        [HT_hat, nmse_LS]   = estimate_HT(RIS_conf, BS_conf, Y, Thetas, f, G, N, 'LS');
+        [w, theta]          = RIS_precode(RIS_conf, HT_hat, theta0);
+        Rate_LS             = calc_rate(BS_conf, G, f, w, theta, N);
+        Rates(idx_sim, 3)   = Rate_LS;  
         
+        [HT_hat, nmse_MMSE] = estimate_HT(RIS_conf, BS_conf, Y, Thetas, f, G, N, 'MMSE');
+        [w, theta]          = RIS_precode(RIS_conf, HT_hat, theta0);
+        Rate_MMSE           = calc_rate(BS_conf, G, f, w, theta, N);
+        Rates(idx_sim, 4)   = Rate_MMSE;  
+
         % (2) MMSE for f only. Assume that G is known. 
         [f_hat, Np_LMMSE_f] = LMMSE_estimate_f(RIS_conf, BS_conf, f, G, Ep, Ed);
-        [w, theta]          = RIS_precode(RIS_conf, f_hat, G);
+        [w, theta]          = RIS_precode(RIS_conf, G.'*diag(conj(f_hat)));     % H=diag(f*)G, here HT required. 
         Rate_LMMSE_f        = calc_rate(BS_conf, G, f, w, theta, Np_LMMSE_f);
-        Rates(idx_sim, 3)   = Rate_LMMSE_f;
+        Rates(idx_sim, 5)   = Rate_LMMSE_f;
         
         % Use IRF to directly perform beamforming, using only 3 pilots.
+        % Assume that G is known. 
         [P_recv_IRF, Rate_IRF] = IRF_CE_BF(RIS_conf, BS_conf, f, G, Ep, Ed, 3, channel_type);
-        Rates(idx_sim, 4) = Rate_IRF;
+        Rates(idx_sim, 6) = Rate_IRF;
 
-        % Genie told me the f-channel + iterate between \theta and w. 
-        [P_recv_Oracle, Rate_Oracle] = traditional_BF(RIS_conf, BS_conf, f, G);
-        Rates(idx_sim, 5) = Rate_Oracle;
+        % Genie told me the G and f-channel + iterate between \theta and w. 
+        [w, theta] = RIS_precode(RIS_conf, G.'*diag(conj(f)));
+        Rates(idx_sim, 7) = calc_rate(BS_conf, G, f, w, theta, 0); 
     end
+    
     SE(idx_scan, :) = mean(Rates);
     fprintf('Pt_{BS} = %.3f dB sim complete. %d/%d\n', pow2db(Pt_BS), idx_scan, scan_len);
 end
+
 
 %% Save Data. 
 disp('sim complete. Files saved at data/.');
@@ -151,16 +170,17 @@ set(0,'defaultfigurecolor','w');
 
 figure('color',[1 1 1]); hold on;
 
-plot(dbP, SE(:,5), 'ko-.','MarkerSize',6);
-plot(dbP, SE(:,4), 'ro-','MarkerSize',6);
-plot(dbP, SE(:,3), 'color', [0, 0, 1], 'LineStyle', '-', 'marker', 'x','MarkerSize',6);
-plot(dbP, SE(:,2), 'color', [0, 1, 1], 'LineStyle', '-', 'marker', 'x','MarkerSize',6);
+plot(dbP, SE(:,7), 'ko-.','MarkerSize',6, 'LineWidth', 2);
+plot(dbP, SE(:,6), 'ro-','MarkerSize',6);
+plot(dbP, SE(:,5), 'color', [0, 0, 1], 'LineStyle', '-', 'marker', 'x','MarkerSize',8);
+plot(dbP, SE(:,4), 'color', [1, 0, 1], 'LineStyle', '--', 'marker', 'p','MarkerSize',6);
+plot(dbP, SE(:,2), 'color', [0, 1, 1], 'LineStyle', '-', 'marker', 's','MarkerSize',6);
 plot(dbP, SE(:,1), 'color', [1, 0, 0.9], 'LineStyle', '-', 'marker', 'x', 'MarkerSize',6);
 
 
 set(gca,'FontName','Times New Roman');
 grid on; box on;
-legend('Oracle', 'Proposed-IRF + VM-EM', 'MMSE f','LMMSE H', 'Random');
+legend('Oracle', 'Proposed-IRF + VM-EM', 'MMSE f', 'LMMSE H', 'MF H', 'Random');
 xlabel('BS transmit power (dBW)', 'interpreter', 'latex');
 ylabel('Capacity (bps/Hz)', 'interpreter', 'latex');
 

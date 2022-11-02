@@ -1,15 +1,18 @@
-function [w, theta] = RIS_precode(RIS_conf, f_hat, G)
-    [N, ~] = size(G);
-    assert(N == RIS_conf.N);
+function [w, theta] = RIS_precode(RIS_conf, HT, initial_theta)
+    N = RIS_conf.N; 
     
     % Perform beamforming based on HT_hat. The model is: y_UE = theta.' * (HT).' *w*s + n
-    theta = exp(1j*2*pi*rand(N, 1));
+    if ~exist('initial_theta', 'var')
+        theta = exp(1j*2*pi*rand(N, 1));
+    else
+        theta = initial_theta;
+    end
     iter = 10;
     
     % Assume that s=1.
     objective = zeros(2*iter, 1);
     threshold = 0.01;
-    HT = G.'*diag(conj(f_hat));
+    % HT = G.'*diag(conj(f_hat));
     
     for idx = 1:iter
         % update w
