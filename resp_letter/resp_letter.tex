@@ -203,9 +203,58 @@ The simulation parameters are summarized in the following table:
 It is understood that the conventional channel estimation technique of Sec.II.B requires $P$ time slots. How is $P$ determined? If $P$ equals to the time slots/pilot cost of the proposed scheme, how would the performance comparison be?
 
 {\color{blue}{\textbf{Authors: } 
-Thanks to the reviewer for pointing out the vague explanation about the number of required pilot slots $P$ in Sec.II.B. For the MVU (equivalent to the least-square, LS) estimator, the number of pilot slots required is $P=N$, since there are 
+Thanks to the reviewer for pointing out the vague explanation about the number of required pilot slots $P$ in Sec.II.B. 
+We have changed the notation $P$ to $N_p$, i.e., number of pilots, for clarity, and re-do all the related simulations. 
+In the first version of this paper, we have compared our proposed IRF-based scheme with the LS channel estimation scheme. However, the LS scheme is able to output the complete cascaded channel $\bm H$ without any prior knowledge, while our proposed IRF-based scheme needs the prior knowledge of the BS-RIS channel $\bm G$. To overcome this unfairness, we have introduced another baseline called the LMMSE-$\bm f$ scheme, by assuming known $\bm G$ and applying LMMSE for the unknown RIS-user link $\bm f$. 
+
+The baselines are compared with our proposed scheme in {\bf Table 2}. For the LS estimators (equivalent to the minimum variance unbiased estimators, MVU), the number of pilot slots required is at least $P=N$, since there are $N\times M$ unknown channel coefficients in $\bm H$, and the BS receives $M$ complex measurements within a single pilot time slot.   
+In response to Reviewer 1's advice, we have also included the LMMSE scheme in our comparison. Since we assume that the channel entries of $\bm G$ and $\bm F$ obey i.i.d. complex Gaussian distributions, the distribution of their product ${\bm H} = {\rm diag}({\bm f}^*) {\bm G}$ are no longer Gaussian. As a result, it is difficult to evaluate the MMSE estimator $\hat{\bm H} = \mathbb{E}\left[{\bm H} | {\bm Y}_{\rm BS}\right]$ for the cascaded channel $\bm H$ due to complicated integral over the density of non-Gaussian distributions. To overcome this difficulty of integration, the LMMSE estimator is employed here, which is the best linear estimator for $\bm H$ in the Bayesian criterion. 
+The LMMSE estimator consumes the same number of $N$ pilots, which is the same as the LS estimator. However, the LMMSE-$\bm f$ estimator only consumes  $\lceil N/M\rceil$ pilots, since the number of complex entries to be estimated is only $N$ instead of $N\times M$. These number of pilots cannot be further reduced due to the requirement of well-posedness of these problems. However, increasing the number of pilots will further improve the precision of these estimators. 
+
+\begin{table}[t]
+    \caption{Comparison of Different CSI Acquisition Methods}
+    \label{tab:comp CE}
+    \centering
+    \begin{tabular}{|l|r|r|r|}
+        \hline 
+        CSI acquisition method & Input & Output & $N_p$ \\ 
+        \hline
+        LS (MVU)        & none    & $\hat{\bm H}$ & $N$  \\
+        \hline
+        LMMSE  & none & $\hat{\bm H}$ & $N$  \\
+        \hline
+        LMMSE $\bm f$ &  ${\bm G}$        & $\hat{\bm f}$ & $\lceil N/M\rceil$ \\
+        \hline 
+        Proposed IRF & $\bm G$ & $\bm \Theta$ & 3  \\
+        \hline 
+    \end{tabular}
+\end{table}
+
+\red{Revisions in the paper. }
 
 
+}}
+
+\textbf{Reviewer 1:}
+3) Furthermore, it is not clear why LS of (7) is used instead of MMSE. It is not clear how the proposed scheme compared to the performance of (7) as a function of RIS size. The performance of the proposed scheme might not always outperform the MMSE based conventional RIS channel estimation, as the noise power at the RIS becomes higher.
+
+{\color{blue}{\textbf{Authors: } 
+balabala
+}}
+
+
+\textbf{Reviewer 1:}
+4) It is not clear how BS beamforming vector $\bm w$ and user's scaler $w'$ are initialized in the proposed algorithms.
+
+{\color{blue}{\textbf{Authors: } 
+balabala
+}}
+
+\textbf{Reviewer 1:}
+5) It would be helpful to incorporate the number of time slots for channel estimation into Table I.
+
+{\color{blue}{\textbf{Authors: } 
+balabala
 }}
 
 
