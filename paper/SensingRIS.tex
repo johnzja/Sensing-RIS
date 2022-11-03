@@ -104,6 +104,8 @@ breaklinks=true}
 \else 
 \newcommand{\myincludegraphics}[2][width=0.8\linewidth]{\includegraphics[#1]{#2}}
 \fi
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
 % 12cm for onecolumn,
 
 \ifCLASSINFOpdf
@@ -875,15 +877,31 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     The Rician $\kappa$-factor is $\kappa=2$. 
     Both the BS and the RIS are equipped with $\lambda/2$-spaced uniform planar arrays (UPAs), while the user has a single antenna. 
     The BS is located at a distance from the RIS that is drawn from a uniform distribution between $20\,{\rm m}$ and $100\,{\rm m}$, and the angle of the BS is uniformly distributed. 
-    The user appears uniformly from $10\,{\rm m}$ to $100\,{\rm m}$, and the angle distribution of the user is also uniform. 
+    The user appears uniformly within a distance ranging from $10\,{\rm m}$ to $100\,{\rm m}$, and the angle distribution of the user is also uniform. 
     The size of the RIS is set to be $40\times 30$, and that of the BS antenna is $4\times 2$. 
-    For IRF methods, 3 pilots are used for CSI acquisition. 
+    For the proposed IRF methods, 3 pilots are used for CSI acquisition. 
     However, for LS-CE methods, the number of pilots is $N=40\times 30$. 
+    \red{
+    Moreover, for the IRF methods, the BS precoder $\bm w$ is chosen to be the right singular vector that corresponds to the most significant singular value of the BS-RIS channel $\bm G$, which automatically maximizes the total energy received by the RIS from the BS, i.e., 
+    \begin{equation}
+        {\bm w} = \underset{\left\|{\bm w}\right\|=1}{\rm argmax}\left\|{\bm G}{\bm w} \right\|^2,
+    \end{equation}
+    and the user's scaler is set to $w'=1$ for all the CSI acquisition schemes. 
+    For the LMMSE algorithms, the BS precoder and the RIS phase-shift matrix is updated alternately according to 
+    \begin{equation}
+        \left\{\begin{aligned}
+            & {\bm \theta}^{(t+1)} = \exp(-\ri \arg(\hat{\bm H}{\bm w}^{(t)})), \\
+            & {\bm w}^{(t+1)} = {\rm norm}(\hat{\bm H}\H {\bm \theta}^{(t+1)*}),
+        \end{aligned}\right.
+    \end{equation}
+    where ${\rm norm}({\bm z})$ denotes ${\bm z}/\left\|{\bm z}\right\|$.
+    }
+    
 
     We compare our proposed \ac{IRF} channel estimation and beamforming method with classical LS-CE algorithm and other idealized settings in Fig.~\ref{fig:rate}. 
     In the simulation of our IRF method, the vM-EM phase estimation algorithm is utilized with the assumption that the phases of the BS-RIS \ac{LOS} path are known. 
     The black dashed line ``Oracle'' assumes perfectly-known CSI, thus perfect iterative beamforming can be performed. 
-    In the LS-CE method, we first utilize \eqref{eqn:LS-CE} to obtain estimates for the cascaded channel \cite{kundu2021channel,wei2021channel}, and then perform iterative RIS beamforming based on the estimated channel. 
+    In the LS-CE method, we first utilize~\eqref{eqn:LS-CE} to obtain estimates for the cascaded channel~\cite{kundu2021channel,wei2021channel}, and then perform iterative RIS beamforming based on the estimated channel. 
     In addition, we also consider the randomly-phased RIS scheme as a benchmark.  
 
     Fig.~\ref{fig:rate} shows the performance curve of the achievable spectral efficiency against the BS transmitted power. From this figure, we can conclude that the proposed IRF method with vM-EM phase estimation is nearly optimal, under extremely low pilot overhead. The proposed IRF method is even close to the oracle scheme, and achieves satisfactory performance throughout a wide range of the BS transmitted power. 
