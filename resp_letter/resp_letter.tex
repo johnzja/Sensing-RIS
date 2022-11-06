@@ -308,20 +308,26 @@ Thanks for the suggestion of explicitly listing the number of time slots for cha
 [R1] A. Lapidoth and S. Shamai, ``Fading channels: how perfect need "perfect side information" be?,'' {\it IEEE Trans. Inf. Theory}, vol. 48, no. 5, pp. 1118-1134, May 2002. 
 
 {\color{blue}{\textbf{Authors: } 
-Many thanks to the reviewers for their comments on improving the rigor of this paper. In this paper, we assume that the data transmission is preceded by two link establishment steps:
+Many thanks to the reviewers for their comments on improving the rigor of this paper. In order to specify which capacity formula we employ in this paper, we first introduce the overall procedure of establishing a RIS-aided link. Specifically, we assume that the data transmission is preceded by three link establishment steps:
 \begin{enumerate}
     \item Acquire the CSI (apply LMMSE or proposed IRF-based schemes);
-    \item Calculate BS's beamformer $\bm w$ and RIS's phase-shifts $\bm\Theta$ to maximize the user's received signal energy.
+    \item Calculate BS's beamformer $\bm w$ and RIS's phase-shifts $\bm\Theta$ to maximize the user's received signal energy;
+    \item Re-estimate the channel with a much smaller pilot overhead.
 \end{enumerate}
-Further, we assume a block-fading channel with blocklength $B$. Within the same block, the random BS-RIS channel matrix $\bm G$ and the RIS-user channel vector ${\bm f}^*$ are realized for only once. After setting $\bm w$ and $\bm\Theta$, the user's downlink SNR 
+The step (3) is needed in real-world systems, because it is very possible that the cascaded channel changes significantly after the RIS reconfiguration and the BS beamforming, and these changes are not perfectly predictable by previous CSI knowledge due to inaccurate RIS phase-shifts, phase-dependent reflective gain and imprecise BS beamforming. As a result, we assume that a perfect additional channel estimation step (3) is executed after the BS-RIS joint beamforming, and provides perfect CSI in the following data transmission.
+
+With this perfect CSI knowledge (side information), we consider a block-fading channel with blocklength $B$. Within the same block, the random BS-RIS channel matrix $\bm G$ and the RIS-user channel vector ${\bm f}^*$ are realized for only once. After setting $\bm w$ and $\bm\Theta$ according to steps (1-2), the user's downlink SNR 
 \begin{equation}
     \gamma_{\rm user} = \frac{P_{{\rm BS}, d} |{\bm f}\H {\bm \Theta} {\bm G}{\bm w}|^2}{\sigma_n^2}
 \end{equation}
 determines the ergodic channel capacity within the following $N_d = B-N_p$ data symbols. Thus, the ergodic capacity per channel use is given by 
 \begin{equation}
-    C_{\rm SI} = \frac{N_d}{B} \mathbb{E}\left[\log\left( 1+\gamma_{\rm user} \right)\right], \label{eqn:capacity_def}
+    C_{\rm PSI} = \frac{N_d}{B} \mathbb{E}\left[\log\left( 1+\gamma_{\rm user} \right)\right], \label{eqn:capacity_def}
 \end{equation} 
-where perfect side information [R1] (channel knowledge) is assumed after the establishment of the RIS-aided reflective link. In our simulations, the expectation in~\eqref{eqn:capacity_def} is numerically approximated by applying the Monte Carlo method. 
+where the subscript PSI indicates that perfect side information [R1] is assumed after the establishment of the RIS-aided reflective link. In our simulations, the expectation in~\eqref{eqn:capacity_def} is numerically approximated by applying the Monte Carlo method. 
+
+Since in this paper, we foucs on how to obtain CSI for BS active beamforming and RIS passive beamforming, the pilot overhead for the re-estimation step (3) is omitted. This approximation is reasonable in that only one equivalent channel coefficient needs to be estimated in this step, compared to $NM$ coefficients in step (1). But rigorously speaking, the value $C_{\rm PSI}$ is an upper bound of the true channel capacity of the RIS-aided communication system. 
+
 
 
 
