@@ -13,7 +13,6 @@
 \usepackage{acronym}  % make an acronym
 \usepackage{algorithm}
 \usepackage{algorithmic}
-\usepackage{balance}
 \usepackage{bm}
 \usepackage{bbm}
 \usepackage{booktabs}
@@ -278,7 +277,6 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     \label{CE received signal}
         {\bm y}_{{\rm BS}, p} =\bm H\T {\bm \theta}_p w' s'+\bm n,\quad p=1,2,\cdots,N_p,
     \end{equation}
-    \red{
     where $w'$ is the precoding scalar of the user satisfying $|w'|^2 \leq P_{\rm max}'$, $s'$ is the normalized user transmitted symbol, and $\bm n\sim \mathcal{CN}\left( \bm 0_{M}, \sigma_{z}^{2}\bm I_{M}\right)$ is the \ac{AWGN} at the receiver BS.
     Equivalently, \eqref{CE received signal} can be expressed in the matrix form
     \begin{equation}
@@ -290,27 +288,47 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     \begin{equation}
         \hat{\bm H}\T = \mathbb{E}\left[ {\bm H}\T | {\bm Y}_{\rm BS} \right]. 
     \end{equation}
-    By approximating the MMSE estimator with the best linear estimator and assuming $\sigma_h^2 = \sigma_f^2\sigma_g^2$, an LMMSE estimator can be obtained as 
+    However, the evaluation of the MMSE estimator requires exact knowledge of the prior p.d.f. of the channel $p({\bm H})$, which is difficult to be written in an explicit form. This is because the entries of the cascaded channel matrix ${\bm H}_{ij}$ is the product of two Gaussian-distributed random variables ${\bm f}_i^{*}\sim{\mathcal{CN}}(0,\sigma_f^2), {\bm G}_{ij}\sim{\mathcal{CN}}(0,\sigma_g^2)$. 
+
+    An alternative way to circumvent this difficulty is to approximate the MMSE estimator with the best linear estimator. By assuming $\sigma_h^2 = \sigma_f^2\sigma_g^2$, an LMMSE estimator can be obtained as 
+    \red{
     \ifx\onecol\undefined
         \begin{equation}
             \begin{aligned}
-            & (\hat{\bm{H}\T})_{\rm MMSE} \\
+            & (\hat{\bm{H}\T})_{\rm LMMSE} \\
             & = \sqrt{P'_{\rm max}} {\bm Y}_{\rm BS} {\bm F}_{N, N_p}\H \left( P'_{\rm max}{\bm F}_{N, N_p} {\bm F}_{N, N_p}\H + \frac{\sigma_z^2}{\sigma_h^2}{\bm I}_{N}  \right)^{-1},
             \end{aligned}
             \label{eqn:LMMSE}
         \end{equation}
     \else
         \begin{equation}
-            \hat{\bm{H}\T}_{\rm MMSE} = \sqrt{P'_{\rm max}} {\bm Y}_{\rm BS} {\bm F}_{N, N_p}\H \left( P'_{\rm max}{\bm F}_{N, N_p} {\bm F}_{N, N_p}\H + \frac{\sigma_z^2}{\sigma_h^2}{\bm I}_{N}  \right)^{-1},
+            \hat{\bm{H}\T}_{\rm LMMSE} = \sqrt{P'_{\rm max}} {\bm Y}_{\rm BS} {\bm F}_{N, N_p}\H \left( P'_{\rm max}{\bm F}_{N, N_p} {\bm F}_{N, N_p}\H + \frac{\sigma_z^2}{\sigma_h^2}{\bm I}_{N}  \right)^{-1},
             \label{eqn:LMMSE}
         \end{equation}
     \fi
-    which provides a feasible solution to channel estimation in this RIS-assisted MISO system. In this paper, we name it the linear minimum mean squared error (LMMSE) channel estimation method. 
-    It is worth noting that, in order to determine the RIS-user channel $\bm{f}\in\mathbb{C}^{N\times 1}$, at least $P = \lceil N/M \rceil = {\Theta}(N)$ pilots are required, even with the assumption that the slow-varying~\cite{Huchen} BS-RIS channel $\bm G$ is known in advance. 
+    }
+    which provides a feasible solution to the channel estimation problem in the RIS-assisted MISO system. In this paper, we name it the linear minimum mean squared error for $\bm H$ (LMMSE-$\bm H$) channel estimation method. 
+
+    Furthermore, by assuming known BS-RIS link $\bm G$, the channel estimation problem can be significantly simplified to the estimation problem of ${\bm f}^*$. By exchanging the position of ${\bm\theta}$ and ${\bm f}^*$ in~\eqref{CE received signal}, we obtain the equivalent uplink channel estimation model as 
+    \begin{equation}
+        {\bm y}_{{\rm BS}, p} = \sqrt{P'_{\rm max}} {\bm G}\T \diag({\bm \theta}_p) {\bm f}^* + {\bm n}, 
+    \end{equation} 
+    which immediately leads to the following MMSE\footnote{This is the true MMSE estimator, since the model is linear, and the prior on $\bm f$ and the noise $\bm n$ is Gaussian. } estimator for $\bm f$:
+    \begin{equation}
+        \hat{\bm f}^* = \left( {\bm A}\H{\bm A} + \frac{\sigma_z^2}{\sigma_f^2}{\bm I}_N \right)^{-1} {\bm A}\H \tilde{\bm y},
+    \end{equation}
+    where $\tilde{\bm y} = {\rm vec}({\bm Y}_{\rm BS})\in\mathbb{C}^{N_pM\times 1}$, and 
+    \begin{equation}
+        {\bm A} = \left[ {\bm G}\T\diag({\bm \theta}_1);\cdots;  {\bm G}\T\diag({\bm \theta}_{N_p})\right] \in \mathbb{C}^{N_pM\times N}.
+    \end{equation}
+    Since this channel estimation scheme assumes known $\bm G$ and estimates unknown $\bm f$ by the MMSE estimator, we refer to it as the MMSE-$\bm f$ scheme. 
+
+    It is worth noting that, both the LMMSE-$\bm G$ and the MMSE-$\bm f$ methods consume a linear number of pilot slots in $N$. 
+    For the LMMSE-$\bm G$ scheme, 
+    In order to determine the RIS-user channel $\bm{f}\in\mathbb{C}^{N\times 1}$, at least $N_p = \lceil N/M \rceil = {\Theta}(N)$ pilots are required, even with the assumption that the slow-varying~\cite{Huchen} BS-RIS channel $\bm G$ is known in advance. 
     In fact, without exploiting the sparsity of $\bm f$, it seems impossible to obtain the $N$ channel coefficients with pilot overhead smaller than $\Theta(N)$. 
     However, in the following section, we will show that it is possible to realize dimension-independent CSI acquisition by exploiting a common physical phenomenon in electrodynamics. 
-    }
-
+    
 \section{Interference Random Field}
 \label{Interference Random Field}
     In this section, the signal model for the \ac{IRF} will be first introduced in Subsection~\ref{Models for IRFs}. Then, in order to acquire the CSI, the simultaneous rotational signaling method will be proposed in Subsection~\ref{Simultaneous Rotational Signaling and Interference Detection}. 
@@ -1167,7 +1185,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \end{aligned}
         \label{eqn:upper bound of r}
     \end{equation}
-    where (a) comes from applying the triangle inequality, and (b) comes from assuming sufficiently large $\gamma$ such that the denominator is positive (note that this can be done due to \eqref{eqn:g hat asymptotic expansion}).
+    where (a) comes from applying the triangle inequality, and (b) comes from assuming sufficiently large $\gamma$ such that the denominator is positive (note that this can be done due to~\eqref{eqn:g hat asymptotic expansion}).
     In order to let this upper bound hold, it should be satisfied that $\gamma > (2+\epsilon)\delta$, and the parameter $\epsilon$ should satisfy 
     \begin{equation}
         \frac{1}{\gamma} - \hat{g}(\gamma) > \frac{1}{(2+\epsilon)\gamma}, \quad\forall \gamma > (2+\epsilon)\delta,
@@ -1177,22 +1195,20 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \epsilon > \frac{1}{1-\gamma \hat{g}(\gamma)}-2,\quad \forall \gamma > (2+\epsilon)\delta.
         \label{eqn:ineq for epsilon}
     \end{equation}
-    Such $\epsilon>0$ exists. Since the function $ 1/(1-\gamma \hat{g}(\gamma))$ is decreasing for sufficiently large $\gamma$, the inequality \eqref{eqn:ineq for epsilon} is equivalent to 
+    Such $\epsilon>0$ exists. Since the function $ 1/(1-\gamma \hat{g}(\gamma))$ is decreasing for sufficiently large $\gamma$, the inequality~\eqref{eqn:ineq for epsilon} is equivalent to 
     \begin{equation}
         \epsilon > \frac{1}{1-(2+\epsilon)\delta\, \hat{g}((2+\epsilon)\delta)}-2.
     \end{equation}
-    In fact, choosing $\epsilon=4$ will satisfy all the conditions above when $\delta = 0.07$. Thus, from \eqref{eqn:upper bound of r}, the relative error is upper bounded by 
+    In fact, choosing $\epsilon=4$ will satisfy all the conditions above when $\delta = 0.07$. Thus, from~\eqref{eqn:upper bound of r}, the relative error is upper bounded by 
     \begin{equation}
         r \leq \frac{0.07}{\gamma/6 - 0.07},\quad \forall \gamma > 0.42.
     \end{equation}
     We can easily see from the above inequality that this approximation becomes arbitrarily good when $\gamma\to\infty$, and the decreasing rate is of order $\mathcal{O}(1/\gamma)$. This completes the proof. 
 
 \footnotesize
-\balance 
 \bibliographystyle{IEEEtran}
 \bibliography{SensingRIS, IEEEabrv}
 
 \end{document}
-
 
 
