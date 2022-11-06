@@ -181,8 +181,8 @@ plot(dbP, SE(:,1), 'color', [1, 0, 0.9], 'LineStyle', '-', 'marker', 'x', 'Marke
 set(gca,'FontName','Times New Roman');
 grid on; box on;
 legend('Oracle', 'Proposed-IRF + VM-EM', 'MMSE f', 'LMMSE H', 'MF H', 'Random');
-xlabel('BS transmit power (dBW)', 'interpreter', 'latex');
-ylabel('Capacity (bps/Hz)', 'interpreter', 'latex');
+xlabel('BS transmit power $P_{\rm max}$ (dBW)', 'interpreter', 'latex');
+ylabel('$C_{\rm SI}$ (bps/Hz)', 'interpreter', 'latex');
 
 
 %% Utilities.

@@ -287,9 +287,10 @@ In the revised paper, we have clarified the initialization and updating methods 
 
 
 \textbf{Reviewer 1:}
-5) It would be helpful to incorporate the number of time slots for channel estimation into Table I.
+5) It would be helpful to incorporate the number of time slots for channel estimation into {\bf Table I}.
 
 {\color{blue}{\textbf{Authors: } 
+Thanks for the suggestion of explicitly listing the number of time slots for channel estimation in {\bf Table I}. In the revised paper, in order to clearly explain the pilot overhead of different schemes, we have changed the overhead index from ``Minimum pilot overhead'' to ``Minimum pilot overhead per user''. We have also clarified in the revised version that, the pilot overhead is equivalent to the number of time slots for channel estimation. Detailed revisions are shown as in the following box: 
 
 \begin{framed}
 \red{
@@ -302,9 +303,29 @@ In the revised paper, we have clarified the initialization and updating methods 
 }}
 
 \textbf{Reviewer 1:}
-6) Fig.~8 y axis is marked as capacity. However, it is understood that we only know the bound as in [R1]. It would be helpful to present the equations for capacity analysis.
+6) Fig.~8 $y$ axis is marked as capacity. However, it is understood that we only know the bound as in [R1]. It would be helpful to present the equations for capacity analysis.
 
 [R1] A. Lapidoth and S. Shamai, ``Fading channels: how perfect need "perfect side information" be?,'' {\it IEEE Trans. Inf. Theory}, vol. 48, no. 5, pp. 1118-1134, May 2002. 
+
+{\color{blue}{\textbf{Authors: } 
+Many thanks to the reviewers for their comments on improving the rigor of this paper. In this paper, we assume that the data transmission is preceded by two link establishment steps:
+\begin{enumerate}
+    \item Acquire the CSI (apply LMMSE or proposed IRF-based schemes);
+    \item Calculate BS's beamformer $\bm w$ and RIS's phase-shifts $\bm\Theta$ to maximize the user's received signal energy.
+\end{enumerate}
+Further, we assume a block-fading channel with blocklength $B$. Within the same block, the random BS-RIS channel matrix $\bm G$ and the RIS-user channel vector ${\bm f}^*$ are realized for only once. After setting $\bm w$ and $\bm\Theta$, the user's downlink SNR 
+\begin{equation}
+    \gamma_{\rm user} = \frac{P_{{\rm BS}, d} |{\bm f}\H {\bm \Theta} {\bm G}{\bm w}|^2}{\sigma_n^2}
+\end{equation}
+determines the ergodic channel capacity within the following $N_d = B-N_p$ data symbols. Thus, the ergodic capacity per channel use is given by 
+\begin{equation}
+    C_{\rm SI} = \frac{N_d}{B} \mathbb{E}\left[\log\left( 1+\gamma_{\rm user} \right)\right], \label{eqn:capacity_def}
+\end{equation} 
+where perfect side information [R1] (channel knowledge) is assumed after the establishment of the RIS-aided reflective link. In our simulations, the expectation in~\eqref{eqn:capacity_def} is numerically approximated by applying the Monte Carlo method. 
+
+
+
+}}
 
 
 %%%% Some strange ideas about the theory. 
