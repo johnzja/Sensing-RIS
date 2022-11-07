@@ -243,17 +243,29 @@ The LMMSE estimator consumes the same number of $N$ pilots, which is the same as
 {\color{blue}{\textbf{Authors: } 
 Thank you for pointing out these three important issues. The detailed response to these concerns are listed as follows. 
 
-3.1) The reviewer's suggestion of using MMSE is very reasonable in that the MMSE estimator shares similar computational cost as the LS estimator (mainly due to matrix inversion), but the MMSE estimator is optimal in the Bayesian-MSE criterion, and thus is more robust to noise. As a result, we have replaced the LS with MMSE throughout our revised paper. 
+3.1) The reviewer's suggestion of using MMSE is very reasonable in that the MMSE estimator shares similar computational cost as the LS estimator (mainly due to matrix inversion), but the MMSE estimator is optimal in the Bayesian-MSE criterion, and thus is more robust to noise. As a result, we have replaced the LS with MMSE (or LMMSE if MMSE is not applicable) throughout our revised paper. 
 
-3.2) 
 
-\begin{figure}
-    \centering
+3.2) According to reviewer's suggestions, we have conducted new numerical experiments, where our proposed IRF-based scheme is compared with the MMSE-$\bm f$ and LMMSE-$\bm H$ schemes as a function of the RIS size $N=N_y\times N_z$. 
+\begin{figure}[h]
+    \centering 
     \includegraphics[width=0.7\textwidth]{figs/C-wrt-N_RIS.pdf}
-    \caption{balabala}
+    \caption{Comparison of the upper bound $C_{\rm PSI}$ as a function of the RIS size $N$, where $M=8$. }
+    \label{fig:RIS_size}
 \end{figure}
 
-3.3) The reviewer is concerned about the possible inefficiency of the proposed IRF-based RIS channel estimation method in the high sensor noise regime. 
+The simulation results are presented in {Fig.~\ref{fig:RIS_size}}. The black dashed Oracle line is obtained by assuming perfect knowledge about both the channel matrices $\bm G$ and $\bm f$; The red line represents the proposed IRF-based CSI acquisition scheme with known $\bm G$ and unknown $\bm f$; The MMSE-$\bm f$ baseline assumes the same channel knowledge as the proposed scheme, but calculates an MMSE estimation for $\bm f$ based on received uplink pilots at the BS; The LMMSE-$\bm H$ scheme assumes no prior channel knowledge. All these curves are drawn with respect to various RIS sizes $N$ ranging from $50$ to $800$. Note that the concrete values $N_y$ and $N_z$ of the planar RIS array are not important, since no channel structure is assumed.  
+
+It can be derived from {Fig.~\ref{fig:RIS_size}} that, our proposed IRF-based scheme outperforms both of the MMSE schemes, and achieves near-optimal performance within a wide range of RIS sizes. The performance gain is mainly due to the reduced pilot overhead, since as the number of RIS element increases, the pilot overhead of the MMSE-based schemes scales linearly w.r.t. $N$, causing a proportional decrease in the average ergodic capacity per symbol $C_{\rm PSI}$. In the case $N\uparrow B=1000$ for LMMSE-$\bm H$ scheme, the capacity value even starts to drop significantly. However, the proposed IRF scheme does not subject to this capacity reduction, because the overhead is dimension-independent.  
+
+
+3.3) The reviewer is concerned about the possible inefficiency of the proposed IRF-based RIS channel estimation method in the high sensor noise regime. It is true that if the sensor noise $\sigma_v^2$ is sufficiently large, then it is hard for the proposed IRF-based scheme to obtain any CSI knowledge. And usually, the low-cost power sensors are more noisy than the RF chain receivers. In order to penalize the accuracy of the cost-efficient sensors, we have manually injected more noise into the sensors by setting an additional sensor noise factor $F_p=10\,{\rm dB}$ and an enlarged sensor bandwidth $100\,{\rm MHz}$. The sensor noise is calculated according to 
+\begin{equation*}
+    \sigma_v^2 = F_p \times {\rm BW}_{\rm sensor}\, n_0,
+\end{equation*}
+where the thermal noise power spectral density is fixed to $n_0 =-174\,{\rm dBm/Hz}$. As a result, in our simulations, the sensor is set to be $F_p \times {\rm BW}_{\rm sensor}/{\rm BW}_{\rm RF} = 64.9\,{\rm dB}$ noisier than an RF-chain receiver. Even with this unfavorable situation, the IRF-based scheme still outperforms the traditional MMSE-based schemes, because of the {\it double-fading} effect [R6] of the reflective link will highly attenuates the reflective signal during traditional channel estimation. Note that the typical path loss at a distance of $100\,{\rm m}$ is $83.3\,{\rm dB}$ at $3.5\,{\rm GHz}$, and the {\it double-fading} effect doubles this number. 
+
+[R6] M. Najafi, V. Jamali, R. Schober, and H. V. Poor, ``Physics-based modeling and scalable optimization of large intelligent reflecting surfaces,'' {\it IEEE Trans. Commun.}, vol. 69, no. 4, pp. 2673-2691, Apr. 2021.
 
 }}
 
@@ -341,7 +353,8 @@ where the subscript PSI indicates that perfect side information [R1] is assumed 
 Since in this paper, we foucs on how to obtain CSI for BS active beamforming and RIS passive beamforming, the pilot overhead for the re-estimation step (3) is omitted. This approximation is reasonable in that only one equivalent channel coefficient needs to be estimated in this step, compared to $NM$ coefficients in step (1). But rigorously speaking, the value $C_{\rm PSI}$ is an upper bound of the true channel capacity of the RIS-aided communication system. 
 
 
-
+{\it Yours sincerely,\\
+the Authors }
 
 }}
 
