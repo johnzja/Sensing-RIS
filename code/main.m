@@ -48,12 +48,12 @@ fprintf('Typical double-fading loss@(100m, 100m) = %.3f dB\n', mag2db((lambda/(4
 
 N_sim = 200;
 
-Pt_BS_range = flip(logspace(-1, 1, 10));
-scan_len = length(Pt_BS_range);
-SE = zeros(scan_len, 8);
+Pt_BS_range     = flip(logspace(-1, 1, 10));
+scan_len        = length(Pt_BS_range);
+SE              = zeros(scan_len, 8);
 
 fprintf('Start simulating...\n');
-for idx_scan = 1:scan_len
+parfor idx_scan = 1:scan_len
     % Pt_BS = 1;      % Total transmit power is 1W. (distributed on M transmit antennas).
     Pt_BS = Pt_BS_range(idx_scan);
     
@@ -133,10 +133,10 @@ for idx_scan = 1:scan_len
         Rates(idx_sim, 4)   = Rate_MMSE;  
 
         % (2) MMSE for f only. Assume that G is known. 
-        [f_hat, Np_LMMSE_f] = LMMSE_estimate_f(RIS_conf, BS_conf, f, G, Ep, Ed);
-        [w, theta]          = RIS_precode(RIS_conf, G.'*diag(conj(f_hat)));     % H=diag(f*)G, here HT required. 
-        Rate_LMMSE_f        = calc_rate(BS_conf, G, f, w, theta, Np_LMMSE_f);
-        Rates(idx_sim, 5)   = Rate_LMMSE_f;
+        [f_hat, Np_LMMSE_f, ~]  = LMMSE_estimate_f(RIS_conf, BS_conf, f, G, Ep, Ed);
+        [w, theta]              = RIS_precode(RIS_conf, G.'*diag(conj(f_hat)));     % H=diag(f*)G, here HT required. 
+        Rate_LMMSE_f            = calc_rate(BS_conf, G, f, w, theta, Np_LMMSE_f);
+        Rates(idx_sim, 5)       = Rate_LMMSE_f;
         
         % Use IRF to directly perform beamforming, using only 3 pilots.
         % Assume that G is known. 
@@ -170,12 +170,12 @@ set(0,'defaultfigurecolor','w');
 
 figure('color',[1 1 1]); hold on;
 
-plot(dbP, SE(:,7), 'ko-.','MarkerSize',6, 'LineWidth', 2);
-plot(dbP, SE(:,6), 'ro-','MarkerSize',6);
-plot(dbP, SE(:,5), 'color', [0, 0, 1], 'LineStyle', '-', 'marker', 'x','MarkerSize',8);
-plot(dbP, SE(:,4), 'color', [1, 0, 1], 'LineStyle', '--', 'marker', 'p','MarkerSize',6);
-plot(dbP, SE(:,2), 'color', [0, 1, 1], 'LineStyle', '-', 'marker', 's','MarkerSize',6);
-plot(dbP, SE(:,1), 'color', [1, 0, 0.9], 'LineStyle', '-', 'marker', 'x', 'MarkerSize',6);
+plot(dbP, SE(:,7), 'ko-.','MarkerSize',6, 'LineWidth', 2);  % Oracle
+plot(dbP, SE(:,6), 'ro-','MarkerSize',6);                   % IRF
+plot(dbP, SE(:,5), 'color', [0, 0, 1], 'LineStyle', '-', 'marker', 'x','MarkerSize',8);     % MMSE f
+plot(dbP, SE(:,4), 'color', [1, 0, 1], 'LineStyle', '--', 'marker', 'p','MarkerSize',6);    % LMMSE H
+plot(dbP, SE(:,2), 'color', [0, 1, 1], 'LineStyle', '-', 'marker', 's','MarkerSize',6);     % MF H
+plot(dbP, SE(:,1), 'color', [1, 0, 0.9], 'LineStyle', '-', 'marker', 'x', 'MarkerSize',6);  % Random
 
 
 set(gca,'FontName','Times New Roman');
