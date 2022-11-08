@@ -171,6 +171,7 @@ Since our proposed scheme requires simultaneous signaling from both the BS and t
         P_{{\rm BS}, p} &= \frac{E_p}{N_p}P_{\rm max},\quad P_{{\rm BS}, d} = \frac{E_d}{N_d}P_{\rm max}, \\
         P_{{\rm u}, p} &= \frac{E_p}{N_p}P'_{\rm max},\quad P_{{\rm u}, d} = \frac{E_d}{N_d}P'_{\rm max},
     \end{aligned}
+    \label{eqn:transmit_power}
 \end{equation}
 which incorporates the overall BS transmit power budget $P_{\rm max}$, the user transmit power budget $P'_{\rm max}$, and the power allocation between pilot symbols and data symbols.  
 The simulation parameters are summarized in the following {\bf Table~\ref{tab:pilot overhead comp CE}}:
@@ -243,18 +244,50 @@ The LMMSE estimator consumes the same number of $N$ pilots, which is the same as
 {\color{blue}{\textbf{Authors: } 
 Thank you for pointing out these three important issues. The detailed response to these concerns are listed as follows. 
 
-3.1) The reviewer's suggestion of using MMSE is very reasonable in that the MMSE estimator shares similar computational cost as the LS estimator (mainly due to matrix inversion), but the MMSE estimator is optimal in the Bayesian-MSE criterion, and thus is more robust to noise. As a result, we have replaced the LS with MMSE (or LMMSE if MMSE is not applicable) throughout our revised paper. 
+3.1) The reviewer's suggestion of using MMSE is very reasonable in that the MMSE estimator shares similar computational cost as the LS estimator (mainly due to matrix inversion), but the MMSE estimator is optimal in the Bayesian-MSE criterion, and thus is more robust to noise. As a result, we have replaced the LS with MMSE (or LMMSE if MMSE is not applicable) throughout our revised paper.
+
+In the revised paper, we have addressed this issue as 
+\begin{framed}
+    \red{Given the received signal $\bm Y_{\rm BS}$ and, without loss of generality, assuming $w's'=\sqrt{P'_{\rm max}}$, the channel estimation problem in RIS-assisted system can be obtained by the MMSE estimator~[14] as  
+    \begin{equation}
+        \begin{aligned}
+            \hat{\bm H}\T &= \underset{\hat{\bm H}\T}{\rm argmin}\mathbb{E}\left[\|\hat{\bm H}\T - {\bm H}\T\|_{F}^2 | {\bm Y}_{\rm BS}\right]\\
+            &= \mathbb{E}\left[ {\bm H}\T | {\bm Y}_{\rm BS} \right] 
+        \end{aligned} 
+        \label{eqn:MMSE_H}
+    \end{equation}
+    However, the evaluation of the MMSE estimator requires exact knowledge of the prior p.d.f. of the channel $p({\bm H})$, which is difficult to be written in an explicit form. This is because the entries of the cascaded channel matrix ${\bm H}_{ij}$ is the product of two Gaussian-distributed random variables ${\bm f}_i^{*}\sim{\mathcal{CN}}(0,\sigma_f^2), {\bm G}_{ij}\sim{\mathcal{CN}}(0,\sigma_g^2)$. }
+
+    \red{An alternative way to circumvent this difficulty is to constrain the estimator $\hat{\bm H}$ in~\eqref{eqn:MMSE_H} to be a linear transform of ${\bm Y}_{\rm BS}$, obtaining a linearly approximated MMSE estimator, which is called the linear MMSE (LMMSE) estimator. By assuming $\sigma_h^2 = \sigma_f^2\sigma_g^2$, the LMMSE estimator can be obtained as }
+    \red{
+    \ifx\onecol\undefined
+        \begin{equation}
+            \begin{aligned}
+            & (\widehat{\bm{H}\T})_{\rm LMMSE} \\
+            & = \sqrt{P'_{\rm max}} {\bm Y}_{\rm BS} {\bm F}_{N, N_p}\H \left( P'_{\rm max}{\bm F}_{N, N_p} {\bm F}_{N, N_p}\H + \frac{\sigma_z^2}{\sigma_h^2}{\bm I}_{N}  \right)^{-1},
+            \end{aligned}
+            \label{eqn:LMMSE}
+        \end{equation}
+    \else
+        \begin{equation}
+            \widehat{\bm{H}\T}_{\rm LMMSE} = \sqrt{P'_{\rm max}} {\bm Y}_{\rm BS} {\bm F}_{N, N_p}\H \left( P'_{\rm max}{\bm F}_{N, N_p} {\bm F}_{N, N_p}\H + \frac{\sigma_z^2}{\sigma_h^2}{\bm I}_{N}  \right)^{-1},
+            \label{eqn:LMMSE}
+        \end{equation}
+    \fi
+    }
+    \red{which provides a feasible solution to the channel estimation problem in the RIS-assisted MISO system. In this paper, we name it the linear minimum mean squared error for $\bm H$ (LMMSE-$\bm H$) channel estimation method.}
+\end{framed}
 
 
 3.2) According to reviewer's suggestions, we have conducted new numerical experiments, where our proposed IRF-based scheme is compared with the MMSE-$\bm f$ and LMMSE-$\bm H$ schemes as a function of the RIS size $N=N_y\times N_z$. 
 \begin{figure}[h]
     \centering 
     \includegraphics[width=0.7\textwidth]{figs/C-wrt-N_RIS.pdf}
-    \caption{Comparison of the upper bound $C_{\rm PSI}$ as a function of the RIS size $N$, where $M=8$. }
+    \caption{Comparison of the capacity upper bound $C_{\rm PSI}$ as a function of the RIS size $N$, where $M=8$. The definition of $C_{\rm PSI}$ will be explained in detail in response to question (6). }
     \label{fig:RIS_size}
 \end{figure}
 
-The simulation results are presented in {Fig.~\ref{fig:RIS_size}}. The black dashed Oracle line is obtained by assuming perfect knowledge about both the channel matrices $\bm G$ and $\bm f$; The red line represents the proposed IRF-based CSI acquisition scheme with known $\bm G$ and unknown $\bm f$; The MMSE-$\bm f$ baseline assumes the same channel knowledge as the proposed scheme, but calculates an MMSE estimation for $\bm f$ based on received uplink pilots at the BS; The LMMSE-$\bm H$ scheme assumes no prior channel knowledge. All these curves are drawn with respect to various RIS sizes $N$ ranging from $50$ to $800$. Note that the concrete values $N_y$ and $N_z$ of the planar RIS array are not important, since no channel structure is assumed.  
+The simulation results are presented in {Fig.~\ref{fig:RIS_size}}. The black dashed Oracle line is obtained by assuming perfect knowledge about both the channel matrices $\bm G$ and $\bm f$; The red line represents the proposed IRF-based CSI acquisition scheme with known $\bm G$ and unknown $\bm f$; The MMSE-$\bm f$ baseline assumes the same channel knowledge as the proposed scheme, but calculates an MMSE estimation for $\bm f$ based on received uplink pilots at the BS; The LMMSE-$\bm H$ scheme assumes no prior channel knowledge. All these curves are drawn with respect to various RIS sizes $N$ ranging from $50$ to $800$. Note that the detailed values $N_y$ and $N_z$ of the planar RIS array are not important, since the i.i.d. Rayleigh fading channel is spatially unstructured.  
 
 It can be derived from {Fig.~\ref{fig:RIS_size}} that, our proposed IRF-based scheme outperforms both of the MMSE schemes, and achieves near-optimal performance within a wide range of RIS sizes. The performance gain is mainly due to the reduced pilot overhead, since as the number of RIS element increases, the pilot overhead of the MMSE-based schemes scales linearly w.r.t. $N$, causing a proportional decrease in the average ergodic capacity per symbol $C_{\rm PSI}$. In the case $N\uparrow B=1000$ for LMMSE-$\bm H$ scheme, the capacity value even starts to drop significantly. However, the proposed IRF scheme does not subject to this capacity reduction, because the overhead is dimension-independent.  
 
@@ -274,33 +307,39 @@ where the thermal noise power spectral density is fixed to $n_0 =-174\,{\rm dBm/
 4) It is not clear how BS beamforming vector $\bm w$ and user's scaler $w'$ are initialized in the proposed algorithms.
 
 {\color{blue}{\textbf{Authors: } 
-Thanks for pointing out this very important issue in our algorithms. In our algorithms, the user's scaler $w'$ is introduced for the sake of symmetry of the formulas, so it is always assumed that $w'=1$. However, for the BS beamformer ${\bm w}\in\mathbb{C}^{M}$ in MMSE/LS  channel estimation algorithms, with the knowledge of the cascaded channel $\bm H$, it is iteratively updated by the following two formulas
+Thanks for pointing out this very important issue in our paper. We will try to answer this question in two parts. 
+
+4.1) Scalers $\bm w$ and $w'$ during CSI acquisition. In our proposed IRF-based CSI acquisition algorithms, since the user's scaler $w'$ is introduced for the sake of symmetry with the BS's beamformer $\bm w$, it is always assumed that $w'\in\mathbb{R}_+$ equals the square root of the user's pilot transmit power, i.e., $w'$ is fixed to $\sqrt{P_{{\rm u}, p}}$, as is introduced in detail in~\eqref{eqn:transmit_power}. 
+For our proposed IRF-based CSI acquisition algorithms, by assuming known BS-RIS link $\bm G$, a sub-optimal solution for $\bm w$ can be obtained by maximizing the total energy that the RIS receives during the creation of IRF, i.e., 
+\begin{equation}
+    {\bm w}_{\rm IRF} = \underset{\left\|{\bm w}\right\|\leq P_{{\rm BS}, p}}{\rm argmax}\left\|{\bm G}{\bm w} \right\|^2. 
+    \label{eqn:IRF_w_opt}
+\end{equation}
+The solution to~\eqref{eqn:IRF_w_opt} is given by computing the singular value decomposition (SVD) ${\bm G} = {\bm U}{\bm S}{\bm V}\H$, sorting the diagonal entries of $\bm S$ in descending order, and setting ${\bm w}_{\rm IRF} = \sqrt{P_{{\rm BS}, p}}{\bm V}_{(:,1)}$, where ${\bm V}_{(:,1)}$ is the $1^{\rm st}$ column of the matrix ${\bm V}\in\mathbb{C}^{M\times M}$. 
+Note that although the solution ${\bm w}_{\rm IRF}$ is a sub-optimal solution, it can still achieve nearly optimal spectral efficiency performance, which is demonstrated by our simulation results.  
+
+4.2) Scalers $\bm w$ and $w'$ during downlink beamforming. For downlink transmission of a MISO system, the user's scaler $w'$ is dummy, so we only consider the BS's beamformer $\bm w$. In our proposed IRF-based method, after the CSI acquisition and the passive RIS beamforming, the BS's active beamformer is adjusted according to~\eqref{eqn:IRF_w_opt}. 
+In contrast to this sub-optimal solution~\eqref{eqn:IRF_w_opt}, in the MMSE baselines, the BS's beamformer $\bm w$ is iteratively updated by exploiting the knowledge of the estimated channel $\hat{\bm H}$ according to the following two formulas
 \begin{equation}
     \left\{\begin{aligned}
         & {\bm \theta}^{(t+1)} = \exp(-\ri \arg(\hat{\bm H}{\bm w}^{(t)})), \\
         & {\bm w}^{(t+1)} = {\rm norm}(\hat{\bm H}\H {\bm \theta}^{(t+1)*}),
     \end{aligned}\right.
 \end{equation}
-where ${\bm w}^{(0)}$ is randomly initialized such that $\|{\bm w}^{(0)}\| = 1$. For our proposed IRF-based CSI acquisition algorithms, by assuming known BS-RIS link $\bm G$, a sub-optimal solution for $\bm w$ can be obtained by maximizing the total energy that the RIS receives, i.e., 
-\begin{equation}
-    {\bm w}_{\rm IRF} = \underset{\left\|{\bm w}\right\|\leq P_{\rm max}}{\rm argmax}\left\|{\bm G}{\bm w} \right\|^2. 
-    \label{eqn:IRF_w_opt}
-\end{equation}
-The solution to~\eqref{eqn:IRF_w_opt} is given by computing the singular value decomposition (SVD) ${\bm G} = {\bm U}{\bm S}{\bm V}\H$, sorting the diagonal entries of $\bm S$ in descending order, and setting ${\bm w}_{\rm IRF} = {\bm V}_{(:,1)}$, where ${\bm V}_{(:,1)}$ is the $1^{\rm st}$ column of the matrix ${\bm V}\in\mathbb{C}^{M\times M}$. 
-Note that although the solution ${\bm w}_{\rm IRF}$ is a sub-optimal solution, it can still achieve nearly optimal spectral efficiency performance, which is demonstrated in our simulation results.  
+where ${\bm w}^{(0)}$ is randomly initialized such that $\|{\bm w}^{(0)}\| = \sqrt{P_{{\rm BS}, p}}$. Note that even if our proposed method employs a sub-optimal BS's beamformer $\bm w$, it still outperforms the baselines in terms of the achievable ergodic rate $C_{\rm PSI}$. 
 
-In the revised paper, we have clarified the initialization and updating methods of the BS beamformer ${\bm w}$ and the user's scaler $w'$ as 
+In the revised paper, we have clarified the initialization and updating methods of the BS beamformer ${\bm w}$ and the user's scaler $w'$ for our proposed algorithms as well as the baselines, which is shown as follows.  
 \begin{framed}\red{
     Moreover, for the IRF methods, the BS beamformer $\bm w$ is chosen to be the right singular vector that corresponds to the most significant singular value of the BS-RIS channel $\bm G$, which automatically maximizes the total signal energy received by the RIS from the BS, i.e., 
     \begin{equation*}
-        {\bm w} = \underset{\left\|{\bm w}\right\|\leq P_{\rm max}}{\rm argmax}\left\|{\bm G}{\bm w} \right\|^2,
+        {\bm w} = \underset{\left\|{\bm w}\right\|\leq P_{{\rm BS}, p}}{\rm argmax}\left\|{\bm G}{\bm w} \right\|^2,
     \end{equation*}
-    and the user's transmit scaler is set to the maximum allowed power $w'=\sqrt{P'_{\rm max}}$ for all the CSI acquisition schemes to ensure a high SNR. 
+    and the user's transmit scaler is set to the maximum allowed power $w'=\sqrt{P_{{\rm u}, p}}$ for all the CSI acquisition schemes to ensure a high SNR. 
     For the LMMSE algorithms, after the channel estimation procedure, the beamforming step is fulfilled by alternately updating the BS beamformer $\bm w$ and the RIS phase-shift matrix $\bm\Theta = {\rm diag}({\bm \theta})$ according to  
     \begin{equation*}
         \left\{\begin{aligned}
             & {\bm \theta}^{(t+1)} = \exp(-\ri \arg(\hat{\bm H}{\bm w}^{(t)})), \\
-            & {\bm w}^{(t+1)} = \sqrt{P_{\rm max}}{\rm norm}(\hat{\bm H}\H {\bm \theta}^{(t+1)*}),
+            & {\bm w}^{(t+1)} = \sqrt{P_{{\rm BS}, d}}{\rm norm}(\hat{\bm H}\H {\bm \theta}^{(t+1)*}),
         \end{aligned}\right.
     \end{equation*}
     where ${\rm norm}({\bm z})$ denotes ${\bm z}/\left\|{\bm z}\right\|$. The initial values ${\bm w}^{(0)}$ and ${\bm\theta}^{(0)}$ are generated randomly, and both subject to their corresponding power constraint and unit-modulus constraint, respectively. In our simulations, the iteration is performed at most $T=10$ times. 
@@ -314,7 +353,7 @@ In the revised paper, we have clarified the initialization and updating methods 
 5) It would be helpful to incorporate the number of time slots for channel estimation into {\bf Table I}.
 
 {\color{blue}{\textbf{Authors: } 
-Thanks for the suggestion of explicitly listing the number of time slots for channel estimation in {\bf Table I}. In the revised paper, in order to clearly explain the pilot overhead of different schemes, we have changed the overhead index from ``Minimum pilot overhead'' to ``Minimum pilot overhead per user''. We have also clarified in the revised version that, the pilot overhead is equivalent to the number of time slots for channel estimation. Detailed revisions are shown as in the following box: 
+Thanks for the suggestion of explicitly specifying the number of time slots for channel estimation in {\bf Table I}. In the revised paper, in order to clearly explain the pilot overhead of different schemes, we have changed the overhead index from ``Minimum pilot overhead'' to ``Minimum pilot overhead per user''. We have also clarified in the revised version that, the pilot overhead is equivalent to the number of time slots for channel estimation. Detailed revisions are shown as in the following box: 
 
 \begin{framed}
 \red{
@@ -332,32 +371,51 @@ Thanks for the suggestion of explicitly listing the number of time slots for cha
 [R1] A. Lapidoth and S. Shamai, ``Fading channels: how perfect need "perfect side information" be?,'' {\it IEEE Trans. Inf. Theory}, vol. 48, no. 5, pp. 1118-1134, May 2002. 
 
 {\color{blue}{\textbf{Authors: } 
-Many thanks to the reviewers for their comments on improving the rigor of this paper. In order to specify which capacity formula we employ in this paper, we first introduce the overall procedure of establishing a RIS-aided link. Specifically, we assume that the data transmission is preceded by three link establishment steps:
+Many thanks to the reviewers for their comments on improving the strictness of this paper. In order to specify which capacity formula we employ in this paper, we first introduce the overall procedure of establishing a RIS-aided link. Specifically, we assume that the data transmission is preceded by three link establishment steps:
 \begin{enumerate}
-    \item Acquire the CSI (apply LMMSE or proposed IRF-based schemes);
+    \item Acquire the CSI (apply LMMSE or proposed IRF-based schemes), consuming $N_p$ time slots;
     \item Calculate BS's beamformer $\bm w$ and RIS's phase-shifts $\bm\Theta$ to maximize the user's received signal energy;
-    \item Re-estimate the channel with a much smaller pilot overhead.
+    \item Re-estimate the channel, assuming no additional pilot overhead.
 \end{enumerate}
-The step (3) is needed in real-world systems, because it is very possible that the cascaded channel changes significantly after the RIS reconfiguration and the BS beamforming, and these changes are not perfectly predictable by previous CSI knowledge due to inaccurate RIS phase-shifts, phase-dependent reflective gain and imprecise BS beamforming. As a result, we assume that a perfect additional channel estimation step (3) is executed after the BS-RIS joint beamforming, and provides perfect CSI in the following data transmission.
+The step (3) is needed in real-world systems, because it is very possible that the equivalent BS-RIS-user channel ${\bm f}\H{\bm \Theta}{\bm G}{\bm w}\in\mathbb{C}$ changes significantly after the RIS reconfiguration and the BS beamforming. These changes are not perfectly predictable by previous CSI knowledge due to inaccurate RIS phase-shifts, phase-dependent reflective gain and imprecise BS beamforming. As a result, we assume that a perfect additional channel estimation step (3) is executed after the BS-RIS joint beamforming, and provides perfect CSI in the following data transmission. Since in this paper, we foucs on how to obtain CSI in step (1) for BS active beamforming and RIS passive beamforming in step (2), the pilot overhead for the re-estimation step (3) is omitted. This approximation is reasonable in that only one equivalent channel coefficient needs to be estimated in this step, which is much smaller compared to $NM$ coefficients involved in step (1). 
 
-With this perfect CSI knowledge (side information), we consider a block-fading channel with blocklength $B$. Within the same block, the random BS-RIS channel matrix $\bm G$ and the RIS-user channel vector ${\bm f}^*$ are realized for only once. After setting $\bm w$ and $\bm\Theta$ according to steps (1-2), the user's downlink SNR 
+With this perfect CSI knowledge (side information) in step (3), we consider a block-fading channel with blocklength $B$. Within the same block, the random BS-RIS channel matrix $\bm G$ and the RIS-user channel vector ${\bm f}^*$ are realized for only once. After setting $\bm w$ and $\bm\Theta$ according to steps (1-2), the user's downlink SNR 
 \begin{equation}
-    \gamma_{\rm user} = \frac{P_{{\rm BS}, d} |{\bm f}\H {\bm \Theta} {\bm G}{\bm w}|^2}{\sigma_n^2}
+    \gamma_{\rm user} = \frac{P_{{\rm BS}, d} |{\bm f}\H {\bm \Theta} {\bm G}{\bm w}|^2}{\sigma_z^2}
 \end{equation}
 determines the ergodic channel capacity within the following $N_d = B-N_p$ data symbols. Thus, the ergodic capacity per channel use is given by 
 \begin{equation}
     C_{\rm PSI} = \frac{N_d}{B} \mathbb{E}\left[\log\left( 1+\gamma_{\rm user} \right)\right], \label{eqn:capacity_def}
 \end{equation} 
-where the subscript PSI indicates that perfect side information [R1] is assumed after the establishment of the RIS-aided reflective link. In our simulations, the expectation in~\eqref{eqn:capacity_def} is numerically approximated by applying the Monte Carlo method. 
+where the subscript PSI indicates that perfect side information [R1] is assumed after the establishment of the RIS-aided reflective link. In our simulations, the expectation in~\eqref{eqn:capacity_def} is numerically approximated by applying the Monte Carlo method. But rigorously speaking, the value $C_{\rm PSI}$ is an upper bound of the true channel capacity of the RIS-aided communication system. 
 
-Since in this paper, we foucs on how to obtain CSI for BS active beamforming and RIS passive beamforming, the pilot overhead for the re-estimation step (3) is omitted. This approximation is reasonable in that only one equivalent channel coefficient needs to be estimated in this step, compared to $NM$ coefficients in step (1). But rigorously speaking, the value $C_{\rm PSI}$ is an upper bound of the true channel capacity of the RIS-aided communication system. 
-
-
-{\it Yours sincerely,\\
-the Authors }
 
 }}
 
+{\color{blue}{\textbf{Authors: } 
+Many thanks again for your valuable time and efforts to review this paper. 
+
+Sincerely, \\
+{\it The Authors }
+}}
+
+\begin{center}
+    {\Large\bf Response to Reviewer 2's Comments}
+\end{center}
+
+\textbf{Reviewer 2:}
+In this paper, the authors propose a dimension-independent channel state information (CSI) acquisition approach for reflecting intelligent surfaces (RIS) in which the required pilot overhead is independent of the number of RIS elements. The main idea is to estimate CSI based on received power variations when both the BS \& user simultaneously transmit to the RIS.
+
+{\color{blue}{\textbf{Authors: } 
+balabala
+}}
+
+\textbf{Reviewer 2:}
+While the proposed idea \& results seem correct, I do not believe the main contributions of the paper (largely algorithmic) are a good fit for IEEE Transactions on Information Theory. My recommendation to the authors would be to submit the paper to wireless communication- and/or signal processing-focused journals, which would be a better fit for the paper's contributions.
+
+{\color{blue}{\textbf{Authors: } 
+balabala
+}}
 
 %%%% Some strange ideas about the theory. 
 

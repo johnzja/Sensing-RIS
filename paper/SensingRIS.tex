@@ -284,13 +284,17 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
         {\bm Y}_{\rm BS}=\bm H\T \bm F_{N,N_p}w' s' + {\bm N},
     \end{equation}
     where ${\bm Y}_{\rm BS}=\left[\bm y_{{\rm BS}, 1},\cdots,\bm y_{{\rm BS}, N_p}\right]$ and $\bm N = \left[ \bm n_{1},\cdots,\bm n_{N_p}\right]$.
-    Given the received signal $\bm Y_{\rm BS}$ and, without loss of generality, assuming $w's'=\sqrt{P'_{\rm max}}$, the channel estimation problem in RIS-assisted system can be obtained by the MMSE estimator~\cite{kundu2021channel} as  
+    \red{Given the received signal $\bm Y_{\rm BS}$ and, without loss of generality, assuming $w's'=\sqrt{P'_{\rm max}}$, the channel estimation problem in RIS-assisted system can be obtained by the MMSE estimator~\cite{kundu2021channel} as  
     \begin{equation}
-        \hat{\bm H}\T = \mathbb{E}\left[ {\bm H}\T | {\bm Y}_{\rm BS} \right]. 
+        \begin{aligned}
+            \hat{\bm H}\T &= \underset{\hat{\bm H}\T}{\rm argmin}\mathbb{E}\left[\|\hat{\bm H}\T - {\bm H}\T\|_{F}^2 | {\bm Y}_{\rm BS}\right]\\
+            &= \mathbb{E}\left[ {\bm H}\T | {\bm Y}_{\rm BS} \right] 
+        \end{aligned} 
+        \label{eqn:MMSE_H}
     \end{equation}
-    However, the evaluation of the MMSE estimator requires exact knowledge of the prior p.d.f. of the channel $p({\bm H})$, which is difficult to be written in an explicit form. This is because the entries of the cascaded channel matrix ${\bm H}_{ij}$ is the product of two Gaussian-distributed random variables ${\bm f}_i^{*}\sim{\mathcal{CN}}(0,\sigma_f^2), {\bm G}_{ij}\sim{\mathcal{CN}}(0,\sigma_g^2)$. 
+    However, the evaluation of the MMSE estimator requires exact knowledge of the prior p.d.f. of the channel $p({\bm H})$, which is difficult to be written in an explicit form. This is because the entries of the cascaded channel matrix ${\bm H}_{ij}$ is the product of two Gaussian-distributed random variables ${\bm f}_i^{*}\sim{\mathcal{CN}}(0,\sigma_f^2), {\bm G}_{ij}\sim{\mathcal{CN}}(0,\sigma_g^2)$. }
 
-    An alternative way to circumvent this difficulty is to approximate the MMSE estimator with the best linear estimator. By assuming $\sigma_h^2 = \sigma_f^2\sigma_g^2$, an LMMSE estimator can be obtained as 
+    \red{An alternative way to circumvent this difficulty is to constrain the estimator $\hat{\bm H}$ in~\eqref{eqn:MMSE_H} to be a linear transform of ${\bm Y}_{\rm BS}$, obtaining a linearly approximated MMSE estimator, which is called the linear MMSE (LMMSE) estimator. By assuming $\sigma_h^2 = \sigma_f^2\sigma_g^2$, the LMMSE estimator can be obtained as }
     \red{
     \ifx\onecol\undefined
         \begin{equation}
@@ -307,19 +311,19 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
         \end{equation}
     \fi
     }
-    which provides a feasible solution to the channel estimation problem in the RIS-assisted MISO system. In this paper, we name it the linear minimum mean squared error for $\bm H$ (LMMSE-$\bm H$) channel estimation method. 
+    \red{which provides a feasible solution to the channel estimation problem in the RIS-assisted MISO system. In this paper, we name it the linear minimum mean squared error for $\bm H$ (LMMSE-$\bm H$) channel estimation method.} 
 
     Furthermore, by assuming known BS-RIS link $\bm G$, the channel estimation problem can be significantly simplified to the estimation problem of ${\bm f}^*$. By exchanging the position of ${\bm\theta}$ and ${\bm f}^*$ in~\eqref{CE received signal}, we obtain the equivalent uplink channel estimation model as 
     \begin{equation}
         {\bm y}_{{\rm BS}, p} = \sqrt{P'_{\rm max}} {\bm G}\T \diag({\bm \theta}_p) {\bm f}^* + {\bm n}, 
     \end{equation} 
-    which immediately leads to the following MMSE\footnote{This is the true MMSE estimator, since the model is linear, and the prior on $\bm f$ and the noise $\bm n$ is Gaussian. } estimator for $\bm f$:
+    which immediately leads to the following MMSE\footnote{This LMMSE estimator is automatically a true MMSE estimator, since the model is linear, and the prior on $\bm f$ and the noise $\bm n$ is Gaussian. } estimator for $\bm f$:
     \begin{equation}
         \hat{\bm f}^* = \left( {\bm A}\H{\bm A} + \frac{\sigma_z^2}{\sigma_f^2}{\bm I}_N \right)^{-1} {\bm A}\H \tilde{\bm y},
     \end{equation}
     where $\tilde{\bm y} = {\rm vec}({\bm Y}_{\rm BS})\in\mathbb{C}^{N_pM\times 1}$, and 
     \begin{equation}
-        {\bm A} = \left[ {\bm G}\T\diag({\bm \theta}_1);\cdots;  {\bm G}\T\diag({\bm \theta}_{N_p})\right] \in \mathbb{C}^{N_pM\times N}.
+        {\bm A} = \sqrt{P'_{\rm max}}\left[ {\bm G}\T\diag({\bm \theta}_1);\cdots;  {\bm G}\T\diag({\bm \theta}_{N_p})\right] \in \mathbb{C}^{N_pM\times N}.
     \end{equation}
     Since this channel estimation scheme assumes known $\bm G$ and estimates unknown $\bm f$ by the MMSE estimator, we refer to it as the MMSE-$\bm f$ scheme. 
 
