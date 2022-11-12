@@ -1,4 +1,4 @@
-%%% Sensing RIS
+%%% Sensing RIS-phase estimation part. 
 % Setup simulation parameters.
 
 Ts = 1e-3;
@@ -11,26 +11,30 @@ N_exp = 10000;          % Number of numerical experiments.
 
 % Scan parameters.
 K = 0.6;
-gamma_bar = 20;
+gamma_bar = db2pow(5);
 N_scan = 9;             % # Scan points.
 
-% K_arr = linspace(0.2,0.9,N_scan);
-gamma_bar_arr = logspace(log10(2), log10(10), N_scan);
+K_arr = linspace(0.2, 0.9, N_scan);
+% gamma_bar_arr = db2pow(linspace(0, 10, N_scan));
 
 MSE_arr_LS = zeros(1, N_scan);
 MSE_arr_VM = zeros(1, N_scan);
 MSE_arr_Newton = zeros(1, N_scan);
 CRLB = zeros(1, N_scan);
 CRLB_precise = zeros(1, N_scan);
-    
-parfor idx_scan = 1:N_scan
+
+fprintf('+===========+=============+============+=============+===========+============+\n');
+fprintf('| gamma_bar +      K      +  LS (DFT)  +    vM-EM    +  Newton   + CRLB/aCRLB |\n');
+fprintf('+-----------+-------------+------------+-------------+-----------+------------+\n');
+
+for idx_scan = 1:N_scan
     rng(0);
-    % K = K_arr(idx_scan);
-    gamma_bar = gamma_bar_arr(idx_scan);
+    K = K_arr(idx_scan);
+    % gamma_bar = gamma_bar_arr(idx_scan);
     beta    = (1-sqrt(1-K^2))/K;
     sigma_v = sqrt((alpha^2+beta^2)/gamma_bar);
     
-    SensingRIS_param = struct();        % Initialize. 
+    SensingRIS_param = struct();       
     SensingRIS_param.alpha      = alpha;
     SensingRIS_param.beta       = beta;
     SensingRIS_param.A          = A;
@@ -91,18 +95,25 @@ parfor idx_scan = 1:N_scan
     MSE_arr_LS(idx_scan)        = mean(MSE_arr_LS_container);
     MSE_arr_VM(idx_scan)        = mean(MSE_arr_VM_container);
     MSE_arr_Newton(idx_scan)    = mean(MSE_arr_Newton_container);
+    
+    fprintf('| %7.3f   |   %7.3f   |   %7.3f  |   %7.3f   |  %7.3f  |   %7.3f  |\n',  ...
+            pow2db(gamma_bar), K, ...
+            pow2db(mean(MSE_arr_LS(idx_scan))), ...
+            pow2db(mean(MSE_arr_VM(idx_scan))), ...
+            pow2db(mean(MSE_arr_Newton(idx_scan))), ...
+            pow2db(mean(CRLB_precise(idx_scan))) );
+    fprintf('+-----------+-------------+------------+-------------+-----------+------------+\n');
 
-    fprintf('Sim Complete for gamma_bar=%f, K=%f.\n', gamma_bar, K);
-    fprintf('std var LS  \t = %f rads\n', sqrt(mean(MSE_arr_LS(idx_scan))));
-    fprintf('std var VM  \t = %f rads\n', sqrt(mean(MSE_arr_VM(idx_scan))));
-    fprintf('std var Newton\t = %f rads\n', sqrt(mean(MSE_arr_Newton(idx_scan))));
-    fprintf('std var CRLB\t = %f rads\n', sqrt(CRLB_precise(idx_scan)));
-    fprintf('----------------------------------------------\n');
+%     fprintf('Sim Complete for gamma_bar=%f, K=%f.\n', gamma_bar, K);
+%     fprintf('std var LS  \t = %f rads\n', sqrt(mean(MSE_arr_LS(idx_scan))));
+%     fprintf('std var VM  \t = %f rads\n', sqrt(mean(MSE_arr_VM(idx_scan))));
+%     fprintf('std var Newton\t = %f rads\n', sqrt(mean(MSE_arr_Newton(idx_scan))));
+%     fprintf('std var CRLB\t = %f rads\n', sqrt(CRLB_precise(idx_scan)));
+%     fprintf('----------------------------------------------\n');
 
 end
 
 fprintf('Simulation complete.\n');
-% Save files.
 
 %% Plot the results.
 set(0,'DefaultLineMarkerSize',4);
@@ -111,7 +122,8 @@ set(0,'DefaultAxesFontSize',12);
 set(0,'DefaultLineLineWidth',1.4);
 set(0,'defaultfigurecolor','w');
 
-scan_arr = pow2db(gamma_bar_arr);
+% scan_arr = pow2db(gamma_bar_arr);
+scan_arr = K_arr;
 
 figure('color',[1 1 1]); hold on;
 plot(scan_arr, pow2db(MSE_arr_LS), 'bp-','MarkerSize',6);
@@ -122,8 +134,8 @@ plot(scan_arr, pow2db(CRLB), 'color', [228,0,127]/255, 'LineStyle', '--', 'marke
 
 set(gca,'FontName','Times New Roman');
 grid on; box on;
-legend('DFT', 'VM-EM', 'Newton-ML', 'CRLB', 'CRLB-approx');
-xlabel('$\bar{\gamma} (dB)$', 'interpreter', 'latex');
-% xlabel('$K$', 'interpreter', 'latex');
+legend('DFT', 'vM-EM', 'Newton-ML', 'CRLB', 'CRLB-approx');
+% xlabel('$\bar{\gamma}$ (dB)', 'interpreter', 'latex');
+xlabel('$K$', 'interpreter', 'latex');
 ylabel('MSE($\varphi$) (dB)', 'interpreter', 'latex');
 

@@ -48,7 +48,7 @@ function varphi = EM_von_mises(P, SensingRIS_param, N_iters, FFT_first)
         cv_varphi = varphi_kappa*exp(1j*varphi_est) + beta*sum(obs_points.*exp(-1j*psi_arr))/(sigma_v^2/2);
 
         varphi_est = angle(cv_varphi);
-        varphi_kappa = abs(cv_varphi);
+        % varphi_kappa = abs(cv_varphi);
     end
     varphi = varphi_est;
 end
