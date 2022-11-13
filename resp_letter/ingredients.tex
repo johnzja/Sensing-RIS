@@ -56,7 +56,10 @@ breaklinks=true}
 \def \T {^{\mathsf{T}}}
 \def \H {^{\mathsf{H}}}
 \def \ri {{\rm i}}
+\def \d {{\rm d}}
 
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
 
 \begin{document}
     
@@ -149,22 +152,25 @@ then the final answer is obtained by setting $p=\sigma^2/\sigma_h^2$, i.e.,
 \section{Achievable Asymptotic Convergence Rate of the vM-EM Algorithm}
 
 \begin{theorem} \label{thm:asymp_perf_vM-EM}
-    There exists a sufficiently large integer $L_0$, such that for any $L\geq L_0$, if the proposed vM-EM algorithm converges, then the returned estimator $\hat{\varphi}$ achieves an MSE performance of $\mathbb{E}[(\hat{\varphi}-\varphi)^2] = \mathcal{O}(\gamma^{-1})$.  
+    Assume $\alpha>\beta>0$. Then there exists a sufficiently large integer $L_0$, such that for any $L\geq L_0$, if the proposed vM-EM algorithm converges, then the returned estimator $\hat{\varphi}$ achieves an MSE performance of $\mathbb{E}[(\hat{\varphi}-\varphi)^2] = \mathcal{O}(\gamma^{-1})$.  
 \end{theorem}
 
-Before proving this theorem, we first introduce the following that characterizes how the estimator $\hat{\varphi}$ varies with the random noise vector $\bm v$. 
+Before proving this theorem, we first introduce the following {\bf Lemma~\ref{lemma_Wirtinger_derivative_of_vM-EM_estimator}} that characterizes how the estimator $\hat{\varphi}$ varies with the random noise vector $\bm v$. 
 
 \begin{lemma} \label{lemma_Wirtinger_derivative_of_vM-EM_estimator}
-    Suppose for the input data sequence ${\bm s} = \sqrt{{\bm P}/A} = (s_0, \cdots, s_{L-1})\T$, the vM-EM algorithm converges to the estimator $\hat{\varphi}$. Then, we can view the estimator $\hat{\varphi} = \hat{\varphi}({\bm v})$ as a function of the noise $\bm v$, and the Wirtinger derivative of $\hat{\varphi}$ w.r.t. $\bm v$ satisfies 
+    Suppose for the input data sequence ${\bm s} = \sqrt{{\bm P}/A} = (s_0, \cdots, s_{L-1})\T$, the vM-EM algorithm converges to the estimator $\hat{\varphi}$. Then, the estimator $\hat{\varphi} = \hat{\varphi}({\bm v})$ can be viewed as a function of the noise $\bm v$, and the Wirtinger derivative of $\hat{\varphi}$ w.r.t. $\bm v$ satisfies 
     \begin{equation}
         \|\nabla_{\bm v}\hat{\varphi}\|^2 = \frac{1}{|\langle {\bm s}, {\bm x}\rangle|^2}\sum_{\ell=0}^{L-1}  \frac{\sin^2(\theta_\ell)}{|\mu_\ell|^2}, 
     \end{equation} 
     where ${\bm x} = (x_0, \cdots, x_{L-1})\T$ is defined as 
     \begin{equation}
+        x_{\ell} := \frac{(\alpha+\beta \cos\theta_\ell)(\beta+\alpha\cos\theta_\ell)}{|\mu_\ell|^3},~~\ell\in\{L\}, 
+    \end{equation}
+    and 
+    \begin{equation}
         \begin{aligned}
-        x_{\ell} &:= \frac{(\alpha+\beta \cos(\theta_\ell))(\beta+\alpha\cos(\theta_\ell))}{|\mu_\ell|^3},~~\ell\in\{L\}, \\
-        \mu_\ell & := \alpha+\beta \exp(\ri \theta_\ell),~~\ell\in\{L\}, \\
-        \theta_\ell & := \psi_\ell + \hat{\varphi}, ~~\ell\in\{L\}.\\
+            \mu_\ell & := \alpha+\beta \exp(\ri \theta_\ell),~~\ell\in\{L\}, \\
+            \theta_\ell & := \psi_\ell + \hat{\varphi}, ~~\ell\in\{L\}. 
         \end{aligned}
     \end{equation}
 \end{lemma}
@@ -174,65 +180,100 @@ Before proving this theorem, we first introduce the following that characterizes
     \begin{equation}
         {\rm d}\Delta\varphi = \langle \nabla_{\bm v}\hat{\varphi}, {\rm d}{\bm v}\rangle + \langle \nabla_{{\bm v}^*}\hat{\varphi}, {\rm d}{\bm v}^*\rangle, 
     \end{equation}
-    where for real-valued function $\hat{\varphi}({\bm v}): \mathbb{C}^L \to \mathbb{R}$ this differential relation reduces to 
+    where for real-valued function $\hat{\varphi}({\bm v}): \mathbb{C}^L \to [0,2\pi]\subset \mathbb{R}$ this differential relation reduces to 
     \begin{equation}
         {\rm d}\Delta\varphi = 2\Re\langle\nabla_{\bm v}\hat{\varphi}, {\rm d}{\bm v}\rangle. 
+        \label{eqn:differential_of_error}
     \end{equation}
     Thus, an integration inequality will hold to control the MSE of the estimator $\hat{\varphi}$, i.e., 
     \begin{equation}
         \begin{aligned}
-            |\Delta{\varphi}|^2 &= \left| \int {\rm d}\Delta\varphi \right|^2 \\
-            &= \left| 2\int_{0}^{1} \Re\langle\nabla_{{\bm v}'=t {\bm v}}\hat{\varphi}, {\bm v}\rangle{\rm d}t \right|^2 \\
-            &\leq 4\|{\bm v}\|^2 \int_{0}^{1} \|\nabla_{{\bm v}'=t{\bm v}}\hat{\varphi} \|^2 {\rm d} t. 
+            |\Delta{\varphi}| &= \left| \int {\rm d}\Delta\varphi \right| \\
+            &= \left| 2\int_{0}^{1} \Re\langle\nabla_{{\bm v}'=t {\bm v}}\hat{\varphi}, {\bm v}\rangle{\rm d}t \right| \\
+            &\leq 2\|{\bm v}\| \left(\int_{0}^{1} \|\nabla_{{\bm v}'=t{\bm v}}\hat{\varphi} \| {\rm d} t \right). 
         \end{aligned}
+        \label{ineq:gradient_bound}
     \end{equation}
 \end{remark}
-This idea is precisely stated in the following lemma 
 
-\begin{lemma}
-    Suppose for the input data sequence ${\bm s} = \sqrt{{\bm P}/A} = (s_0, \cdots, s_{L-1})\T$, the vM-EM algorithm converges, and the estimation error is denoted by $\Delta\varphi = \hat{\varphi} - \varphi$. Then the estimation error is upper-bounded by
+Before explaining this idea in detail, we first introduce some interesting results about some intermediate variables.
+\begin{lemma}[Asymptotic invariants]\label{lemma:asymp_inv}
+    If we define 
     \begin{equation}
-        |\Delta\varphi|^2 \leq  \frac{4H}{\|{\bm x}\|^2/ L} \log^2 \left(1-\frac{\frac{\|{\bm x}\|}{\sqrt{L}}\frac{\|{\bm v}\|}{\sqrt{L}}}{G-\beta\|{\bm x}\| \cdot |\Delta\varphi|/L}\right), \label{eqn:MSE-upper-bound}
-    \end{equation} 
+        \begin{aligned}
+            H_L & :=\frac{1}{L}\sum_{\ell=0}^{L-1} \frac{\sin^2(\theta_\ell)}{|\mu_\ell|^2}, \\
+            G_L & := \frac{1}{L}\sum_{\ell=0}^{L-1} \frac{(\alpha+\beta \cos(\theta_\ell))(\beta+\alpha\cos(\theta_\ell))}{|\mu_\ell|^2}, \\
+        \end{aligned}
+    \end{equation}
+    then the sequences $H_L$ and $G_L$ are intrinsically independent of the estimator $\hat{\varphi}\in[0,2\pi]$ as $L\to\infty$. Specifically, 
+    \begin{equation}
+        \begin{aligned}
+            H &= H_{\infty} + \mathcal{O}(L^{-1}), \\
+            G &= G_{\infty} + \mathcal{O}(L^{-1}), 
+        \end{aligned}
+    \end{equation}
     where 
     \begin{equation}
         \begin{aligned}
-            H & :=\frac{1}{L}\sum_{\ell=0}^{L-1} \frac{\sin^2(\theta_\ell)}{|\mu_\ell|^2}, \\
-            G & := \frac{1}{L}\sum_{\ell=0}^{L-1} \frac{(\alpha+\beta \cos(\theta_\ell))(\beta+\alpha\cos(\theta_\ell))}{|\mu_\ell|^2}, \\
-            \mu_\ell^{(0)} &:= \alpha +\beta\exp(\ri(\psi_\ell + \varphi)),~~\ell\in\{L\}\\
+            H_{\infty} &=  \frac{1}{2\pi}\int_{0}^{2\pi} \frac{\sin^2\theta}{\alpha^2+\beta^2+2\alpha\beta\cos(\theta)}{\rm d}\theta = \frac{1}{2\alpha^2},  \\
+            G_{\infty} &= \frac{1}{2\pi}\int_{0}^{2\pi} \frac{(\alpha+\beta\cos(\theta))(\beta+\alpha\cos(\theta))}{\alpha^2+\beta^2+2\alpha\beta\cos(\theta)} {\rm d}\theta = \frac{\beta}{2\alpha}.  \\ 
         \end{aligned}
     \end{equation}
 \end{lemma}
 
-One can observe from the definition of $H$, $G$ and $\bm x$ that, these values are intrinsically independent of the estimator $\hat{\varphi}$ as $L\to\infty$. Specifically, 
+{\it Proof Sketch.} The integral expressions for $H_\infty$ and $G_\infty$ as well as the residuals $\mathcal{O}(L^{-1})$ can be obtained by applying the numerical trapezoidal integration formula to the definition of the sequence $H_L$ and $G_L$. The integrals on $[0,2\pi]$ can be evaluated by the following replacements:
 \begin{equation}
     \begin{aligned}
-        H &= H_{\infty} + \mathcal{O}(L^{-1}), \\
-        G &= G_{\infty} + \mathcal{O}(L^{-1}), 
+        {\rm d}\theta & \to \frac{\d z}{\ri z}, \\
+        \sin\theta & \to \frac{z-z^{-1}}{2\ri}, \\
+        \cos\theta & \to \frac{z+z^{-1}}{2}, \\
+        \int_0^{2\pi} & \to \int_{|z|=1}, \\
     \end{aligned}
 \end{equation}
-where 
-\begin{equation}
-    \begin{aligned}
-        H_{\infty} &=  \frac{1}{2\pi}\int_{0}^{2\pi} \frac{\sin^2\theta}{\alpha^2+\beta^2+2\alpha\beta\cos(\theta)}{\rm d}\theta = \frac{1}{2\alpha^2},  \\
-        G_{\infty} &= \frac{1}{2\pi}\int_{0}^{2\pi} \frac{(\alpha+\beta\cos(\theta))(\beta+\alpha\cos(\theta))}{\alpha^2+\beta^2+2\alpha\beta\cos(\theta)} {\rm d}\theta = \frac{\beta}{2\alpha}.  \\ 
-    \end{aligned}
-\end{equation}
+and the applying the Residue Theorem to all poles inside the closed curve $|z|=1$. 
 
-In fact, we can also prove that 
+\begin{remark}
+    These limiting expressions will play an important rule in obtaining the upper bound of the estimation error $|\Delta\varphi|$, since this invariance can asymptotically eliminate the dependency of the Wirtinger derivative ({\bf Lemma~\ref{lemma_Wirtinger_derivative_of_vM-EM_estimator}}) on the unknown estimator $\hat{\varphi}$. 
+\end{remark}
+
+\begin{remark}
+    In fact, we can also prove that 
+    \begin{equation}
+        \frac{\|{\bm x}\|^2}{L} = \frac{2\alpha^2-\beta^2/2}{4\alpha^2(\alpha^2-\beta^2)} + \mathcal{O}(L^{-1}),~~\alpha>\beta>0
+    \end{equation}
+    by the same numerical integration approximation technique and the Residue Theorem. 
+\end{remark}
+
+
+\begin{lemma}[ODE bound] \label{lemma:ODE-bound}
+    Suppose for the input data sequence ${\bm s} = \sqrt{{\bm P}/A} = (s_0, \cdots, s_{L-1})\T$, the vM-EM algorithm converges, and the estimation error is denoted by $\Delta\varphi = \hat{\varphi} - \varphi$. Then for any sufficiently large $L\geq L_0$, there exists some positive $\delta = \delta(L)>0$ and $C=C(L)>0$, such that for any noise vector ${\bm v}$ satisfying $\|{\bm v}\|/\sqrt{L} \leq \delta$, the estimation error is upper-bounded by
+    \begin{equation}
+        |\Delta\varphi|\leq C \frac{\|{\bm v}\|}{\sqrt{L}}. 
+    \end{equation}
+\end{lemma}
+From the above {\bf Lemma~\ref{lemma:ODE-bound}}, we can directly prove {\bf Theorem~\ref{thm:asymp_perf_vM-EM}}. Choose $L\geq L_0$, and then let us compute the MSE of the vM-EM estimator, i.e., 
 \begin{equation}
-    \frac{\|{\bm x}\|^2}{L} = \frac{2\alpha^2-\beta^2/2}{4\alpha^2(\alpha^2-\beta^2)} + \mathcal{O}(L^{-1}),~~\alpha>\beta>0. 
+    \begin{aligned}
+    \mathbb{E}[(\hat{\varphi}-\varphi)^2] &= \mathbb{E}[|\Delta\varphi|^2] \\
+    &= \mathbb{E}\left[|\Delta\varphi|^2 \Bigg|\frac{\|{\bm v}\|}{\sqrt{L}} \leq \delta \right]\mathbb{P}\left[\frac{\|{\bm v}\|}{\sqrt{L}} \leq \delta \right] + \mathbb{E}\left[|\Delta\varphi|^2 \Bigg|\frac{\|{\bm v}\|}{\sqrt{L}} > \delta \right]\mathbb{P}\left[\frac{\|{\bm v}\|}{\sqrt{L}}>\delta \right] \\
+    & \leq C^2 \mathbb{E}\left[\frac{\|{\bm v}\|^2}{L}\right] + \pi^2 \mathbb{P}\left[\frac{\|{\bm v}\|}{\sqrt{L}}>\delta\right] \\
+    & \overset{(a)}{\leq} C^2\sigma_v^2 + \pi^2 \frac{\mathbb{E}\left[\left(\frac{\|{\bm v}\|}{\sqrt{L}}\right)^r\right]}{\delta^r},
+    \end{aligned}
 \end{equation}
-Thus, there exists a sufficiently large integer $L_0$ such that for any $L\geq L_0$, the denominator $G-\beta\|{\bm x}\| \cdot |\Delta\varphi|/L$ in~\eqref{eqn:MSE-upper-bound} is bounded away from zero. Thus we obtain 
+where (a) comes from applying the Markov inequality, and $r>0$ can be arbitrarily chosen. Particularly, by setting $r=2$, we obtain 
 \begin{equation}
-    |\Delta\varphi|^2 \leq C_1 \log^2(1+C_2\|{\bm v}\|/\sqrt{L}),
-    \label{eqn:log_ub}
-\end{equation}
-where $C_1$ and $C_2$ are some constant that depends on $L_0$ but not on $\bar{\gamma}$. Thus, by using the inequality $\log^2(1+x)\leq x^2$ and taking the expectation of~\eqref{eqn:log_ub}, we get 
-\begin{equation}
-    \mathbb{E}[(\hat{\varphi} - \varphi)^2]\leq C_1 C_2^2 \sigma_v^2 = \mathcal{O}(\bar{\gamma}^{-1}),
+    \mathbb{E}\left[(\hat{\varphi} - \varphi)\right] \leq \sigma_v^2(C^2+\pi^2/\delta^2) = O(\gamma^{-1}),  
 \end{equation}
 which completes the proof of {\bf Theorem~\ref{thm:asymp_perf_vM-EM}}. 
+
+\begin{lemma}[Deprecated]\label{lemma:perturbation_bound}
+    Suppose for the input data sequence ${\bm s} = \sqrt{{\bm P}/A} = (s_0, \cdots, s_{L-1})\T$, the vM-EM algorithm converges, and the estimation error is denoted by $\Delta\varphi = \hat{\varphi} - \varphi$. Further assume that $\Delta\varphi\to 0$ in probability as $\gamma\to\infty$, i.e., the estimator is consistent. Then the estimation error is upper-bounded by
+    \begin{equation}
+        |\Delta\varphi|^2 \leq  \frac{4H}{\|{\bm x}\|^2/ L} \log^2 \left(1-\frac{\frac{\|{\bm x}\|}{\sqrt{L}}\frac{\|{\bm v}\|}{\sqrt{L}}}{G-\beta\|{\bm x}\| \cdot |\Delta\varphi|/\sqrt{L}}\right), \label{eqn:MSE-upper-bound}
+    \end{equation} 
+    with probability arbitrary close to $1$ as $\gamma\to\infty$. 
+\end{lemma}
+
 
 
 \appendix
@@ -264,33 +305,30 @@ Define $p(z,w) = (zw^* - z^*w)/(2\ri): \mathbb{C}^2 \to \mathbb{R}$, then the co
     p(z(\hat{\varphi}),w(\hat{\varphi}, {\bm s}))=0 .
     \label{eqn:vM-EM_balance}
 \end{equation}
-Notice that if the observed signal is noiseless, i.e., $s_\ell = \mu_\ell^{(0)}$, then the true value $\varphi$ is a solution to the equation~\eqref{eqn:vM-EM_balance}. This can be easily seen from the fact that if $\hat{\varphi} = \varphi$, then $\mu_\ell = \mu_\ell^{(0)}$.
-However, generally the input of the algorithm ${\bm s}$ is noisy, which is modeled by $s_\ell = |\mu_\ell^{(0)} + v_\ell|$, where $v_\ell \sim$ i.i.d. $\mathcal{CN}(0, \sigma_v^2)$ are the thermal noise at the $\ell$-th power sensor. Thus, the estimator $\hat\varphi$ can be viewed as a perturbed version of the true value $\varphi$, i.e., $\hat{\varphi} = \hat{\varphi}(\bm v)$, which is a function of the noise $\bm v$. Thus, we aim to find $\nabla_{\bm v}(\hat{\varphi}({\bm v}))$, where the gradient operator $\nabla_{{\bm v}}$ acting on $f: \mathbb{C}^L\to \mathbb{C}$ is defined through its components:
+Notice that if the observed signal is noiseless, i.e., $s_\ell = \mu_\ell^{(0)}:=\alpha+\beta\exp(\ri(\psi_\ell+\varphi))$, then the true value $\varphi$ is a solution to the equation~\eqref{eqn:vM-EM_balance}. This can be easily seen from the fact that if $\hat{\varphi} = \varphi$, then $\mu_\ell = \mu_\ell^{(0)}$.
+However, generally the input of the algorithm ${\bm s}$ is noisy, which is modeled by $s_\ell = |\mu_\ell^{(0)} + v_\ell|$, where $v_\ell \sim$ i.i.d. $\mathcal{CN}(0, \sigma_v^2)$ are the thermal noise at the $\ell$-th power sensor. Thus, the estimator $\hat\varphi$ can be viewed as a perturbed version of the true value $\varphi$, i.e., $\hat{\varphi} = \hat{\varphi}(\bm v)$, which is a function of the noise $\bm v$. 
+Thus, we aim to find the {\it Wirtinger derivative} $\nabla_{\bm v}(\hat{\varphi}({\bm v}))$, where the gradient operator $\nabla_{{\bm v}}$ acting on $f: \mathbb{C}^L\to \mathbb{C}$ is defined through its components:
 \begin{equation}
     \begin{aligned}
-    \nabla_{\bm v}f &= \frac{1}{2}\left( \nabla_{\Re({\bm v})} f -\ri \nabla_{\Im({\bm v})} \right) \\
+    \nabla_{\bm v}f &= \frac{1}{2}\left( \nabla_{\Re({\bm v})} f -\ri \nabla_{\Im({\bm v})} f \right) \\
     &={\frac{1}{2}} \left( \frac{\partial f}{\partial v_{0, R}} -\ri \frac{\partial f}{\partial v_{0, I}}, \cdots,  \frac{\partial f}{\partial v_{L-1, R}} -\ri \frac{\partial f}{\partial v_{L-1, I}}\right)\T. 
     \end{aligned}
 \end{equation}
-If this {\it Wirtinger derivative} has been found, then we can obtain the upper bound for $\Delta\varphi$ as 
-\begin{equation}
-    |\Delta\varphi|\leq 2\|\nabla_{\bm v}\hat{\varphi} \|\cdot \|{\bm v}\|. 
-\end{equation}
 
-We first evaluate $\partial \hat{\varphi}/\partial v_\ell$. Taking the derivative of both sides of~\eqref{eqn:vM-EM_balance} w.r.t. $v_\ell$ and using the implicit derivative formula, we obtain 
+Choose $\ell\in\{L\}$, we first evaluate $\partial \hat{\varphi}/\partial v_\ell$. Taking the derivative of both sides of~\eqref{eqn:vM-EM_balance} w.r.t. $v_\ell\in\mathbb{C}$ and using the derivative formula for implicit functions \red{cite here}, we obtain 
 \begin{equation}
     \frac{\partial \hat\varphi}{\partial v_\ell}=-\frac{\frac{\partial p}{\partial w} \frac{\partial w}{\partial v_\ell}+\frac{\partial p}{\partial w^*} \frac{\partial w^*}{\partial v_\ell}}{\left(\frac{\partial p}{\partial z} \frac{\partial z}{\partial \hat\varphi}+\frac{\partial p}{\partial z^*} \frac{\partial z^*}{\partial \hat\varphi}\right)+\left(\frac{\partial p}{\partial w} \frac{\partial w}{\partial \hat\varphi}+\frac{\partial p}{\partial w^*} \frac{\partial w^*}{\partial \hat\varphi}\right)},
     \label{eqn:implicit_function_derivative} 
 \end{equation}
-where the Wirtinger derivative is applied to functions of complex variables, and the ordinary derivative is applied to functions of real variables. 
+where the {\it Wirtinger derivative} is applied to functions of complex variables, and the ordinary derivative is applied to functions of real variables. 
 
 By calculating the derivatives of $p$ w.r.t. $z$, $z^*$, $w$ and $w^*$, as well as $z$ w.r.t. $\hat{\varphi}$, we obtain 
 \begin{equation}
-    \begin{array}{cc}
+    \begin{aligned}
     \frac{\partial p}{\partial z}=\frac{\ri}{2} w^*, & \frac{\partial p}{\partial z^*}=-\frac{\ri}{2} w, \\
     \frac{\partial p}{\partial w}=-\frac{\ri}{2} z^*, & \frac{\partial p}{\partial w^*}=\frac{\ri}{2} z, \\
     \frac{\partial z}{\partial \hat\varphi}=\ri z, & \frac{\partial z^*}{\partial \hat\varphi}=-\ri z^*. 
-    \end{array}
+    \end{aligned}
     \label{eqn:basic_derivatives}
 \end{equation}
 Substituting~\eqref{eqn:basic_derivatives} into~\eqref{eqn:implicit_function_derivative}, we obtain 
@@ -319,27 +357,26 @@ Similarly, by evaluating $\partial w/\partial \hat{\varphi}$ as
     \begin{aligned}
     \frac{\partial w}{\partial \hat{\varphi}} &= \frac{2\beta}{\sigma_v^2 \kappa_0} \sum_{\ell=0}^{L-1} e^{-\ri \psi_\ell} s_\ell \frac{\partial}{\partial \hat{\varphi}}\left(\frac{\mu_\ell}{|\mu_\ell|}\right) \\
     &= \frac{2\beta}{\sigma_v^2 \kappa_0} \sum_{\ell=0}^{L-1} e^{-\ri \psi_\ell} s_\ell  \frac{\mu_\ell}{|\mu_\ell|^3} {\ri} \Im \left\{\mu_\ell^* \frac{\partial \mu_\ell}{\partial \hat{\varphi}}  \right\} \\
-    &=  \frac{2\beta}{\sigma_v^2 \kappa_0} \sum_{\ell=0}^{L-1} e^{-\ri \psi_\ell} s_\ell  \frac{\mu_\ell}{|\mu_\ell|^3} {\ri} \beta(\beta + \alpha\cos(\theta_\ell)). 
+    &=  \frac{2\beta}{\sigma_v^2 \kappa_0} \sum_{\ell=0}^{L-1} e^{-\ri \psi_\ell} s_\ell  \frac{\mu_\ell}{|\mu_\ell|^3} {\ri} \beta(\beta + \alpha\cos(\theta_\ell)), 
     \end{aligned}
 \end{equation}
-
-Thus, we obtain 
+we get the denominator $D$ as 
 \begin{equation}
     \begin{aligned}
     D = D_\ell &= -\Re(z^*w) +\Im(z^* \frac{\partial w}{\partial \hat{\varphi}}) \\
     &= -\Re\{z^*(w+\ri \frac{\partial w}{\partial \hat{\varphi}})\} \\
-    &= -\frac{2\beta}{\sigma_v^2 \kappa_0} \Re\left\{ \sum_{\ell=0}^{L-1}e^{-\ri \theta_\ell} s_\ell \frac{\mu_\ell}{|\mu_\ell|}\left( 1-\beta\frac{\beta+\alpha\cos(\theta_\ell)}{|\mu_\ell|^2} \right) \right\} \\
+    &= -\frac{2\beta}{\sigma_v^2 \kappa_0} \Re\left\{ \sum_{\ell=0}^{L-1}e^{-\ri \theta_\ell} s_\ell \frac{\mu_\ell}{|\mu_\ell|}\left( 1-\beta\cdot \frac{\beta+\alpha\cos(\theta_\ell)}{|\mu_\ell|^2} \right) \right\} \\
     &= \frac{2\alpha\beta}{\sigma_v^2 \kappa_0} \langle {\bm s}, {\bm x} \rangle,
     \end{aligned}
 \end{equation}
-where ${\bm x} = (x_0, x_1, \cdots, x_{L-1})\T$, and 
+where ${\bm x} = (x_0, x_1, \cdots, x_{L-1})\T$, and its components defined as 
 \begin{equation}
     \begin{aligned}
         x_\ell &= \Re\{ e^{-\ri \theta_\ell} \frac{\mu_\ell}{|\mu_\ell|} \}(1- \beta(\beta+\alpha\cos(\theta_\ell))/|\mu_\ell|^2) \\
         &= \frac{(\beta+\alpha\cos(\theta_\ell))(\alpha+\beta\cos(\theta_\ell))}{|\mu_\ell|^3}. 
     \end{aligned}
 \end{equation}
-The norm of the gradient $\nabla_{\bm v}\hat{\varphi}$ is thus given by 
+Finally, the squared norm of the gradient $\nabla_{\bm v}\hat{\varphi}$ is given by 
 \begin{equation}
     \begin{aligned}
     \|\nabla_{\bm v}\hat{\varphi}\|^2 &= \sum_{\ell=0}^{L-1}\left| \frac{N_\ell}{D} \right|^2 \\
@@ -347,5 +384,94 @@ The norm of the gradient $\nabla_{\bm v}\hat{\varphi}$ is thus given by
     \end{aligned}
 \end{equation}
 which completes the proof. 
+
+\section*{Proof of Lemma~\ref{lemma:perturbation_bound}}
+{\it Proof.} According to {\bf Lemma~\ref{lemma_Wirtinger_derivative_of_vM-EM_estimator}}, by applying the inequality~\eqref{ineq:gradient_bound}, we need to compute the upper bound of the integral of $\|\nabla_{\bm v}\hat{\varphi}\|$, i.e.,
+\begin{equation}
+    \int_{0}^{1} \|\nabla_{\bm v}\hat{\varphi}\|{\rm d}t = \int_{0}^{1} \frac{\sqrt{L\cdot H}}{|\langle{\bm s}(t), {\bm x}\rangle|} {\rm d} t,
+\end{equation}
+
+Thus, we obtain 
+\begin{equation}
+    \begin{aligned}
+        \int_{0}^{1} \|\nabla_{\bm v}\hat{\varphi}\|{\rm d}t & \leq \sqrt{H/L} \int_0^1 \frac{1}{G-\frac{\|{\bm x}\|}{\sqrt{L}} \left( t\frac{\|{\bm v}\|}{\sqrt{L}} + \beta|\Delta\varphi| \right)}{\rm d}t \\
+        & = -\frac{\sqrt{H}}{(\|{\bm x}\|/\sqrt{L})\cdot\|{\bm v}\|} \log\left(1-\frac{\|{\bm x}\|\cdot\|{\bm v}\|/L}{G-(\beta|\Delta\varphi|)\cdot \|{\bm x}\|/\sqrt{L}}\right), 
+    \end{aligned}
+\end{equation}
+where the denominator $G-(\beta|\Delta\varphi|)\cdot \|{\bm x}\|/\sqrt{L}$ can be assumed positive with probability arbitrarily close to 1 since the estimator $\hat{\varphi}$ is consistent. Thus, the following inequality holds with probability arbitrarily close to 1 as $\bar{\gamma}\to\infty$:  
+\begin{equation}
+    \begin{aligned}
+        |\Delta\varphi|^2 &\leq 4\|{\bm v}\|^2 \left(\int_0^1 \|\nabla_{\bm v}\hat{\varphi}\|{\rm d}t\right)^2 \\
+        & \leq \frac{4H}{(\|{\bm x}\|)^2/L}\log^2\left(1-\frac{\|{\bm x}\|\cdot\|{\bm v}\|/L}{G-(\beta|\Delta\varphi|)\cdot \|{\bm x}\|/\sqrt{L}}\right),
+    \end{aligned}
+\end{equation}
+which completes the proof. 
+
+\section*{Proof of Lemma~\ref{lemma:ODE-bound}}
+From the differential representation of the estimation error~\eqref{eqn:differential_of_error}, for all $t\in[0,1]$, we obtain 
+\begin{equation}
+    {\rm d}|\Delta\varphi| \leq 2\|\nabla_{t{\bm v}}\hat{\varphi}\|\cdot \|{\bm v}\|{\rm d}t.
+\end{equation}
+Since $H_L = H_\infty + \mathcal{O}(L^{-1})$, we can conclude that the upper limit and the lower limit of the sequence $H_L$ converges to the same limit $H_\infty$ as $L\to\infty$. Specifically, if we denote 
+\begin{equation}
+    \begin{aligned}
+    \underline{H}_L &:= \inf_{k\geq L, \varphi\in[0,2\pi]}{H_k}, \\
+    \overline{H}_L &:= \sup_{k\geq L, \varphi\in[0,2\pi]}{H_k}, 
+    \end{aligned}
+\end{equation}
+then $\underline{H}_L = H_\infty+\mathcal{O}(L^{-1})$, and $\overline{H}_L = H_\infty+\mathcal{O}(L^{-1})$. The same definitions and upper/lower limiting properties hold for the sequence $G_L$ and $X_L := \|{\bm x}\|/\sqrt{L}$. It follows immediately that 
+\begin{equation}
+    \begin{aligned}
+        & \underline{H}_L \leq H_L \leq \overline{H}_L, \\
+        & \underline{G}_L \leq G_L \leq \overline{G}_L, \\
+        & \underline{X}_L \leq X_L \leq \overline{X}_L. 
+    \end{aligned}
+\end{equation}
+
+Thus, by~{\bf Lemma~\ref{lemma_Wirtinger_derivative_of_vM-EM_estimator}}, we can further bound the increasing rate of $|\Delta\varphi|$ from above, i.e., 
+\begin{equation}
+    {\rm d}|\Delta\varphi| \leq \frac{2\sqrt{L\overline{H}_L}}{|\langle{\bm s}(t), {\bm x}\rangle|} \cdot \|{\bm v}\|{\rm d}t
+    \label{ineq:diff_of_error}
+\end{equation}
+where ${\bm s}(t) = |{\bm \mu}^{(0)} + t{\bm v}|$, and the components of ${\bm \mu}^{(0)}\in\mathbb{C}^L$ is defined as $\mu_\ell^{(0)}:= \alpha+\beta\exp(\ri (\psi_\ell + \varphi))$. In order to obtain an upper bound for the increasing rate of $|\Delta\varphi|$ w.r.t. $t$, we first try to lower-bound the inner product $\langle{\bm s}(t), {\bm x}\rangle$. $\forall t\in[0,1]$: 
+\begin{equation}
+    \begin{aligned}
+    \langle{\bm s}(t), {\bm x}\rangle &= \langle{\bm s}(t) - |{\bm \mu}|, {\bm x}\rangle + \langle|{\bm\mu}|,{\bm x}\rangle\\
+    &= \langle{\bm s}(t) - |{\bm \mu}|, {\bm x}\rangle + LG_L \\
+    &\geq L\underline{G}_L-\|{\bm s}(t) - |{\bm \mu}|\|\cdot\|{\bm x}\| \\
+    & \geq L\underline{G}_L-(\|{\bm s}(t) - |{\bm \mu}^{(0)}|\|+\||{\bm \mu}^{(0)}| - |{\bm \mu}|\|)\cdot\|{\bm x}\| \\
+    &\overset{(a)}{\geq} L\underline{G}_L-(t\|{\bm v}\| + \sqrt{L}\beta|\Delta\varphi|)\cdot\|{\bm x}\| \\
+    &\geq L\left[\underline{G}_L-(\frac{t\|{\bm v}\|}{\sqrt{L}}+\beta|\Delta\varphi|)\cdot \overline{X}_L \right]\\
+    \end{aligned}
+\end{equation}
+where (a) comes from applying the triangle inequality to the definition of ${\bm s}(t)$ and ${\bm \mu}^{(0)}$. Combining the above inequality with the differential inequality~\eqref{ineq:diff_of_error}, we obtain 
+\begin{equation}
+    {\rm d}|\Delta\varphi|\leq \frac{2\sqrt{\overline{H}_L}}{\underline{G}_L-(\frac{t\|{\bm v}\|}{\sqrt{L}}+\beta|\Delta\varphi|)\cdot \overline{X}_L }\cdot \frac{\|{\bm v}\|}{\sqrt{L}} {\rm d}t,
+    \label{ineq:increasing-rate-constraint}
+\end{equation}
+where the initial condition is $|\Delta\varphi|(t=0) = |\Delta\varphi|({\bm v} = 0)=0$. In order to solve this differential inequality, we construct an ordinary differential equation (ODE) with zero initial condition as 
+\begin{equation}
+    \frac{\d y}{\d u} = g(y, u) := \frac{2\sqrt{\overline{H}_L}}{\underline{G}_L - \overline{X}_L\left(u+\beta y\right)}, ~~~~y(0)=0.  \label{eqn:ODE}
+\end{equation}
+Since $u=0$ is a non-singular point of the ODE, there exists some small positive number $\delta>0$ such that the solution to~\eqref{eqn:ODE} uniquely exists in some closed interval $I_{\delta} = [0,\delta]$ \red{cite here}. Furthermore, there exists some positive constant $C>0$ such that $\forall u\in I_{\delta}$, $y(u)\leq Cu$. Particularly, since $g(y,u)$ is an increasing function of $y$ and $u$, $C$ can be chosen to be 
+\begin{equation}
+    C(\delta, L) = \frac{2\sqrt{\overline{H}_L}}{\underline{G}_L-\overline{X}_L (\delta+\beta y(\delta))}. 
+\end{equation} 
+Since the solution $y(u)$ of this ODE~\eqref{eqn:ODE} characterizes the maximum value attainable with such increasing rate constraint~\eqref{ineq:increasing-rate-constraint}, it serves as an upper bound to the unknown function $|\Delta\varphi|(t{\bm v})$ as a function of $t$, i.e., 
+\begin{equation}
+    |\Delta\varphi|(t{\bm v}) \leq y\left(t\frac{\|{\bm v}\|}{\sqrt{L}}\right)
+\end{equation}
+
+Thus, by further applying $y(u)\leq Cu$, we can infer that $\forall t: 0\leq t \leq \delta (\|{\bm v}\|/\sqrt{L})^{-1}$,
+\begin{equation}
+    |\Delta\varphi|(t{\bm v}) \leq C t\frac{\|{\bm v}\|}{\sqrt{L}}.
+\end{equation} 
+Thus, if we apply the constraint $\|{\bm v}\|/\sqrt{L}\leq \delta$, then $t$ can be chosen to $t=1$, i.e., 
+\begin{equation}
+    |\Delta\varphi|({\bm v}) \leq C \frac{\|{\bm v}\|}{\sqrt{L}},
+\end{equation}
+which completes the proof. 
+
+
 
 \end{document}
