@@ -769,8 +769,8 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
     In this section, we first provide the achievability proof the proposed vM-EM phase estimation algorithm. Then, we derive various CRLB expressions for the phase estimation problems. 
 
 \subsection{Asymptotic Achievability Bound of the vM-EM algorithm}
-\begin{theorem}[vM-EM estimator] \label{thm:asymp_perf_vM-EM}
-    Assume $\alpha>\beta>0$. Then there exists a sufficiently large integer $L_0$, such that for any $L\geq L_0$, if the proposed vM-EM algorithm converges, then the returned estimator $\hat{\varphi}$ achieves an MSE performance of $\mathbb{E}[(\hat{\varphi}-\varphi)^2] = \mathcal{O}(\gamma^{-1})$, where $\varphi$ is the true parameter.   
+\begin{theorem}[MSE of the vM-EM estimator] \label{thm:asymp_perf_vM-EM}
+    Assume $\alpha>\beta>0$ are fixed. Then, there exists a sufficiently large integer $L_0$, such that for any $L\geq L_0$, if the proposed vM-EM algorithm converges, the returned estimator $\hat{\varphi}$ achieves an MSE performance of $\mathbb{E}[(\hat{\varphi}-\varphi)^2] = \mathcal{O}(\bar{\gamma}^{-1})$, where $\varphi$ is the true parameter, and $\bar{\gamma}$ is the interferential SNR defined as $\bar{\gamma} = (\alpha^2+\beta^2)/\sigma_v^2$.    
 \end{theorem}
 
 Before proving this theorem, we first introduce the following {\bf Lemma~\ref{lemma:wirtinger_der_vM-EM}} that characterizes how the vM-EM estimator $\hat{\varphi}$ in {\bf Algorithm~\ref{alg:vM-EM}} varies with the random noise vector $\bm v$. 
@@ -809,7 +809,7 @@ where for real-valued function $\hat{\varphi}({\bm v}): \mathbb{C}^L \to [0,2\pi
     {\rm d}\Delta\varphi = 2\Re\langle\nabla_{\bm v}\hat{\varphi}, {\rm d}{\bm v}^*\rangle. 
     \label{eqn:differential_of_error}
 \end{equation}
-Thus, an integration inequality will hold to control the MSE of the estimator $\hat{\varphi}$, i.e., 
+Thus, an integration inequality will hold to upper-bound the MSE of the estimator $\hat{\varphi}$, i.e., 
 \begin{equation}
     \begin{aligned}
         |\Delta{\varphi}|^2 &= \left| \int {\rm d}\Delta\varphi \right|^2 \\
@@ -821,7 +821,7 @@ Thus, an integration inequality will hold to control the MSE of the estimator $\
 Before explaining this idea in detail, we first introduce some interesting results about some intermediate variables.
 
 \begin{lemma}[Asymptotic invariants]\label{lemma:asymp_inv}
-    If we define 
+    Suppose $\alpha > \beta > 0$. If we define 
     \begin{equation}
         \begin{aligned}
             H_L & :=\frac{1}{L}\sum_{\ell=0}^{L-1} \frac{\sin^2(\theta_\ell)}{|\mu_\ell|^2}, \\
@@ -898,12 +898,12 @@ From the above {\bf Lemma~\ref{lemma:ODE-bound}}, we can directly prove {\bf The
 \fi
 where (a) comes from applying the Markov inequality, and $r>0$ can be arbitrarily chosen. Particularly, by setting $r=2$, we obtain 
 \begin{equation}
-    \mathbb{E}\left[(\hat{\varphi} - \varphi)\right] \leq \sigma_v^2(C^2+\pi^2/\delta^2) = O(\gamma^{-1}),  
+    \mathbb{E}\left[(\hat{\varphi} - \varphi)\right] \leq \sigma_v^2(C^2+\pi^2/\delta^2) = \mathcal{O}(\bar{\gamma}^{-1}),  
 \end{equation}
 which completes the proof of {\bf Theorem~\ref{thm:asymp_perf_vM-EM}}. 
 
 \begin{remark}
-    balabala
+    The conclusion of {\bf Theorem~\ref{thm:asymp_perf_vM-EM}} guarantees that as $\bar{\gamma}\to\infty$, the MSE of the vM-EM estimator decays at a rate of at least $(\bar{\gamma})^{-1}$. This conclusion is verified in the following numerical simulation, where it is shown that the MSE curve of the proposed vM-EM algorithm has an asymptotic slope of $-1$ in the logarithmic coordinate. 
 \end{remark}
 
 %\subsection{The CRLB} \label{The CRLB}
@@ -922,7 +922,7 @@ which completes the proof of {\bf Theorem~\ref{thm:asymp_perf_vM-EM}}.
 %    To overcome this difficulty, we first perform exact analysis, and then approximated asymptotic analysis. The difficulty of manipulating Bessel functions is conquered by asymptotic expansion techniques \cite{silverman1972special}. Satisfactory asymtotic results are acquired in the absence of exact closed-form expression of the CRLB. These results will be introduced in the following subsection.  
 %    %In the following two subsections, {\bf Theorem \ref{thm:precise CRLB}} reveals  
     
-\subsection{Exact Expression of the CRLB} \label{Precise CRLB}
+\subsection{Expressions for the CRLB} \label{Precise CRLB}
 In Section~\ref{Sensing RIS-Based Channel Estimation}, we have introduced three phase estimation methods to solve the probabilistic parameter estimation problem.
 To analyze the performance limit of the proposed schemes, we derive the CRLB~\cite{casella2021statistical} of the estimation in \textbf{Theorem~\ref{thm:precise CRLB}}.
     
@@ -946,23 +946,18 @@ To analyze the performance limit of the proposed schemes, we derive the CRLB~\ci
                 \label{eqn:precise_g_function}
             \end{equation}
         \fi
-%        Furthermore, $\bar{\gamma}$ is determined only by physical signal intensity
-%        \begin{equation}
-%            \bar{\gamma} = \frac{1}{L}\sum_{l=0}^{L-1}{\gamma_l} = \frac{\alpha^2+\beta^2}{\sigma_v^2}.
-%        \end{equation}
-%    The function $R(\cdot)$ is defined the same as in \eqref{eqn:R function derivative property}.
+        The function $R(\cdot)$ is defined the same as in~\eqref{eqn:R function derivative property}.
     \end{theorem}
     \begin{IEEEproof}
-        See {\bf Appendix \ref{appendix:proof of theorem1}}. 
+        See {\bf Appendix~\ref{appendix:proof of theorem1}}. 
     \end{IEEEproof}
 
-    From \textbf{Theorem \ref{thm:precise CRLB}}, we note that the CRLB of the phase estimation problem is completely determined by the two parameters $K$ and $\bar{\gamma}$, which are the interferential contrast and the average interferential SNR, respectively. 
-    However, this exact CRLB expression is difficult to calculate due to the sophisticated evaluation of the integral in \eqref{eqn:precise_g_function}.
-    Thus, we will provide a simpler approximated CRLB in the following Subsection \ref{Asymptotic CRLB}.
+    From \textbf{Theorem~\ref{thm:precise CRLB}}, we note that the CRLB of the phase estimation problem is completely determined by the two parameters $K$ and $\bar{\gamma}$, which are the interferential contrast and the average interferential SNR, respectively. 
+    However, this exact CRLB expression is difficult to calculate due to the sophisticated evaluation of the integral in~\eqref{eqn:precise_g_function}.
+    Thus, we will provide a simpler approximated CRLB in the following {\bf Theorem~\ref{thm:asymptotic CRLB}}. 
     
-\subsection{Asymptotic CRLB}    \label{Asymptotic CRLB}
     \begin{theorem}[Asymptotic CRLB] \label{thm:asymptotic CRLB} \mbox{}\par
-        Suppose the probabilistic model is specified by \eqref{eqn:sensor power}. Then the approximated CRLB of this $L$-point phase estimation problem is given by 
+        Suppose the probabilistic model is specified by~\eqref{eqn:sensor power}. Then the approximated CRLB of this $L$-point phase estimation problem is given by 
         \begin{equation}
             \frac{1}{{\rm CRLB}(\varphi)}\approx K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}\sin^2(\psi_l+\varphi)(1/\gamma_l-\hat{g}(\gamma_l))^{+},
             \label{eqn:asymptotic CRLB}
@@ -1444,14 +1439,14 @@ From the differential representation of the estimation error~\eqref{eqn:differen
 \begin{equation}
     {\rm d}|\Delta\varphi| \leq 2\|\nabla_{t{\bm v}}\hat{\varphi}\|\cdot \|{\bm v}\|{\rm d}t.
 \end{equation}
-Since $H_L = H_\infty + \mathcal{O}(L^{-1})$, we can conclude that the upper limit and the lower limit of the sequence $H_L$ converges to the same limit $H_\infty$ as $L\to\infty$. Specifically, if we denote 
+Since $H_L = H_\infty + \mathcal{O}(L^{-1})$, we can conclude that the upper limit and the lower limit of the sequence $H_L$ converges to the same limit $H_\infty$ as $L\to\infty$, and this convergence is uniform in $\varphi\in[0,2\pi]$. Specifically, if we denote 
 \begin{equation}
     \begin{aligned}
     \underline{H}_L &:= \inf_{k\geq L, \varphi\in[0,2\pi]}{H_k}, \\
     \overline{H}_L &:= \sup_{k\geq L, \varphi\in[0,2\pi]}{H_k}, 
     \end{aligned}
 \end{equation}
-then $\underline{H}_L = H_\infty+\mathcal{O}(L^{-1})$, and $\overline{H}_L = H_\infty+\mathcal{O}(L^{-1})$. The same definitions and upper/lower limiting properties hold for the sequence $G_L$ and $X_L := \|{\bm x}\|/\sqrt{L}$. It follows immediately that 
+then $\underline{H}_L = H_\infty+\mathcal{O}(L^{-1})$, and $\overline{H}_L = H_\infty+\mathcal{O}(L^{-1})$. The same definitions and upper/lower limiting properties hold for the sequences $G_L$ and $X_L := \|{\bm x}\|/\sqrt{L}$. It follows immediately that 
 \begin{equation}
     \begin{aligned}
         & \underline{H}_L \leq H_L \leq \overline{H}_L, \\
@@ -1483,22 +1478,23 @@ where (a) comes from applying the triangle inequality to the definition of ${\bm
 \end{equation}
 where the initial condition is $|\Delta\varphi|(t=0) = |\Delta\varphi|({\bm v} = 0)=0$. In order to solve this differential inequality, we construct an ordinary differential equation (ODE) with zero initial condition as 
 \begin{equation}
-    \frac{\d y}{\d u} = g(y, u) := \frac{2\sqrt{\overline{H}_L}}{\underline{G}_L - \overline{X}_L\left(u+\beta y\right)}, ~~~~y(0)=0.  \label{eqn:ODE}
+    \frac{\d y}{\d u} = g_L(y, u) := \frac{2\sqrt{\overline{H}_L}}{\underline{G}_L - \overline{X}_L\left(u+\beta y\right)}, ~~~~y(0)=0.  \label{eqn:ODE}
 \end{equation}
-Since $u=0$ is a non-singular point of the ODE, there exists some small positive number $\delta>0$ such that the solution to~\eqref{eqn:ODE} uniquely exists in some closed interval $I_{\delta} = [0,\delta]$~\cite{ince1956ordinary}. Furthermore, there exists some positive constant $C>0$ such that $\forall u\in I_{\delta}$, $y(u)\leq Cu$. Particularly, since $g(y,u)$ is an increasing function of $y$ and $u$, $C$ can be chosen to be 
+Since $u=0$ is a non-singular point of the ODE, there exists some small positive number $\delta=\delta(L)>0$ such that the solution to~\eqref{eqn:ODE} uniquely exists in some closed interval $I_{\delta} = [0,\delta]$~\cite{ince1956ordinary}. Note that this $\delta$ is chosen for some given $L$, but the existence of the ODE solution, as well as all the following properties, hold true for arbitrary larger values of $L$ in the same interval $I_\delta$, because of the monotone property of the sequences $\overline{H}_L$, $\underline{G}_L$, and $\overline{X}_L$. 
+
+Furthermore, there exists some positive constant $C>0$ such that $\forall u\in I_{\delta}$, $y(u)\leq Cu$. Particularly, since $g_L(y,u)$ is an increasing function of $y$ and $u$, $C$ can be chosen to be 
 \begin{equation}
     C(\delta, L) = \frac{2\sqrt{\overline{H}_L}}{\underline{G}_L-\overline{X}_L (\delta+\beta y(\delta))}. 
 \end{equation} 
-Since the solution $y(u)$ of this ODE~\eqref{eqn:ODE} characterizes the maximum value attainable with such increasing rate constraint~\eqref{ineq:increasing-rate-constraint}, it serves as an upper bound to the unknown function $|\Delta\varphi|(t{\bm v})$ as a function of $t$, i.e., 
+Since the solution $y(u)$ of this ODE~\eqref{eqn:ODE} characterizes the maximum value attainable for arbitrary smooth function subject to the increasing rate constraint~\eqref{ineq:increasing-rate-constraint}, the solution $y(u)$ in $I_\delta$ serves as an upper bound to the unknown function $|\Delta\varphi|(t{\bm v})$ as a function of $t$, i.e., 
 \begin{equation}
-    |\Delta\varphi|(t{\bm v}) \leq y\left(t\frac{\|{\bm v}\|}{\sqrt{L}}\right)
+    |\Delta\varphi|(t{\bm v}) \leq y\left(t\frac{\|{\bm v}\|}{\sqrt{L}}\right), \quad \forall t\frac{\|{\bm v}\|}{\sqrt{L}} \in I_\delta.  
 \end{equation}
-
 Thus, by further applying $y(u)\leq Cu$, we can infer that $\forall t: 0\leq t \leq \delta (\|{\bm v}\|/\sqrt{L})^{-1}$,
 \begin{equation}
     |\Delta\varphi|(t{\bm v}) \leq C t\frac{\|{\bm v}\|}{\sqrt{L}}.
 \end{equation} 
-Thus, if we apply the constraint $\|{\bm v}\|/\sqrt{L}\leq \delta$, then $t$ can be chosen to $t=1$, i.e., 
+If we apply the constraint $\|{\bm v}\|/\sqrt{L}\leq \delta$, then $t$ can be chosen to $t=1$, i.e., 
 \begin{equation}
     |\Delta\varphi|({\bm v}) \leq C \frac{\|{\bm v}\|}{\sqrt{L}},
 \end{equation}

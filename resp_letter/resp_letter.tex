@@ -47,7 +47,7 @@
 \newcommand{\red}[1]{\textcolor{red}{#1}}
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
 
-
+\newenvironment{IEEEproof}{{\it Proof. }}{}
 \newcolumntype{C}[1]{>{\PreserveBackslash\centering}p{#1}}
 \newcolumntype{R}[1]{>{\PreserveBackslash\raggedleft}p{#1}}
 \newcolumntype{L}[1]{>{\PreserveBackslash\raggedright}p{#1}}
@@ -55,6 +55,9 @@
 \def \T {^{\mathsf{T}}}
 \def \H {^{\mathsf{H}}}
 \def \ri {{\rm i}}
+\def \d {{\rm d}}
+
+\def\onecol{}
 
 \begin{document}
 
@@ -400,6 +403,13 @@ Sincerely, \\
 {\it The Authors }
 }}
 
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{center}
     {\Large\bf Response to Reviewer 2's Comments}
 \end{center}
@@ -411,13 +421,206 @@ In this paper, the authors propose a dimension-independent channel state informa
 We appreciate the reviewer's concise summary of the key points of this paper. We have tried our best to revise the paper according to the reviewer's valuable comments, and our responses are provided in a point-to-point manner as below. 
 }}
 
+
 \textbf{Reviewer 2:}
 While the proposed idea \& results seem correct, I do not believe the main contributions of the paper (largely algorithmic) are a good fit for IEEE Transactions on Information Theory. My recommendation to the authors would be to submit the paper to wireless communication- and/or signal processing-focused journals, which would be a better fit for the paper's contributions.
 
 {\color{blue}{\textbf{Authors: } 
-Much thanks for the reviewer's positive attitude on the novelty and correctness of this paper. Also, as is stressed by the reviewer, the previous version of this paper lacks a series of sound information-theoretic analyses. We agree with the reviewer that the analytical results are necessary for the high-quality journals like IEEE T-IT. To this end, we have tried our best to provide achievable bounds for our proposed interference random field (IRF)-based CSI acquisiton schemes. These newly-added theorems and lemmas are mainly related to detection and estimation theory, which may match the broader scope of this journal. For you to check, we have 
+Much thanks for the reviewer's positive attitude on the novelty and correctness of this paper. Also, as is stressed by the reviewer, the previous version of this paper lacks a series of sound information-theoretic analyses. We agree with the reviewer that the analytical results are necessary for the high-quality journals like IEEE T-IT. To this end, we have tried our best to provide achievable bounds for our proposed interference random field (IRF)-based CSI acquisiton schemes. These newly-added theorems and lemmas are mainly related to detection and estimation theory, which may match the broader scope of this journal. For you to check, we have provided the theoretical contents as follows with some slight modifications, e.g., the number of equations and lemmata may be different from those in the revised paper. 
+\begin{framed}
+\red{
+    \begin{theorem}[MSE of the vM-EM estimator] \label{thm:asymp_perf_vM-EM}
+        Assume $\alpha>\beta>0$ are fixed. Then, there exists a sufficiently large integer $L_0$, such that for any $L\geq L_0$, if the proposed vM-EM algorithm converges, the returned estimator $\hat{\varphi}$ achieves an MSE performance of $\mathbb{E}[(\hat{\varphi}-\varphi)^2] = \mathcal{O}(\bar{\gamma}^{-1})$, where $\varphi$ is the true parameter, and $\bar{\gamma}$ is the interferential SNR defined as $\bar{\gamma} = (\alpha^2+\beta^2)/\sigma_v^2$.    
+    \end{theorem}
+}
 
+    \red{Before proving this theorem, we first introduce the following {\bf Lemma~\ref{lemma:wirtinger_der_vM-EM}} that characterizes how the vM-EM estimator $\hat{\varphi}$ in {\bf Algorithm~2} varies with the random noise vector $\bm v$. }
+
+    \red{\begin{lemma} \label{lemma:wirtinger_der_vM-EM}
+        Suppose that for the input data sequence ${\bm s} = \sqrt{{\bm P}/A} = (s_0, \cdots, s_{L-1})\T$, the vM-EM algorithm converges to the estimator $\hat{\varphi}$. Then, the estimator $\hat{\varphi} = \hat{\varphi}({\bm v})$ can be viewed as a function of the noise $\bm v$, and the Wirtinger derivative of $\hat{\varphi}$ w.r.t. $\bm v$ satisfies 
+        \begin{equation}
+            \|\nabla_{\bm v}\hat{\varphi}\|^2 = \frac{1}{|\langle {\bm s}, {\bm x}\rangle|^2}\sum_{\ell=0}^{L-1}  \frac{\sin^2(\theta_\ell)}{|\mu_\ell|^2}, 
+        \end{equation} 
+        where ${\bm x} = (x_0, \cdots, x_{L-1})\T$ is defined as 
+        \begin{equation}
+            x_{\ell} := \frac{(\alpha+\beta \cos\theta_\ell)(\beta+\alpha\cos\theta_\ell)}{|\mu_\ell|^3},~~\ell\in\{L\}, 
+        \end{equation}
+        and 
+        \begin{equation}
+            \begin{aligned}
+                \mu_\ell & := \alpha+\beta {\rm exp}(\ri \theta_\ell),~~\ell\in\{L\}, \\
+                \theta_\ell & := \psi_\ell + \hat{\varphi}, ~~\ell\in\{L\}. 
+            \end{aligned}
+        \end{equation}
+    \end{lemma}
+    \begin{IEEEproof}
+    The proof is provided in {\bf Appendix E}. 
+    \end{IEEEproof}
+    }
+    
+    \red{The aim of {\bf Lemma~\ref{lemma:wirtinger_der_vM-EM}} is to establish the connection between the vM-EM estimator $\hat{\varphi}$ and the noise vector ${\bm v}$. In the following, we denote the estimation error as 
+    \begin{equation}
+        \Delta\varphi := \hat{\varphi} - \varphi. 
+    \end{equation}
+    Specifically, it is justified in {\bf Lemma~\ref{lemma:wirtinger_der_vM-EM}} that, the squared error $|\Delta\varphi|^2$ of the vM-EM estimator is intrinsically bounded by the noise energy $\|{\bm v}\|^2$, since the differential ${\rm d}\Delta\varphi$ of a general complex-valued function $\Delta\varphi: \mathbb{C}\to\mathbb{C}$ can be written as 
+    \begin{equation}
+        {\rm d}\Delta\varphi = \langle \nabla_{\bm v}\hat{\varphi}, {\rm d}{\bm v}^*\rangle + \langle \nabla_{{\bm v}^*}\hat{\varphi}, {\rm d}{\bm v}\rangle, 
+    \end{equation}
+    where for real-valued function $\hat{\varphi}({\bm v}): \mathbb{C}^L \to [0,2\pi]\subset \mathbb{R}$ this differential relation reduces to 
+    \begin{equation}
+        {\rm d}\Delta\varphi = 2\Re\langle\nabla_{\bm v}\hat{\varphi}, {\rm d}{\bm v}^*\rangle. 
+        \label{eqn:differential_of_error}
+    \end{equation}
+    Thus, an integration inequality will hold to upper-bound the MSE of the estimator $\hat{\varphi}$, i.e., 
+    \begin{equation}
+        \begin{aligned}
+            |\Delta{\varphi}|^2 &= \left| \int {\rm d}\Delta\varphi \right|^2 \\
+            &= 4 \left| \int_{0}^{1} \Re\langle\nabla_{{\bm v}'=t {\bm v}}\hat{\varphi}, {\bm v}\rangle{\rm d}t \right|^2 \\
+            &\leq 4\|{\bm v}\|^2 \left(\int_{0}^{1} \|\nabla_{{\bm v}'=t{\bm v}}\hat{\varphi} \| {\rm d} t \right)^2. 
+        \end{aligned}
+        \label{ineq:gradient_bound}
+    \end{equation}
+    Before explaining this idea in detail, we first introduce some interesting results about some intermediate variables. }
+    
+    \red{\begin{lemma}[Asymptotic invariants]\label{lemma:asymp_inv}
+        Suppose $\alpha > \beta > 0$. If we define 
+        \begin{equation}
+            \begin{aligned}
+                H_L & :=\frac{1}{L}\sum_{\ell=0}^{L-1} \frac{\sin^2(\theta_\ell)}{|\mu_\ell|^2}, \\
+                G_L & := \frac{1}{L}\sum_{\ell=0}^{L-1} \frac{(\alpha+\beta \cos(\theta_\ell))(\beta+\alpha\cos(\theta_\ell))}{|\mu_\ell|^2}, \\
+            \end{aligned}
+        \end{equation}
+        then the sequences $H_L$ and $G_L$ are intrinsically independent of the estimator $\hat{\varphi}\in[0,2\pi]$ as $L\to\infty$. Specifically, 
+        \begin{equation}
+            \begin{aligned}
+                H &= H_{\infty} + \mathcal{O}(L^{-1}), \\
+                G &= G_{\infty} + \mathcal{O}(L^{-1}), 
+            \end{aligned}
+        \end{equation}
+        where 
+        \begin{equation}
+            \begin{aligned}
+                H_{\infty} &=  \frac{1}{2\pi}\int_{0}^{2\pi} \frac{\sin^2\theta}{\alpha^2+\beta^2+2\alpha\beta\cos(\theta)}{\rm d}\theta = \frac{1}{2\alpha^2},  \\
+                G_{\infty} &= \frac{1}{2\pi}\int_{0}^{2\pi} \frac{(\alpha+\beta\cos(\theta))(\beta+\alpha\cos(\theta))}{\alpha^2+\beta^2+2\alpha\beta\cos(\theta)} {\rm d}\theta = \frac{\beta}{2\alpha}.  \\ 
+            \end{aligned}
+        \end{equation}
+    \end{lemma}
+    }
+    
+    
+    \red{{\it Proof Sketch.} The integral expressions for $H_\infty$ and $G_\infty$ as well as the asymptotic residuals $\mathcal{O}(L^{-1})$ can be obtained by applying the numerical trapezoidal integration formula to the definition of the sequence $H_L$ and $G_L$. The integrals on $[0,2\pi]$ can be evaluated by the following replacements:
+    \begin{equation}
+        \begin{aligned}
+            & {\rm d}\theta  \to \frac{\d z}{\ri z}, & \int_0^{2\pi} \to \int_{|z|=1}, \\
+            & \sin\theta  \to \frac{z-z^{-1}}{2\ri}, & \cos\theta \to \frac{z+z^{-1}}{2}, \\
+        \end{aligned}
+    \end{equation}
+    and the applying the Residue Theorem to all poles inside the closed curve $|z|=1$. }
+    
+    \red{\begin{remark}
+        These limiting expressions will play an important rule in obtaining the upper bound of the estimation error $|\Delta\varphi|$, since this invariance can asymptotically eliminate the dependency of the Wirtinger derivative ({\bf Lemma~\ref{lemma:wirtinger_der_vM-EM}}) on the unknown estimator $\hat{\varphi}$. 
+    \end{remark}}
+    
+    \red{\begin{remark}
+        In fact, we can also prove that 
+        \begin{equation}
+            \frac{\|{\bm x}\|^2}{L} = \frac{2\alpha^2-\beta^2/2}{4\alpha^2(\alpha^2-\beta^2)} + \mathcal{O}(L^{-1}),~~\alpha>\beta>0
+        \end{equation}
+        by the same numerical integration approximation technique and the Residue Theorem. 
+    \end{remark} }
+    
+    
+    \red{\begin{lemma}[ODE bound] \label{lemma:ODE-bound}
+        Suppose for the input data sequence ${\bm s} = \sqrt{{\bm P}/A} = (s_0, \cdots, s_{L-1})\T$, the vM-EM algorithm converges, and the estimation error is denoted by $\Delta\varphi = \hat{\varphi} - \varphi$. Then, for any sufficiently large $L\geq L_0$, there exists some positive $\delta = \delta(L)>0$ and $C=C(L)>0$, such that for any noise vector ${\bm v}$ satisfying $\|{\bm v}\|/\sqrt{L} \leq \delta$, the estimation error is upper-bounded by
+        \begin{equation}
+            |\Delta\varphi|\leq C \frac{\|{\bm v}\|}{\sqrt{L}}. 
+        \end{equation}
+    \end{lemma}
+    \begin{IEEEproof}
+        The proof is provided in {\bf Appendix~F}. 
+    \end{IEEEproof}
+    From the above {\bf Lemma~\ref{lemma:ODE-bound}}, we can directly prove {\bf Theorem~\ref{thm:asymp_perf_vM-EM}}. Choose $L\geq L_0$, and then let us compute the MMSE of the vM-EM estimator, i.e., 
+    \ifx\onecol\undefined
+    \begin{equation}
+        \begin{aligned}
+        \mathbb{E}[(\hat{\varphi}-\varphi)^2] &= \mathbb{E}[|\Delta\varphi|^2] \\
+        &= \mathbb{E}\left[|\Delta\varphi|^2 \Bigg|\frac{\|{\bm v}\|}{\sqrt{L}} \leq \delta \right]\mathbb{P}\left[\frac{\|{\bm v}\|}{\sqrt{L}} \leq \delta \right] \\
+        & + \mathbb{E}\left[|\Delta\varphi|^2 \Bigg|\frac{\|{\bm v}\|}{\sqrt{L}} > \delta \right]\mathbb{P}\left[\frac{\|{\bm v}\|}{\sqrt{L}}>\delta \right] \\
+        & \leq C^2 \mathbb{E}\left[\frac{\|{\bm v}\|^2}{L}\right] + \pi^2 \mathbb{P}\left[\frac{\|{\bm v}\|}{\sqrt{L}}>\delta\right] \\
+        & \overset{(a)}{\leq} C^2\sigma_v^2 + \pi^2 \frac{\mathbb{E}\left[\left(\frac{\|{\bm v}\|}{\sqrt{L}}\right)^r\right]}{\delta^r},
+        \end{aligned}
+    \end{equation}
+    \else 
+    \begin{equation}
+        \begin{aligned}
+        \mathbb{E}[(\hat{\varphi}-\varphi)^2] &= \mathbb{E}[|\Delta\varphi|^2] \\
+        &= \mathbb{E}\left[|\Delta\varphi|^2 \Bigg|\frac{\|{\bm v}\|}{\sqrt{L}} \leq \delta \right]\mathbb{P}\left[\frac{\|{\bm v}\|}{\sqrt{L}} \leq \delta \right] + \mathbb{E}\left[|\Delta\varphi|^2 \Bigg|\frac{\|{\bm v}\|}{\sqrt{L}} > \delta \right]\mathbb{P}\left[\frac{\|{\bm v}\|}{\sqrt{L}}>\delta \right] \\
+        & \leq C^2 \mathbb{E}\left[\frac{\|{\bm v}\|^2}{L}\right] + \pi^2 \mathbb{P}\left[\frac{\|{\bm v}\|}{\sqrt{L}}>\delta\right] \\
+        & \overset{(a)}{\leq} C^2\sigma_v^2 + \pi^2 \frac{\mathbb{E}\left[\left(\frac{\|{\bm v}\|}{\sqrt{L}}\right)^r\right]}{\delta^r},
+        \end{aligned}
+    \end{equation}
+    \fi
+    where (a) comes from applying the Markov inequality, and $r>0$ can be arbitrarily chosen. Particularly, by setting $r=2$, we obtain 
+    \begin{equation}
+        \mathbb{E}\left[(\hat{\varphi} - \varphi)\right] \leq \sigma_v^2(C^2+\pi^2/\delta^2) = \mathcal{O}(\bar{\gamma}^{-1}),  
+    \end{equation}
+    which completes the proof of {\bf Theorem~\ref{thm:asymp_perf_vM-EM}}.  }
+    
+    \red{\begin{remark}
+        The conclusion of {\bf Theorem~\ref{thm:asymp_perf_vM-EM}} guarantees that as $\bar{\gamma}\to\infty$, the MSE of the vM-EM estimator decays at a rate of at least $(\bar{\gamma})^{-1}$. This conclusion is verified in the following numerical simulation, where it is shown that the MSE curve of the proposed vM-EM algorithm has an asymptotic slope of $-1$ in the logarithmic coordinate. 
+    \end{remark} }
+    
+\end{framed}
+
+
+The newly-added proofs of the above lemmas and theorems are provided in the revised paper. 
 }}
+
+\clearpage 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{center}
+    {\Large\bf Response to Reviewer 3's Comments}
+\end{center}
+
+\textbf{Reviewer 3:}
+This paper introduces a dimension-independent CSI acquisition method for sensing
+RIS-assisted MISO wireless communication systems. The key issue of the paper is that the achievable schemes look like heuristic with no performance guarantees, and the methodology does not seem novel.
+
+{\color{blue}{\textbf{Authors: } 
+We appreciate the reviewer's concise summary of the key points of this paper. We have tried our best to address these issues in the revised paper according to the reviewer's valuable comments. Specifically, we have proved theorems for 
+}}
+
+\textbf{Reviewer 3:}
+1) The paper considers a MISO system. Can the approaches work for MIMO system?
+
+{\color{blue}{\textbf{Authors: } 
+Balabala..
+}}
+
+\textbf{Reviewer 3:}
+2) The new contribution from algorithm seems to be phase estimation in Section V. However, all the approaches seem direct and heuristic. There are no performance guarantees of the proposed approaches.
+
+{\color{blue}{\textbf{Authors: } 
+Balabala..
+}}
+
+\textbf{Reviewer 3:}
+3) All the theorems seem to be on CRLB rather than the achievability. As such, the achievable strategy and CRLB comparison will add credibility to the achievability.
+
+{\color{blue}{\textbf{Authors: } 
+Balabala..
+}}
+
+
+
+
+\clearpage 
 
 %%%% Some strange ideas about the theory. 
 
