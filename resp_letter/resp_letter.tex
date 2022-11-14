@@ -508,7 +508,7 @@ Much thanks for the reviewer's positive attitude on the novelty and correctness 
     }
     
     
-    \red{{\it Proof Sketch.} The integral expressions for $H_\infty$ and $G_\infty$ as well as the asymptotic residuals $\mathcal{O}(L^{-1})$ can be obtained by applying the numerical trapezoidal integration formula to the definition of the sequence $H_L$ and $G_L$. The integrals on $[0,2\pi]$ can be evaluated by the following replacements:
+    \red{{\it Proof Sketch.} The integral expressions for $H_\infty$ and $G_\infty$ as well as the asymptotic remainders $\mathcal{O}(L^{-1})$ can be obtained by applying the numerical trapezoidal integration formula to the definition of the sequence $H_L$ and $G_L$. The integrals on $[0,2\pi]$ can be evaluated by the following replacements:
     \begin{equation}
         \begin{aligned}
             & {\rm d}\theta  \to \frac{\d z}{\ri z}, & \int_0^{2\pi} \to \int_{|z|=1}, \\
@@ -576,6 +576,13 @@ Much thanks for the reviewer's positive attitude on the novelty and correctness 
 The newly-added proofs of the above lemmas and theorems are provided in the revised paper. 
 }}
 
+{\color{blue}{\textbf{Authors: } 
+Many thanks again for your valuable time and efforts to review this paper. 
+
+Sincerely, \\
+{\it The Authors }
+}}
+
 \clearpage 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -593,14 +600,36 @@ This paper introduces a dimension-independent CSI acquisition method for sensing
 RIS-assisted MISO wireless communication systems. The key issue of the paper is that the achievable schemes look like heuristic with no performance guarantees, and the methodology does not seem novel.
 
 {\color{blue}{\textbf{Authors: } 
-We appreciate the reviewer's concise summary of the key points of this paper. We have tried our best to address these issues in the revised paper according to the reviewer's valuable comments. Specifically, we have proved theorems for 
+We appreciate the reviewer's concise summary of the key points of this paper. We have tried our best to address these issues in the revised paper according to the reviewer's valuable comments. Specifically, we have proved achievable theorems for our proposed vM-EM phase estimation algorithm, and our responses are provided in a point-to-point manner as below. 
 }}
 
 \textbf{Reviewer 3:}
 1) The paper considers a MISO system. Can the approaches work for MIMO system?
 
 {\color{blue}{\textbf{Authors: } 
-Balabala..
+Thanks for the insightful comments of the reviewer. Since the definition of MIMO systems usually include two possible explanations: the multi-antenna MIMO and the multi-user MIMO, we will elaborate our thoughts on both of these two explanations. 
+
+1.1) Actually, the extensibility to multi-antenna MIMO case is possible without sacrificing the number of time slots for CSI acquisition. By placing the pilot symbols on different OFDM subcarriers across different antennas, all the antennas at the user can transmit rotational pilots simultaneously at different frequencies. Then, the power sensors attached to each RIS element can split the interference random field (IRF) signal into components of different frequencies and perform phase estimation separately for different antennas. Mathematically, it is possible to retrieve $K$ different phases $\varphi_k\in[0,2\pi], k\in\{1,2,\cdots,K\}$ from the following composite power signal 
+\begin{equation}
+    P(t) = \left|\alpha + \sum_{k=1}^{K} \beta_k e^{\ri \omega_k t}  e^{\ri \varphi_k}\right|^2,
+\end{equation}
+where $\beta_k>0$, and $\omega_k\neq\omega_\ell$ for different antenna indices $k,\ell$. In fact, by assuming a sufficiently small interferential power ratio $r=(\alpha)^{-2}\sum_k \beta_k^2$, the above power signal can be locally linearized into one DC component $\alpha^2$ and $K$ AC components of different frequencies, which may further be separated by directly applying the Fourier transform. Clearly, this sensing RIS-aided multi-antenna MIMO CSI acquisition method is sub-optimal. However, designing the optimal method to estimate all the $\varphi_k$ and $\beta_k$ accurately is also interesting, and we will leave it for our future work. 
+
+1.2) The extensibility to multi-user MIMO case. Similar to the above multi-antenna MIMO case, the simultaneous CSI acquisition methodology also works for the multi-user case. By transmitting pilot symbols that rotate at different frequencies, the RIS power sensor can still distinguish between different users. 
+Moreover, since usually different users are separated in the angular domain from the RIS's perspective, in the multi-user case, the RIS can further exploit such angular separation property to distinguish between different users. Thus, by exploiting multi-sensor joint detection and estimation at the RIS, the CSI acquisition precision can be further improved. Such an extension to the multi-user MIMO case is also left for our future work, and we have added a brief discussion about this idea in the revised version.  
+
+% It is worth pointing out that the method we proposed to estimate the channel phase difference $\varphi$ is heuristic, which may not be the optimal one. It has been verified in the paper that our method is simple and efficient. However, designing the optimal method to estimate ${{\varphi_{l,c}}}$ is also interesting, and we will leave it for our future work. In the revised paper, we have addressed this issue as:
+
+Specifically, in the revised paper, we have addressed these issues in two parts:
+
+\begin{framed}
+    
+\end{framed}
+
+\begin{framed}
+    
+\end{framed}
+
 }}
 
 \textbf{Reviewer 3:}
@@ -616,7 +645,6 @@ Balabala..
 {\color{blue}{\textbf{Authors: } 
 Balabala..
 }}
-
 
 
 

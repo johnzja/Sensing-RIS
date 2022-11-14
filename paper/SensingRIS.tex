@@ -210,6 +210,7 @@ In Section~\ref{Simulation Results}, simulation results are provided for quantif
 Finally, in Section~\ref{Conclusion}, we provide our conclusions followed by promising future research ideas.
 
 \textit{Notation:} $\mathbb C$ and $\mathbb R$ denote the set of complex and real numbers, respectively;
+$\ri$ denotes the imaginary unit; 
 $\{L\}$ represents the set of integers $\{0,1,\cdots,L-1\}$;
 $\bm A^{-1}, \bm A^*,\bm A\T,$ and $\bm A\H$ denote the inverse, conjugate, transpose, and conjugate transpose of matrix $\bm A$, respectively; 
 $\Vert \cdot\Vert_{2}$ is the $\mathcal{L}_{2}$-norm of its argument function;
@@ -266,7 +267,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     In this paper, we assume that the locations of the \ac{BS} and the RIS are unchanged, which can provide us a feasible beamforming approach expressed as
     \begin{equation}
         \label{traditional beamforming}
-        \bm w=\sqrt{P_{\rm max}}\bm a\left(\alpha\right),~ \theta_{n} = \exp\left(-{\rm j} \arg\left(f_{n}^{*}\bm g_{n}\T \bm w\right)\right),~\forall n\in \{N\},
+        \bm w=\sqrt{P_{\rm max}}\bm a\left(\alpha\right),~ \theta_{n} = \exp\left(-\ri \arg\left(f_{n}^{*}\bm g_{n}\T \bm w\right)\right),~\forall n\in \{N\},
     \end{equation}
     where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave departure angle $\alpha$ of the BS antenna array, and $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]\T$. 
 
@@ -349,7 +350,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
         \subfigure[Optical interference.]
         {\includegraphics[width=1\linewidth]{figures/scheme1.pdf}}
         \subfigure[Electromagnetic interference.]
-        {\includegraphics[width=1\linewidth]{figures/scheme2.pdf}}
+        {\includegraphics[width=0.7\linewidth]{figures/scheme2.pdf}}
         \caption{Analogy between the optical interference and the \ac{IRF} phenomenon induced on the RIS.}
         \label{fig:scheme}
     \end{figure}
@@ -363,7 +364,6 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
             {\includegraphics[width=.41\textwidth]{figures/scheme2.pdf}}
             \caption{Analogy between the optical interference and the \ac{IRF} phenomenon induced on the RIS.}
             \label{fig:scheme}
-            %\vspace{-0.5em}
         \end{figure}
     \fi
 
@@ -372,7 +372,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     If we represent both of the BS-RIS and user-RIS signals that appear on each RIS element by their baseband equivalent signals $E_{{\rm BB}}(t)$, 
     then the corresponding physical passband electric field induced on each RIS element is characterized by 
     \begin{equation}
-        E(t) = \sqrt{2} \Re\left( E_{{\rm BB}}(t)e^{{\rm j}\omega_c t} \right),
+        E(t) = \sqrt{2} \Re\left( E_{{\rm BB}}(t)e^{\ri\omega_c t} \right),
         \label{baseband-passband relationship}
     \end{equation}
     where $\omega_c = 2\pi f_c$ denotes the carrier frequency, and the coefficient $\sqrt{2}$ ensures that the passband signal power is equal to the baseband signal power, i.e., 
@@ -388,7 +388,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
     \end{equation}
     where $v(t)\sim \mathcal{CN}(0,\sigma_{v}^{2})$ is the electromagnetic noise signal in its baseband representation,
     $\bm w$ and $w'$ are the beamforming vector at the BS side and the user side satisfying $\Vert \bm w \Vert_{2}^{2}\leq P_{\text{max}}$ and $|w'|^{2}\leq P'_{\text{max}}$, respectively,
-    $s$ is the symbol transmitted from the BS to RIS, and $s'=e^{{\rm j} \psi(t)}$ is the time-varying transmitted symbol from the user to the RIS.  
+    $s$ is the symbol transmitted from the BS to RIS, and $s'=e^{\ri \psi(t)}$ is the time-varying transmitted symbol from the user to the RIS.  
     Since the interference fringes are not sensitive to a global phase change, we can safely assume that $s=1$, and then the relative phase between the user and the BS can be fully characterized by a time-varying phase function $\psi(t)$.  
 
     Furthermore, by defining $\alpha = \left\vert\bm g_{n}\T\bm w\right\vert$, $\beta = \left\vert f_{n}^{*} w' \right\vert$, and the phase difference between the \ac{BS}-RIS link\footnote{Since it is usually difficult to obtain the optimal BS beamforming vector $\bm w$, during the CSI acquisition procedure, we fix $\bm w$ to a steering vector that guides most of the signal energy to the RIS aperture. As a result, $\bm g_n\T \bm w$ can be treated as the equivalent BS-link from the BS to the $n$-th RIS element.} and the RIS-user channel as $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}\T\bm w\right)$, then the power of the \ac{IRF} can be written as
@@ -398,7 +398,7 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
             \begin{aligned}
                 P(t)&=A \left| E_{{\rm BB, IRF}} (t)\right |^{2}+\zeta\\
                 &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{IRF power signal}}\\
-                &+\underbrace{2A\Re\left\{\left(\alpha+\beta e^{{\rm j}\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
+                &+\underbrace{2A\Re\left\{\left(\alpha+\beta e^{\ri\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
             \end{aligned}
         \end{equation}
     \else 
@@ -406,11 +406,11 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
             \label{eqn:power of interference}
             \begin{aligned}
                 P(t)&=A \left| E_{{\rm BB, IRF}} (t)\right |^{2}+\zeta\\
-                &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{IRF power signal}}+\underbrace{2A\Re\left\{\left(\alpha+\beta e^{{\rm j}\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
+                &=\underbrace{A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\psi(t)+\varphi\right)\right]}_{\text{IRF power signal}}+\underbrace{2A\Re\left\{\left(\alpha+\beta e^{\ri\left(\psi(t)+\varphi\right)}\right)v'^{*}(t)\right\}+A\left|v'(t)\right|^{2}+\zeta}_{\text{Noise}},\\
             \end{aligned}
         \end{equation}
     \fi
-    where $\zeta$ is the noise introduced by digital signal processing after measuring the IRF power, $A$ is the amplification factor of the power sensor, and the equivalent electromagnetic noise $v'(t) = e^{{\rm j}{\rm arg}({\bm g}_n\T \bm w)}v^*(t)$ follows the same distribution as $v(t)$ for any time $t$.
+    where $\zeta$ is the noise introduced by digital signal processing after measuring the IRF power, $A$ is the amplification factor of the power sensor, and the equivalent electromagnetic noise $v'(t) = e^{\ri{\rm arg}({\bm g}_n\T \bm w)}v^*(t)$ follows the same distribution as $v(t)$ for any time $t$.
     The name IRF comes from the randomness of the unknown $\varphi$, the unknown noise realization, and the interferential nature of the field.
 
     The phase difference $\varphi$ defined here will play an important role in our following channel estimation, since it carries enough CSI for beamforming, which will be justified in the next section. To estimate the phase difference $\varphi$, we need enough observations from the sensor-detected power signal $P(t)$. For simplicity and without loss of generality, we can assume $\psi(t)=\frac{2\pi}{T_{s}} t$, where $T_s$ is the symbol period. Furthermore, assume that $L$ observations $P[l]=P(t_{l})$ located at equally-spaced instants $t_{l}=\frac{l}{L}T_{s}$ for all $l\in \{L\}$
@@ -440,24 +440,24 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
 
     To clarify this idea, we take only one RIS element into consideration. 
     As is introduced in the previous subsection, if we allow the BS and the user to transmit electromagnetic waves simultaneously, then the interference phenomenon will occur on each RIS element. 
-    However, equal carrier frequencies of the BS and the user create stable interference fringes \cite{louradour1993interference} on the RIS, which do not carry information about the channel. 
-    In contrast, a rotational symbol $s'=e^{{\rm j}\psi(t)}$ at the user, which is equivalent to a slightly higher carrier frequency, enables the IRF power to vary over time. 
+    However, equal carrier frequencies of the BS and the user create stable interference fringes~\cite{louradour1993interference} on the RIS, which do not carry information about the channel. 
+    In contrast, a rotational symbol $s'=e^{\ri\psi(t)}$ at the user, which is equivalent to a slightly higher carrier frequency, enables the IRF power to vary over time. 
     Thus, the desired CSI can be drawn from the varying IRF power signal received by sensing RIS. 
     Fig.~\ref{fig:protocol} shows the simultaneous rotational signaling procedure and the IRF waveform. 
 
     \begin{figure}[!t]
         \centering
         \includegraphics[width=\linewidth]{figures/phasor.pdf}
-        \caption{Phasor representation of the \ac{IRF} on each RIS element. Red vector represents the complex BS-RIS signal ${\bm g}_n\T{\bm w}$; Blue vector represents the complex user-RIS signal $f_n^*w'$; $\alpha$ and $\beta$ denote the amplitude of these signals respectively. In our signaling method, the BS transmits a fixed symbol $s=1$, while the user transmits a rotating symbol $s'=e^{{\rm j}\psi(t)}$, causing the output of the power sensor $P(t)$ to vary in a waveform that is similar to a sine curve.}
+        \caption{Phasor representation of the \ac{IRF} on each RIS element. Red vector represents the complex BS-RIS signal ${\bm g}_n\T{\bm w}$; Blue vector represents the complex user-RIS signal $f_n^*w'$; $\alpha$ and $\beta$ denote the amplitude of these signals respectively. In our signaling method, the BS transmits a fixed symbol $s=1$, while the user transmits a rotating symbol $s'=e^{\ri\psi(t)}$, causing the output of the power sensor $P(t)$ to vary in a waveform that is similar to a sine curve.}
         \label{fig:phasor}
     \end{figure}
     To further analyze the interference, we focus on the received IRF signal $P(t)$ of the $n$-th RIS element. 
     Note that the power of interference field measured at instant $t$, expressed by \eqref{eqn:power of interference}, exhibits a sinusoidal waveform in the time domain, as is shown in Fig.~\ref{fig:phasor}. 
     The initial phase ($t=0$) of this sinusoidal waveform is uniquely determined by $\varphi$.
     Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. 
-    However, according to \eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n\T{\bm w})+\arg(f_n^*w')$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}\T\bm w\right)$, we assume the phase $\arg({\bm g}_n\T{\bm w})$ to be known in our algorithms in order to acquire the phase sum.
-    The underlying reason for this assumption is that, in contrast to the fast time-varying RIS-user link, the BS-RIS link often exhibits a quasi-static property, thus two-timescale methods in \cite{Huchen} can be applied to solely estimate the BS-RIS channel.
-    In our simulations, the phase $\arg({\bm g}_n\T{\bm w})$ is calculated based on the geometry, i.e., the locations of the BS and the RIS \cite{bai2014coverage}. 
+    However, according to~\eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n\T{\bm w})+\arg(f_n^*w')$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}\T\bm w\right)$, we assume the phase $\arg({\bm g}_n\T{\bm w})$ to be known in our algorithms in order to acquire the phase sum.
+    The underlying reason for this assumption is that, in contrast to the fast time-varying RIS-user link, the BS-RIS link often exhibits a quasi-static property, thus two-timescale methods in~\cite{Huchen} can be applied to solely estimate the BS-RIS channel.
+    In our simulations, the phase $\arg({\bm g}_n\T{\bm w})$ is calculated based on the geometry, i.e., the locations of the BS and the RIS~\cite{bai2014coverage}. 
 
 
 \section{Sensing RIS-Based Channel Estimation}
@@ -466,13 +466,13 @@ In this section, we will first briefly introduce the hardware architecture requi
 
 \subsection{Hardware Architecture of Sensing RIS} \label{Hardware Architecture of Sensing RIS}
     \ifx\onecol\undefined
-        \begin{figure}[!t]
+        \begin{figure*}[!t]
             \centering
             \includegraphics[width=1\linewidth]{figures/hardware.pdf}
             \centerline{(a)~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~(b)}
             \caption{Comparison of hardware architectures. (a) Traditional RIS. (b) Proposed sensing RIS.}
             \label{fig:hardware}
-        \end{figure}
+        \end{figure*}
     \else 
         \begin{figure}[!t]
             \centering
@@ -483,8 +483,8 @@ In this section, we will first briefly introduce the hardware architecture requi
         \end{figure}
     \fi
     
-To obtain the amplitude of the induced \ac{IRF}, inspired by the sensing metasurface \cite{ma2019smart}, we propose a hardware architecture named sensing RIS.
-In contrast to traditional RIS architecture shown in Fig.~\ref{fig:hardware}~(a), where each RIS element includes a phase-shift circuit and a patch antenna, each sensing RIS element additionally integrates a power sensor which is responsible for detecting the amplitude of the IRF \cite{ma2020smartsensing}, as shown in Fig.~\ref{fig:hardware}~(b).
+To obtain the amplitude of the induced \ac{IRF}, inspired by the sensing metasurface~\cite{ma2019smart}, we propose a hardware architecture named sensing RIS.
+In contrast to traditional RIS architecture shown in Fig.~\ref{fig:hardware}~(a), where each RIS element includes a phase-shift circuit and a patch antenna, each sensing RIS element additionally integrates a power sensor which is responsible for detecting the amplitude of the IRF~\cite{ma2020smartsensing}, as shown in Fig.~\ref{fig:hardware}~(b).
 Since all of the RIS elements can sense and adjust the phase independently from one another, low-cost microcontroller units (MCUs) can be attached locally to each RIS element to allow parallel computation of the optimal phases. 
 However, for extremely large-scale RIS systems, sparse sensing and controlling may be preferred to reduce cost and hardware complexity. 
 
@@ -520,7 +520,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
                 \STATE Estimate $\alpha$ and $\beta$ from $P_{\alpha}(t)$ and $P_{\beta}(t)$.
                 \STATE Estimate phase difference $\varphi_n$ from $P(t)$, $\alpha$ and $\beta$. 
                 \STATE Estimate $\psi_{n} = {\rm arg}(\bm g_{n}\T\bm w)$ from known locations of BS and RIS
-                \STATE $\theta_n \leftarrow \exp(-{\rm j}(\varphi_n + 2\psi_n))$
+                \STATE $\theta_n \leftarrow \exp(-\ri(\varphi_n + 2\psi_n))$
             \ENDFOR
             \STATE ${\bm \Theta} \leftarrow \diag\left(\left[\theta_1, \theta_2, \cdots, \theta_N\right]\T\right)$
             \RETURN ${\bm \Theta}$
@@ -589,20 +589,20 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
     The key challenge of the IRF channel estimation and beamforming is the phase estimation step, i.e., how to obtain the phase difference $\varphi$. Since the interferential power $P(t)$ exhibits a sinusoidal waveform, Fourier transforms can be applied to extract its phase. Apply $L$-point \ac{DFT} to the discrete-time  observed sensor detection signals $P[0],\cdots ,P[L-1]$, and we have
     \begin{equation}
         \label{DFT}
-        p[l']=\sum\nolimits_{l=0}^{L-1}P[l]e^{-{\rm j}\frac{2\pi}{L}ll'},\quad \forall l'\in \{L\}.
+        p[l']=\sum\nolimits_{l=0}^{L-1}P[l]e^{-\ri\frac{2\pi}{L}ll'},\quad \forall l'\in \{L\}.
     \end{equation}
     Specifically, we have the complex amplitude of the first harmonic $p[1]$ as 
     \ifx\onecol\undefined
         \begin{equation} \label{DFT l=1}
             \begin{aligned}
-                p[1]&=\sum\nolimits_{l=0}^{L-1}A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\frac{2\pi}{L}l+\varphi\right)\right]e^{-{\rm j}\frac{2\pi}{L}l}\\
-                &=LA\alpha\beta  e^{{\rm j}\varphi}.
+                p[1]&=\sum\nolimits_{l=0}^{L-1}A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\frac{2\pi}{L}l+\varphi\right)\right]e^{-\ri\frac{2\pi}{L}l}\\
+                &=LA\alpha\beta  e^{\ri\varphi}.
             \end{aligned}
         \end{equation}
     \else 
         \begin{equation}
             \label{DFT l=1}
-            p[1]=\sum\nolimits_{l=0}^{L-1}A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\frac{2\pi}{L}l+\varphi\right)\right]e^{-{\rm j}\frac{2\pi}{L}l}=LA\alpha\beta  e^{{\rm j}\varphi}.
+            p[1]=\sum\nolimits_{l=0}^{L-1}A\left[\alpha^{2}+\beta^{2}+2\alpha\beta\cos\left(\frac{2\pi}{L}l+\varphi\right)\right]e^{-{\ri}\frac{2\pi}{L}l}=LA\alpha\beta  e^{{\ri}\varphi}.
         \end{equation}
     \fi
     Then, the phase $\varphi$ can be estimated as
@@ -613,7 +613,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
     Note that this DFT method simply ignores the non-Gaussian noise. For Gaussian noise, the DFT method is optimal. However, in fact, the noise in \eqref{eqn:power of interference} contains a squared term of Gaussian noise, resulting in the noise being non-Gaussian. Thus, we further conceive an ML method, as described in the following Subsection~\ref{ML method}. 
 
 \subsection{Newton-ML method}  \label{ML method}
-    Suppose the noise field $v'(t)=v'_R(t) + {\rm j}v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. 
+    Suppose the noise field $v'(t)=v'_R(t) + {\ri }v'_I(t)\sim \mathcal{CN}(0, \sigma_v^2)$, and the noise of the power sensor is $\zeta \sim \mathcal{N}(0, \sigma_{\zeta}^2)$. 
     Without loss of generality, we can assume that the sensor noise power $\sigma_{\zeta}^2$ is much weaker than the electromagnetic noise field $v'(t)$.
     Thus, we assume $\sigma_{\zeta}^2=0$ in the following discussion.  
     As a result, the distribution of $P(t) = A\left|E_{{\rm BB}, {\rm IRF}}(t)\right|^2$ is a non-central chi-squared distribution $\nc_{\chi_2^2}(A(\mu_{R}^2+\mu_{I}^2),  A\sigma_v^2/2)$ with degrees of freedom $k=2$, and mean values $\mu_{R}, \mu_{I}$ given by
@@ -711,13 +711,13 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
     Note that the von Mises distribution is a distribution on a circle, thus it acts as a perfect prior distribution of a phase estimation problem. 
     More fortunately, the von Mises distribution is also closely related to the complex Gaussian distribution, thus implying the possibility of designing an iterative EM algorithm \cite{casella2021statistical} based on the interactions between the von Mises distribution and the complex Gaussian noise distribution. The following two lemmas: {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}} reveal these interactions. 
     \begin{lemma}[Bayesian estimation of $\VM$ distribution]\label{lemma_1} \mbox{}\par
-        Let $\theta \sim \VM(\mu, \kappa)$, and $z|\theta \sim \CN(e^{{\rm j}\theta}, \sigma^2)$. Then the posterior distribution $\theta | z$ is also a von Mises distribution $\VM(\mu', \kappa')$ with parameters $\mu'$ and $\kappa'$ satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} + 2z/\sigma^2$.
+        Let $\theta \sim \VM(\mu, \kappa)$, and $z|\theta \sim \CN(e^{{\ri}\theta}, \sigma^2)$. Then the posterior distribution $\theta | z$ is also a von Mises distribution $\VM(\mu', \kappa')$ with parameters $\mu'$ and $\kappa'$ satisfying $\kappa' e^{{\ri}\mu'} = \kappa e^{{\ri}\mu} + 2z/\sigma^2$.
     \end{lemma}
         \begin{IEEEproof}
         See {\bf Appendix \ref{Proof of Lemma 1}}. 
     \end{IEEEproof}
     
-    In this paper, we also use $\VM(\kappa e^{{\rm j}\mu})$ to denote the von Mises distribution $\VM(\mu, \kappa)$. 
+    In this paper, we also use $\VM(\kappa e^{{\ri}\mu})$ to denote the von Mises distribution $\VM(\mu, \kappa)$. 
     This representation provides convenience for the calculation of the posterior distribution of the von Mises distribution in Bayesian inference.
 
     \begin{lemma}[Circular $\CN$ posterior is $\VM$]\label{lemma_2} \mbox{}\par
@@ -727,18 +727,18 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
         \end{equation}
     \end{lemma}
     \begin{IEEEproof}
-        Replacing $z$ by $r e^{{\rm j} \theta}$ give rise to the conclusion immediately. 
+        Replacing $z$ by $r e^{\ri \theta}$ give rise to the conclusion immediately. 
     \end{IEEEproof}
     
-    Combining the results of {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}}, we can then construct the EM algorithm for estimating $\varphi$. Since the output of the power sensors $P[l]$ does not contain phase information, we can treat the phases as latent variables. Let $s_l = \sqrt{P[l]/A}$ be the noisy estimation for $|\alpha + \beta e^{{\rm j} (\varphi + \psi_l)} + v_l|$, and $\theta_l$ be the latent variables $\arg (\alpha + \beta e^{{\rm j} (\varphi + \psi_l)} + v_l)$ that are not observable. 
-    Since the noise $v_l \sim {\rm i.i.d.}\;\CN(0, \sigma_v^2)$, then from {\bf Lemma \ref{lemma_2}}, $\theta_l | s_l, \varphi \sim \VM(\arg(\alpha + \beta e^{{\rm j} (\varphi + \psi_l)}), s_l |\alpha + \beta e^{{\rm j} (\varphi + \psi_l)}|/(\sigma_v^2/2))$. Thus, we can infer the latent variables by ML estimation 
+    Combining the results of {\bf Lemma \ref{lemma_1}} and {\bf Lemma \ref{lemma_2}}, we can then construct the EM algorithm for estimating $\varphi$. Since the output of the power sensors $P[l]$ does not contain phase information, we can treat the phases as latent variables. Let $s_l = \sqrt{P[l]/A}$ be the noisy estimation for $|\alpha + \beta e^{{\ri} (\varphi + \psi_l)} + v_l|$, and $\theta_l$ be the latent variables $\arg (\alpha + \beta e^{{\ri} (\varphi + \psi_l)} + v_l)$ that are not observable. 
+    Since the noise $v_l \sim {\rm i.i.d.}\;\CN(0, \sigma_v^2)$, then from {\bf Lemma \ref{lemma_2}}, $\theta_l | s_l, \varphi \sim \VM(\arg(\alpha + \beta e^{{\ri} (\varphi + \psi_l)}), s_l |\alpha + \beta e^{{\ri} (\varphi + \psi_l)}|/(\sigma_v^2/2))$. Thus, we can infer the latent variables by ML estimation 
     \begin{equation}
-        \hat{\theta}_{l, {\rm ML}} | s_l, \varphi = \arg(\alpha + \beta e^{{\rm j} (\varphi + \psi_l)}).
+        \hat{\theta}_{l, {\rm ML}} | s_l, \varphi = \arg(\alpha + \beta e^{{\ri} (\varphi + \psi_l)}).
         \label{eqn:E-step}
     \end{equation}
     After inferring the latent variables $\hat{\theta}_{l, {\rm ML}}$, we can update the estimation of $\varphi$ using Bayesian rule in {\bf Lemma \ref{lemma_1}}
     \begin{equation}
-        \varphi | s_l, \theta_l \sim \VM\left( \kappa e^{{\rm j} \mu} + \frac{\beta}{\sigma_v^2/2}\sum_{l=0}^{L-1}{\left(s_l e^{{\rm j}\theta_l}-\alpha\right)e^{-{\rm j} \psi_l}}\right),
+        \varphi | s_l, \theta_l \sim \VM\left( \kappa e^{{\ri} \mu} + \frac{\beta}{\sigma_v^2/2}\sum_{l=0}^{L-1}{\left(s_l e^{{\ri}\theta_l}-\alpha\right)e^{-{\ri} \psi_l}}\right),
         \label{eqn:M-step}
     \end{equation}
     where the coefficient $\beta/(\sigma_v^2/2)$ comes from scaling the phasor in Fig.~\ref{fig:phasor} by a factor $\beta^{-1}$ and applying {\bf Lemma \ref{lemma_1}}.
@@ -754,9 +754,9 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
             \STATE $\hat{\varphi} \leftarrow \arg\{{\rm FFT}(P)[1]\}$
             \STATE $\kappa \leftarrow 1$
             \WHILE {$\hat{\varphi}$ not convergence}
-                \STATE $\mu_l \leftarrow \alpha + \beta e^{{\rm j} (\hat{\varphi}+\psi_l)}, \quad \forall l\in \{L\}$
-                \STATE $w_l \leftarrow s_l e^{{\rm j} \arg(\mu_l)} - \alpha, \quad \forall l\in \{L\}$
-                \STATE $z_\varphi \leftarrow \kappa e^{{\rm j} \hat{\varphi}} + \beta \left( \sum_{l=0}^{L-1}{w_l e^{-{\rm j} \psi_l}}\right) / (\sigma_v^2/2)$
+                \STATE $\mu_l \leftarrow \alpha + \beta e^{{\ri} (\hat{\varphi}+\psi_l)}, \quad \forall l\in \{L\}$
+                \STATE $w_l \leftarrow s_l e^{{\ri} \arg(\mu_l)} - \alpha, \quad \forall l\in \{L\}$
+                \STATE $z_\varphi \leftarrow \kappa e^{{\ri} \hat{\varphi}} + \beta \left( \sum_{l=0}^{L-1}{w_l e^{-{\ri} \psi_l}}\right) / (\sigma_v^2/2)$
                 \STATE $\hat{\varphi} \leftarrow \arg(z_\varphi)$
                 \STATE $\kappa \leftarrow |z_\varphi|$
             \ENDWHILE
@@ -769,9 +769,9 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
     In this section, we first provide the achievability proof the proposed vM-EM phase estimation algorithm. Then, we derive various CRLB expressions for the phase estimation problems. 
 
 \subsection{Asymptotic Achievability Bound of the vM-EM algorithm}
-\begin{theorem}[MSE of the vM-EM estimator] \label{thm:asymp_perf_vM-EM}
+\red{\begin{theorem}[MSE of the vM-EM estimator] \label{thm:asymp_perf_vM-EM}
     Assume $\alpha>\beta>0$ are fixed. Then, there exists a sufficiently large integer $L_0$, such that for any $L\geq L_0$, if the proposed vM-EM algorithm converges, the returned estimator $\hat{\varphi}$ achieves an MSE performance of $\mathbb{E}[(\hat{\varphi}-\varphi)^2] = \mathcal{O}(\bar{\gamma}^{-1})$, where $\varphi$ is the true parameter, and $\bar{\gamma}$ is the interferential SNR defined as $\bar{\gamma} = (\alpha^2+\beta^2)/\sigma_v^2$.    
-\end{theorem}
+\end{theorem}}
 
 Before proving this theorem, we first introduce the following {\bf Lemma~\ref{lemma:wirtinger_der_vM-EM}} that characterizes how the vM-EM estimator $\hat{\varphi}$ in {\bf Algorithm~\ref{alg:vM-EM}} varies with the random noise vector $\bm v$. 
 
@@ -1096,13 +1096,13 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
 % Non-central Chi-Squared distribution. 
 \section{Proof of \textbf{Lemma 1}}
 \label{Proof of Lemma 1}
-        Denote $z=z_r + {\rm j} z_i$; then the posterior density $p(\theta | z) \propto p(\theta)p(z|\theta)$ can be expressed as
+        Denote $z=z_r + {\ri} z_i$; then the posterior density $p(\theta | z) \propto p(\theta)p(z|\theta)$ can be expressed as
         \AutoColumn{
             \begin{equation}
                 \begin{aligned}
                     p(\theta|z) & \propto \exp(\kappa \cos(\theta - \mu))\exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right) \\
                     & \propto \exp\left( \kappa \cos(\theta - \mu) + \frac{2}{\sigma^2}(z_r \cos\theta + z_i\sin\theta) \right) \\
-                    & \propto \exp\left( \re\left[ e^{{\rm j} \theta}\left(\kappa e^{-{\rm j}\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
+                    & \propto \exp\left( \re\left[ e^{{\ri} \theta}\left(\kappa e^{-{\ri}\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
                 \end{aligned}
             \end{equation}
         }{
@@ -1111,12 +1111,12 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
                     p(\theta|z) & \propto \exp(\kappa \cos(\theta - \mu)) \\
                     &~~~\times \exp\left(-\frac{1}{\sigma^2}\left(\left(z_r - \cos\theta\right)^2 + \left(z_i - \sin\theta\right)^2\right)\right) \\
                     & \propto \exp\left( \kappa \cos(\theta - \mu) + \frac{2}{\sigma^2}(z_r \cos\theta + z_i\sin\theta) \right) \\
-                    & \propto \exp\left( \re\left[ e^{{\rm j} \theta}\left(\kappa e^{-{\rm j}\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
+                    & \propto \exp\left( \re\left[ e^{{\ri} \theta}\left(\kappa e^{-{\ri}\mu} + \frac{1}{\sigma^2/2} z^*\right)\right] \right).
                 \end{aligned}
             \end{equation}
         }
 
-        Since the density of the von Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{{\rm j} \theta}(\kappa e^{{\rm j} \mu})^* \right] \right)$, we can also parameterize the von Mises distribution by a single complex parameter $\kappa e^{{\rm j}\mu}$. Thus, the above $p(\theta|z)$ is a von Mises density with parameter $\kappa'e^{{\rm j}\mu'}$, satisfying $\kappa' e^{{\rm j}\mu'} = \kappa e^{{\rm j}\mu} +2z/\sigma^2$. This completes the proof.
+        Since the density of the von Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{{\ri} \theta}(\kappa e^{{\ri} \mu})^* \right] \right)$, we can also parameterize the von Mises distribution by a single complex parameter $\kappa e^{{\ri}\mu}$. Thus, the above $p(\theta|z)$ is a von Mises density with parameter $\kappa'e^{{\ri}\mu'}$, satisfying $\kappa' e^{{\ri}\mu'} = \kappa e^{{\ri}\mu} +2z/\sigma^2$. This completes the proof.
 
 
 \section{Proof of \textbf{Theorem~\ref{thm:precise CRLB}}}\label{appendix:proof of theorem1}
@@ -1246,14 +1246,14 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     and the random variable $P[l]$ obeys a non-central chi-squared distribution which can be equivalently expressed as 
     \AutoColumn{
         \begin{equation}
-            P[l] \sim A\left| \CN\left( (\alpha + \beta e^{{\rm j} (\psi_l + \varphi)}), \sigma_v^2 \right)\right|^2
-            \sim \frac{a}{2} \left| \CN\left((\alpha + \beta e^{{\rm j} (\psi_l + \varphi)})/(\sigma_v / \sqrt{2}), 2\right)\right|^2.
+            P[l] \sim A\left| \CN\left( (\alpha + \beta e^{{\ri} (\psi_l + \varphi)}), \sigma_v^2 \right)\right|^2
+            \sim \frac{a}{2} \left| \CN\left((\alpha + \beta e^{{\ri} (\psi_l + \varphi)})/(\sigma_v / \sqrt{2}), 2\right)\right|^2.
         \end{equation}
     }{
         \begin{equation}
             \begin{aligned}
-            P[l] &\sim A\left| \CN\left( (\alpha + \beta e^{{\rm j} (\psi_l + \varphi)}), \sigma_v^2 \right)\right|^2 \\
-            & \sim \frac{a}{2} \left| \CN\left((\alpha + \beta e^{{\rm j} (\psi_l + \varphi)})/(\sigma_v / \sqrt{2}), 2\right)\right|^2.
+            P[l] &\sim A\left| \CN\left( (\alpha + \beta e^{{\ri} (\psi_l + \varphi)}), \sigma_v^2 \right)\right|^2 \\
+            & \sim \frac{a}{2} \left| \CN\left((\alpha + \beta e^{{\ri} (\psi_l + \varphi)})/(\sigma_v / \sqrt{2}), 2\right)\right|^2.
             \end{aligned}
         \end{equation}
     }
@@ -1267,7 +1267,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \end{aligned}
         \label{eqn:approx evaluation}
     \end{equation}
-    where $m=\lvert\alpha + \beta e^{{\rm j} (\psi_l + \varphi)}\rvert/(\sigma_v / \sqrt{2}) = \sqrt{2\lambda_l/a} = \sqrt{2\gamma_l}$, and thus $m^2/2=\gamma_l$. Plugging \eqref{eqn:noncentral chi mean} and \eqref{eqn:Laguerre half order} into \eqref{eqn:approx evaluation}, we obtain the final expression 
+    where $m=\lvert\alpha + \beta e^{\ri (\psi_l + \varphi)}\rvert/(\sigma_v / \sqrt{2}) = \sqrt{2\lambda_l/a} = \sqrt{2\gamma_l}$, and thus $m^2/2=\gamma_l$. Plugging \eqref{eqn:noncentral chi mean} and \eqref{eqn:Laguerre half order} into \eqref{eqn:approx evaluation}, we obtain the final expression 
     \AutoColumn{
         \begin{equation}
             \begin{aligned}
@@ -1371,7 +1371,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         \label{eqn:implicit_function_derivative} 
     \end{equation}
     where the {\it Wirtinger derivative} is applied to functions of complex variables, and the ordinary derivative is applied to functions of real variables. 
-    By calculating the derivatives of $p$ w.r.t. $z$, $z^*$, $w$ and $w^*$, as well as $z$ w.r.t. $\hat{\varphi}$, we obtain 
+    By calculating the Wirtinger derivatives of $p$ w.r.t. $z$, $z^*$, $w$ and $w^*$, as well as $z$ w.r.t. $\hat{\varphi}$, we obtain 
     \begin{equation}
         \begin{aligned}
         \frac{\partial p}{\partial z}=\frac{\ri}{2} w^*, & \frac{\partial p}{\partial z^*}=-\frac{\ri}{2} w, \\
