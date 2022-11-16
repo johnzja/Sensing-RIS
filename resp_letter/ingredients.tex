@@ -67,6 +67,45 @@ breaklinks=true}
     {\Large\bf Some Theorems}
 \end{center}
 
+%%%% Some strange ideas about the theory. 
+
+\section{Some strange ideas}
+\begin{theorem} 
+    Suppose all the entries of ${\bm G}\in\mathbb{C}^{N\times M}$ and ${\bm f}\in\mathbb{C}^{N\times 1}$ obey ${\mathcal{CN}(0,1)}$ distribution, and the channel noise ${\bm N}\sim \mathcal{CN}(0,\sigma^2)$. 
+    Then, the LS channel estimator is given by 
+    \begin{equation}
+        \hat{\bm{H}}_{\rm LS} = \left( {\bm F}_{N,P}^{*} {\bm F_{N,P}\T} \right)^{-1}{\bm F}_{N,P}^{*}{\bm Y}_{\rm BS}\T,
+    \end{equation}
+    and the MMSE estimator is given by 
+    \begin{equation}
+        \hat{\bm{H}}_{\rm MMSE} = \left( {\bm F}_{N,P}^{*} {\bm F_{N,P}\T + \sigma^2 {\bm I}_N} \right)^{-1}{\bm F}_{N,P}^{*}{\bm Y}_{\rm BS}\T
+    \end{equation}
+\end{theorem}
+
+{\it Proof.}
+Proof will be provided. 
+
+The equivalent model can be expressed by 
+\begin{equation}
+    \tilde{\bm y}_{\rm BS} = {\rm vec}({\bm Y}_{\rm BS}) = {\bm A}{\bm h} + \tilde{\bm n},
+\end{equation}
+where ${\bm h} = {\rm vec}({\bm H}\T)\in\mathbb{C}^{NM}$, ${\bm A} = {\bm F}_{N,P}\T\otimes {\bm I}_M$, and $\tilde{\bm n} = {\rm vec}({\bm N})$. In this model, if we assume ${\bm C}_{\bm h} = $ 
+
+\begin{theorem}
+    With the MMSE channel estimator, the second-order statistics of the estimation error 
+    \begin{equation}
+        {\bm \epsilon} = {\rm vec}((\hat{{\bm H}}_{\rm MMSE} - {\bm H})\T)  
+    \end{equation}
+    is given by 
+    \begin{equation}
+        \mathbb{E}[{\bm \epsilon}{\bm \epsilon}\H | \hat{\bm h}] = \left( {\bm F}_{N,P}^{*} {\bm F_{N,P}\T / \sigma^2 + {\bm I}_N} \right)^{-1} \otimes {\bm I}_M.
+    \end{equation}
+\end{theorem}
+
+Note that the distribution of such an estimation error ${\bm \epsilon}$ is not necessarily Gaussian. 
+
+
+
 \section{RIS Achievable Bound}
 RIS-aided communication systems are expected to achieve an order of $\Omega(N^2)$ SNR gain when the direct BS-user link is blocked, where $N$ denotes the number of RIS elements. However, the phase-shift of each RIS element need to be properly configured to achieve such quadratic gain. To calculate these phase shifts, accurate channel matrix is a prerequisite. Thus, channel estimation have to be made as accurate as possible to ensure the quadratic scaling law. 
 

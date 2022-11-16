@@ -104,8 +104,8 @@ breaklinks=true}
 \else 
 \newcommand{\myincludegraphics}[2][width=0.8\linewidth]{\includegraphics[#1]{#2}}
 \fi
-\newcommand{\red}[1]{\textcolor{red}{#1}}
-\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\red}[1]{{\color{red}{#1}}}
+\newcommand{\blue}[1]{{\color{blue}{#1}}}
 % 12cm for onecolumn,
 
 \ifCLASSINFOpdf
@@ -501,8 +501,9 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     In fact, the signaling requirements can be realized by transmitting a symbol $s=1$ on the zeroth subcarrier at the BS, while transmitting a symbol $s'=1$ on the $k$-th subcarrier at the user. 
     As is mentioned above, if we denote the OFDM symbol period by $T_s$, then the equivalent IRF angular frequency $\omega$ is given by $\omega = 2\pi k /T_s$, which means the noiseless power signal exhibits exactly $k$ sinusoidal periods during an OFDM symbol. 
     Without loss of generality, in this paper, we always assume $k=1$. 
-    In fact, for multi-user MISO systems\footnote{In this paper, we assume that the user is equipped with a single antenna, but the number of antennas at BS is not restricted. Furthermore, for MIMO systems, since the user is equipped with multiple antennas, phase-tuning simply for constructive interference at the user is sub-optimal. Thus, IRF methods should be further improved to fully harness the space-multiplexing gains of MIMO.}, different $k$ values can be assigned to different users in order to enable channel estimation and beamforming design for several users within a single OFDM symbol. 
-    This can be done by Fourier analysis on the power signal $P(t)$ and extraction of phase angles for each user at distinct frequencies. 
+    \red{In fact, for multi-antenna MIMO systems, rotating pilot symbols at different frequencies $k$ can be simultaneously transmitted by different antennas to enable CSI acquisition.  
+    Then, the multi-antenna CSI acquisition can be fulfilled by performing Fourier analysis on the composite IRF power signal $P(t)$, and extracting the phase angles for each antenna at distinct frequencies. 
+    Similarly, this pseudo-frequency division idea can be extended to multi-user MIMO systems, where different users can also be distinguished by different IRF frequencies. Fortunately, since different users are usually separated in the angular domain from the RIS's perspective, these users can be further identified by performing joint detection and estimation across all the RIS sensors. The joint CSI estimation is beyond the scope of this paper, and is left for our future work. }
 
     The second step 2) is called {\it phase estimation}. This step is designed to extract the phase difference $\varphi$ between the BS-RIS and RIS-user channel. 
     This is the key step of dimension-independent IRF channel estimation and beamforming, since this step can be done independently among all the RIS elements. 
@@ -539,6 +540,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     \begin{table*}[t]
         \caption{Pilot Overhead Comparison of Different CSI Acquisition Methods}
         \label{tab:pilot overhead comp CE}
+        \color{red}
         \centering
         \begin{tabular}{|l|r|r|r|r|}
             \hline 
@@ -771,9 +773,11 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
 \subsection{Asymptotic Achievability Bound of the vM-EM algorithm}
 \red{\begin{theorem}[MSE of the vM-EM estimator] \label{thm:asymp_perf_vM-EM}
     Assume $\alpha>\beta>0$ are fixed. Then, there exists a sufficiently large integer $L_0$, such that for any $L\geq L_0$, if the proposed vM-EM algorithm converges, the returned estimator $\hat{\varphi}$ achieves an MSE performance of $\mathbb{E}[(\hat{\varphi}-\varphi)^2] = \mathcal{O}(\bar{\gamma}^{-1})$, where $\varphi$ is the true parameter, and $\bar{\gamma}$ is the interferential SNR defined as $\bar{\gamma} = (\alpha^2+\beta^2)/\sigma_v^2$.    
-\end{theorem}}
+\end{theorem}
+
 
 Before proving this theorem, we first introduce the following {\bf Lemma~\ref{lemma:wirtinger_der_vM-EM}} that characterizes how the vM-EM estimator $\hat{\varphi}$ in {\bf Algorithm~\ref{alg:vM-EM}} varies with the random noise vector $\bm v$. 
+
 
 \begin{lemma} \label{lemma:wirtinger_der_vM-EM}
     Suppose that for the input data sequence ${\bm s} = \sqrt{{\bm P}/A} = (s_0, \cdots, s_{L-1})\T$, the vM-EM algorithm converges to the estimator $\hat{\varphi}$. Then, the estimator $\hat{\varphi} = \hat{\varphi}({\bm v})$ can be viewed as a function of the noise $\bm v$, and the Wirtinger derivative~\cite{remmert1991theory} of $\hat{\varphi}$ w.r.t. $\bm v$ satisfies 
@@ -795,6 +799,7 @@ Before proving this theorem, we first introduce the following {\bf Lemma~\ref{le
 \begin{IEEEproof}
 The proof is provided in {\bf Appendix~\ref{app:proof_Wirtinger_derivative}}. 
 \end{IEEEproof}
+
 
 The aim of {\bf Lemma~\ref{lemma:wirtinger_der_vM-EM}} is to establish the connection between the vM-EM estimator $\hat{\varphi}$ and the noise vector ${\bm v}$. In the following, we denote the estimation error as 
 \begin{equation}
@@ -906,6 +911,7 @@ which completes the proof of {\bf Theorem~\ref{thm:asymp_perf_vM-EM}}.
     The conclusion of {\bf Theorem~\ref{thm:asymp_perf_vM-EM}} guarantees that as $\bar{\gamma}\to\infty$, the MSE of the vM-EM estimator decays at a rate of at least $(\bar{\gamma})^{-1}$. This conclusion is verified in the following numerical simulation, where it is shown that the MSE curve of the proposed vM-EM algorithm has an asymptotic slope of $-1$ in the logarithmic coordinate. 
 \end{remark}
 
+}
 %\subsection{The CRLB} \label{The CRLB}
 %    In the previous section, we have introduced three phase estimation methods. 
 %    A natural question is how accurate can these phase estimators be. 
@@ -1343,6 +1349,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     We can easily see from the above inequality that this approximation becomes arbitrarily good when $\gamma\to\infty$, and the decreasing rate is of order $\mathcal{O}(1/\gamma)$. This completes the proof. 
 
 
+\red{
 \section{Proof of Lemma~\ref{lemma:wirtinger_der_vM-EM}} \label{app:proof_Wirtinger_derivative}
     {\it {Proof.}}
     Let $z=\exp(\ri \hat{\varphi})$ be the complex representation of the estimator $\hat\varphi$, and 
@@ -1382,7 +1389,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
     \end{equation}
     Substituting~\eqref{eqn:basic_derivatives} into~\eqref{eqn:implicit_function_derivative}, we obtain 
     \begin{equation}
-        \frac{\partial \hat\varphi}{\partial v_\ell} = -\frac{\frac{\ri}{2} \left( z\frac{\partial w^*}{\partial v_\ell} -z^* \frac{\partial w}{\partial v_\ell} \right)}{-\Re(z^*w) +\Im(z^* \frac{\partial w}{\partial \hat{\varphi}})}. 
+        \frac{\partial \hat\varphi}{\partial v_\ell} = -\frac{\ri}{2}\frac{\left( z\frac{\partial w^*}{\partial v_\ell} -z^* \frac{\partial w}{\partial v_\ell} \right)}{-\Re(z^*w) +\Im(z^* \frac{\partial w}{\partial \hat{\varphi}})}. 
     \end{equation}
     Let $\frac{\partial \varphi}{\partial v_\ell} = -N_\ell / D_\ell$, where $N_\ell$ and $D_\ell$ are defined to be the numerator and denominator of the above equation respectively. In order to obtain expressions for $N_\ell$ and $D_\ell$, we first evaluate 
     \begin{equation}
@@ -1499,7 +1506,7 @@ If we apply the constraint $\|{\bm v}\|/\sqrt{L}\leq \delta$, then $t$ can be ch
     |\Delta\varphi|({\bm v}) \leq C \frac{\|{\bm v}\|}{\sqrt{L}},
 \end{equation}
 which completes the proof. 
-
+}
 
 \footnotesize
 \bibliographystyle{IEEEtran}
