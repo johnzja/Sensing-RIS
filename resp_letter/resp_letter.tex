@@ -44,8 +44,10 @@
 \DeclareGraphicsRule{.png}{eps}{.bb}{}
 
 \newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
-\newcommand{\red}[1]{\textcolor{red}{#1}}
-\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\red}[1]{{\color{red}{#1}}}
+\newcommand{\blue}[1]{{\color{blue}{#1}}}
+\newcommand{\Authors}[1]{{\blue{{\textbf{Authors: }}{#1}}}}
+
 
 \newenvironment{IEEEproof}{{\it Proof. }}{}
 \newcolumntype{C}[1]{>{\PreserveBackslash\centering}p{#1}}
@@ -82,13 +84,47 @@ Jieao Zhu, {\it Student Member,~IEEE}, Kunzan Liu, {\it Student Member,~IEEE}, \
 
 \textbf{Editor}: Manuscript ID IT-22-0267 titled ``Sensing RISs: Enabling Dimension-Independent CSI Acquisition for Beamforming'' which you submitted to the IEEE Transactions on Information Theory, has been reviewed.  The comments of the reviewer(s) are included at the bottom of this letter. There may be additional comments as separate files available through your Author Center on the ScholarOne Manuscripts web site, so please check there also to make sure you have received all reviewer comments.
 
+\blue{
+    {\bf Authors:}
+    We would like to commence by thanking the editor and three professional reviewers for their valuable time in evaluating our submission. Your constructive comments and expert knowledge of the field have helped us to strengthen the manuscript significantly. We endeavored to address all the suggestions and comments, and our reflections are provided below in a point-to-point manner. We also indicate how our manuscript has been revised accordingly, and all the revisions have been highlighted in \red{red} color in the revised paper. Here, we would like to make a brief summary of the major revisions in the revised paper as below:
+    \begin{enumerate}
+        \item We have added achievability proofs for the proposed vM-EM phase estimation algorithm. 
+        \item We have clarified the extensibility of the proposed scheme to broader scenarios including RIS-aided MIMO systems. 
+        \item We have improved the simulations. 
+    \end{enumerate}
+}
+
+\textbf{Editor:} 
 Based on my own detailed reading of the paper and the reviewers' comments, I recommend that you revise and resubmit your manuscript. Specifically, in your revision, the following points must be addressed:
 
 1) Two out of the three reviewers have pointed that the paper is missing a strong information-theoretic element. I would recommend to consider adding results that address that concern.
 
+\blue{
+    {\bf Authors:}
+    Thanks for Editor's valuable suggestions. 
+}
+
 2) Another major concern is that methods appear ad-hoc and not particularly novel. Again, it is important to address this concern directly.
 
+\blue{
+    {\bf Authors:}
+
+}
+
 One of the reviewers has expressed support for the paper, so I hope you will take a step back and consider revisiting the paper to address all the concerns in a significant manner.
+
+\blue{
+    {\bf Authors}:
+    Many thanks again for your valuable time and efforts to review this paper. 
+    \\
+    \\
+    Sincerely, 
+
+    {\it The Authors}
+}
+
+\clearpage
+
 
 \begin{center}
     {\Large\bf Response to Reviewer 1's Comments}
@@ -105,7 +141,7 @@ We appreciate the reviewer's concise summary of the key points of this paper and
 1) Compared to the conventional RIS channel estimation performed at the receiver, this proposed scheme has the following limitations: 1.1) assuming BS-RIS link is known; 1.2) assuming direct BS-user link is blocked; 1.3) the number of sensors is dimension-dependent in exchange of saving pilot. It would be helpful if the authors can list these disadvantages and discuss how to mitigate them if the assumptions cannot be met. For example, would learning help in reducing sensors?
 
 {\color{blue}{\textbf{Authors: } 
-Much thanks for pointing out these three limitations of our proposed sensing RIS-based channel estimation scheme. Our efforts to mitigate these disadvantages are listed as follows: 
+Many thanks for pointing out these three limitations of our proposed sensing RIS-based channel estimation scheme. Our efforts to mitigate these disadvantages are listed as follows: 
 
 1.1) The assumption of a known BS-RIS link. There are three possible ways to mitigate the requirement of this prior knowledge. 
 First, we can exploit the geometry associated with the BS and RIS. Usually, the location, orientation, aperture size and antenna spacing are fixed after the installation of the BS and RIS, and the BS-RIS link is often free of unpredictable obstructions. 
@@ -878,8 +914,6 @@ Sincerely,
 
 
 }
-
-
 
 
 \clearpage
