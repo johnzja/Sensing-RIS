@@ -197,7 +197,7 @@ Specifically, the contributions of this paper can be summarized as follows.
         Our simulation results further demonstrate that our proposed signal transmission method and the corresponding algorithms can realize dimension-independent CSI acquisition for beamforming, and then achieve near-optimal spectral efficiency. 
     \end{itemize}
 
-\subsection{Organization and notation}
+\subsection{Organization and Notation}
 
 \textit{Organization:}
 The rest of the paper is organized as follows.
@@ -753,7 +753,7 @@ In this section, three phase estimation algorithms will be proposed in Subsectio
             \STATE $s_l \leftarrow \sqrt{P[l]/A}, \quad \forall l\in \{L\}$
             \STATE $\hat{\varphi} \leftarrow \arg\{{\rm FFT}(P)[1]\}$
             \STATE $\kappa \leftarrow 1$
-            \WHILE {$\hat{\varphi}$ not convergence}
+            \WHILE {$\hat{\varphi}$ not convergent}
                 \STATE $\mu_l \leftarrow \alpha + \beta e^{{\ri} (\hat{\varphi}+\psi_l)}, \quad \forall l\in \{L\}$
                 \STATE $w_l \leftarrow s_l e^{{\ri} \arg(\mu_l)} - \alpha, \quad \forall l\in \{L\}$
                 \STATE $z_\varphi \leftarrow \kappa e^{{\ri} \hat{\varphi}} + \beta \left( \sum_{l=0}^{L-1}{w_l e^{-{\ri} \psi_l}}\right) / (\sigma_v^2/2)$
@@ -924,13 +924,12 @@ which completes the proof of {\bf Theorem~\ref{thm:asymp_perf_vM-EM}}.
 %    The evaluation of CRLB in non-coherent parameter estimation was first formulated in \cite{jiang2016cramer}, where the authors introduced Gaussian approximation in order to obtain a simple closed-form CRLB expression. Unfortunately, this approximation only holds for very large non-centrality parameter $\lambda$, i.e., large interferential SNR $\gamma=\lambda/A\sigma_v^2$. Thus, an exact expression of the CRLB is required in our \ac{IRF} methods. However, without Gaussian approximation techniques, fatal complexity about Bessel functions will occur, making the analysis nearly intractable. 
 %
 %    To overcome this difficulty, we first perform exact analysis, and then approximated asymptotic analysis. The difficulty of manipulating Bessel functions is conquered by asymptotic expansion techniques \cite{silverman1972special}. Satisfactory asymtotic results are acquired in the absence of exact closed-form expression of the CRLB. These results will be introduced in the following subsection.  
-%    %In the following two subsections, {\bf Theorem \ref{thm:precise CRLB}} reveals  
     
 \subsection{Expressions for the CRLB} \label{Precise CRLB}
 In Section~\ref{Sensing RIS-Based Channel Estimation}, we have introduced three phase estimation methods to solve the probabilistic parameter estimation problem.
-To analyze the performance limit of the proposed schemes, we derive the CRLB~\cite{casella2021statistical} of the estimation in \textbf{Theorem~\ref{thm:precise CRLB}}.
+To analyze the performance limit of the proposed schemes, we derive the CRLB~\cite{casella2021statistical} of the estimation in \textbf{Lemma~\ref{lemma:precise CRLB}}.
     
-    \begin{theorem}[Non-central Chi-Squared CRLB] \label{thm:precise CRLB}\mbox{}\par
+    \begin{lemma}[Non-central Chi-Squared CRLB] \label{lemma:precise CRLB}\mbox{}\par
         Suppose the probabilistic model is specified by~\eqref{eqn:sensor power}, where $L$ observations $P[0],\cdots,P[L-1]$ are obtained. Then the CRLB of this $L$-point phase estimation problem is given by
         \begin{equation}
             \frac{1}{{\rm CRLB}(\varphi)} = K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}\sin^2(\psi_l+\varphi)\left(1/\gamma_l-g(\gamma_l)\right),
@@ -951,12 +950,12 @@ To analyze the performance limit of the proposed schemes, we derive the CRLB~\ci
             \end{equation}
         \fi
         The function $R(\cdot)$ is defined the same as in~\eqref{eqn:R function derivative property}.
-    \end{theorem}
+    \end{lemma}
     \begin{IEEEproof}
-        See {\bf Appendix~\ref{appendix:proof of theorem1}}. 
+        See {\bf Appendix~\ref{app:proof of precise CRLB}}. 
     \end{IEEEproof}
 
-    From \textbf{Theorem~\ref{thm:precise CRLB}}, we note that the CRLB of the phase estimation problem is completely determined by the two parameters $K$ and $\bar{\gamma}$, which are the interferential contrast and the average interferential SNR, respectively. 
+    From \textbf{Lemma~\ref{lemma:precise CRLB}}, we note that the CRLB of the phase estimation problem is completely determined by the two parameters $K$ and $\bar{\gamma}$, which are the interferential contrast and the average interferential SNR, respectively. 
     However, this exact CRLB expression is difficult to calculate due to the sophisticated evaluation of the integral in~\eqref{eqn:precise_g_function}.
     Thus, we will provide a simpler approximated CRLB in the following {\bf Theorem~\ref{thm:asymptotic CRLB}}. 
     
@@ -966,7 +965,7 @@ To analyze the performance limit of the proposed schemes, we derive the CRLB~\ci
             \frac{1}{{\rm CRLB}(\varphi)}\approx K^2(\bar{\gamma})^2 \sum_{l=0}^{L-1}\sin^2(\psi_l+\varphi)(1/\gamma_l-\hat{g}(\gamma_l))^{+},
             \label{eqn:asymptotic CRLB}
         \end{equation}
-        where $(x)^{+}$ represents ${x{\mathbbm{1}}_{\{x\geq 0\}}}$, and the definition of parameters are the same as in {\bf Theorem \ref{thm:precise CRLB}}. The asymptotic approximation function $\hat{g}(\gamma)$ is defined as 
+        where $(x)^{+}$ represents ${x{\mathbbm{1}}_{\{x\geq 0\}}}$, and the definition of parameters are the same as in {\bf Lemma \ref{lemma:precise CRLB}}. The asymptotic approximation function $\hat{g}(\gamma)$ is defined as 
         \begin{equation}
             \hat{g}(\gamma) = \frac{1}{4} \sqrt{\frac{\pi}{\gamma}}e^{-\gamma/2}\left((1+1/\gamma)I_0(\gamma/2) + I_1(\gamma/2)\right).
             \label{eqn:definition g function}
@@ -977,7 +976,7 @@ To analyze the performance limit of the proposed schemes, we derive the CRLB~\ci
     \end{IEEEproof}
     
         The asymptotic expression of the CRLB still relies only on two parameters $K$ and $\bar{\gamma}$. But the calculation is much simpler compared to the exact expression. 
-        The discussions of the properties of the exact and asymptotic expressions of CRLB are continued in Subsection \ref{Properties of the CRLB}.
+        The discussions of the properties of the exact and asymptotic expressions of CRLB are continued in Subsection~\ref{Properties of the CRLB}.
         
 \subsection{Properties of the CRLB} \label{Properties of the CRLB}
     From the above analysis of CRLB, we can observe two properties of the phase estimation problem:
@@ -990,13 +989,13 @@ To analyze the performance limit of the proposed schemes, we derive the CRLB~\ci
     \begin{figure}[!t]
         \centering
         \myincludegraphics{data/CRLB.pdf}
-        \caption{Precise $1/{\rm CRLB}(\varphi)$ as a two-variable function of $K$ and $\bar{\gamma}$, calculated from \eqref{eqn:precise_CRLB}. The larger the value of the reciprocal CRLB, the more precise an unbiased estimator can be. }
+        \caption{Precise $1/{\rm CRLB}(\varphi)$ as a two-variable function of $K$ and $\bar{\gamma}$, calculated from~\eqref{eqn:precise_CRLB}. The larger the value of the reciprocal CRLB, the more precise an unbiased estimator can be. }
         \label{fig:CRLB two variable}
     \end{figure}
     The best prediction accuracy occurs when $\lvert K \rvert = 1$, i.e., the RIS-received signal from BS is as strong as that from the user. 
     Also, the larger value of the average interferential SNR $\bar{\gamma}$ also contributes to a more accurate phase estimation. 
 
-We also perform error analysis for the use of asymptotic expansion technique, which is stated in the following {\bf Theorem 3}. 
+We also perform error analysis for the use of asymptotic expansion technique, which is stated in the following {\bf Theorem~\ref{thm:CRLB_asym_error_analysis}}. 
 
     \begin{theorem}[Asymptotic Optimality of CRLB] \label{thm:CRLB_asym_error_analysis}\mbox{}\par
         The relative error $r$ of $1/\gamma - \hat{g}(\gamma)$, as an approximation of $1/\gamma - g(\gamma)$, decreases at a rate that is inverse proportional to the interferential SNR $\gamma$, i.e.,
@@ -1005,10 +1004,10 @@ We also perform error analysis for the use of asymptotic expansion technique, wh
         \end{equation}
     \end{theorem}
     \begin{IEEEproof}
-        See {\bf Appendix \ref{Proof of Theorem 3}}. 
+        See {\bf Appendix~\ref{Proof of Theorem 3}}. 
     \end{IEEEproof}
 
-From {\bf Theorem 3}, we can conclude that our derived expression of approximated CRLB is asymptotically optimal.
+From {\bf Theorem~\ref{thm:CRLB_asym_error_analysis}}, we can conclude that our derived expression of approximated CRLB is asymptotically optimal.
 
 
 \section{Simulation Results}
@@ -1123,7 +1122,7 @@ In this section, we will present our simulation results. In Subsection \ref{Phas
         Since the density of the von Mises distribution $\VM(\mu, \kappa)$ can also be expressed as $p(\theta) \propto \exp\left( \re\left[ e^{{\ri} \theta}(\kappa e^{{\ri} \mu})^* \right] \right)$, we can also parameterize the von Mises distribution by a single complex parameter $\kappa e^{{\ri}\mu}$. Thus, the above $p(\theta|z)$ is a von Mises density with parameter $\kappa'e^{{\ri}\mu'}$, satisfying $\kappa' e^{{\ri}\mu'} = \kappa e^{{\ri}\mu} +2z/\sigma^2$. This completes the proof.
 
 
-\section{Proof of \textbf{Theorem~\ref{thm:precise CRLB}}}\label{appendix:proof of theorem1}
+\section{Proof of \textbf{Lemma~\ref{lemma:precise CRLB}}}\label{app:proof of precise CRLB}
     According to the definition of the CRLB, taking the negative expectation of \eqref{Second Derivative Likelihood} yields the reciprocal CRLB of the estimators for $\varphi$. Note that in \eqref{Second Derivative Likelihood}, there are three types of expectations to be evaluated: $\mathbb{E}\left[P[l]\right]$, $\mathbb{E}\left[R(z_l)\sqrt{P[l]}\right]$, and $\mathbb{E}\left[(1-R^2(z_l))P[l]\right]$. The expectation of $P[l]$ can be directly evaluated from \eqref{eqn:sensor power} by the linearity of the expectation operation:
     \begin{equation}
         \mathbb{E}\left[P[l]\right] = A\sigma_v^2 + \lambda_l.

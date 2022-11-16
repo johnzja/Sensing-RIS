@@ -101,14 +101,16 @@ Based on my own detailed reading of the paper and the reviewers' comments, I rec
 
 \blue{
     {\bf Authors:}
-    Thanks for Editor's valuable suggestions. 
+    Thanks for Editor's valuable suggestions on adding convincing theoretical results. We have proved asymptotic achievability bounds ({\bf Theorem 1}) for the proposed vM-EM algorithm, which states that the proposed vM-EM algorithm achieves an asymptotic mean squared error (MSE) performance of $\mathcal{O}(\bar{\gamma})$, where $\bar{\gamma}$ is the interferential signal-to-noise ratio (SNR). This theorem is established through {\bf Lemma 3-5}, where several interesting insights are provided for the proposed algorithms. 
+    The newly-added theoretical proofs are added to {\bf Section VI-A} in the revised paper, and the corresponding proofs are provided in {\bf Appendix E-F}. 
+    Furthermore, this asymptotic result of {\bf Theorem 1} is verified by our numerical simulations in {\bf Section VII}. Since this proof is strongly related to detection and estimation theory, we believe that this newly-added theoretical content would make this paper fit the broader scope of this journal. 
 }
 
 2) Another major concern is that methods appear ad-hoc and not particularly novel. Again, it is important to address this concern directly.
 
 \blue{
     {\bf Authors:}
-
+    
 }
 
 One of the reviewers has expressed support for the paper, so I hope you will take a step back and consider revisiting the paper to address all the concerns in a significant manner.
@@ -638,7 +640,7 @@ This paper introduces a dimension-independent CSI acquisition method for sensing
 RIS-assisted MISO wireless communication systems. The key issue of the paper is that the achievable schemes look like heuristic with no performance guarantees, and the methodology does not seem novel.
 
 {\color{blue}{\textbf{Authors: } 
-We appreciate the reviewer's concise summary of the key points of this paper. We have tried our best to address these issues in the revised paper according to the reviewer's valuable comments. Specifically, we have proved achievable theorems for our proposed vM-EM phase estimation algorithm, and our responses are provided in a point-to-point manner as below. 
+We appreciate the reviewer's concise summary of the key points of this paper. We have tried our best to address these issues in the revised paper according to the reviewer's valuable comments. Specifically, we have added achievable theorems for our proposed vM-EM phase estimation algorithm, and our responses are provided in a point-to-point manner as below. 
 }}
 
 \textbf{Reviewer 3:}
@@ -647,14 +649,14 @@ We appreciate the reviewer's concise summary of the key points of this paper. We
 {\color{blue}{\textbf{Authors: } 
 Thanks for the insightful comments of the reviewer. Since the definition of MIMO systems usually include two possible explanations: the multi-antenna MIMO and the multi-user MIMO, we will elaborate on both of these two explanations. 
 
-1.1) Actually, the extensibility to multi-antenna MIMO case is possible without sacrificing the number of time slots for CSI acquisition. By placing the pilot symbols on different OFDM subcarriers across different antennas, all the antennas at the user can transmit rotational pilots simultaneously at different frequencies. Then, the power sensors attached to each RIS element can split the interference random field (IRF) signal into components of different frequencies and perform phase estimation separately for different antennas. Mathematically, it is possible to retrieve $K$ different phases $\varphi_k\in[0,2\pi], k\in\{1,2,\cdots,K\}$ from the following composite power signal 
+1.1) Actually, the extensibility to multi-antenna MIMO case is possible without sacrificing the number of time slots for CSI acquisition. By placing the pilot symbols on different OFDM subcarriers across different antennas, all the antennas at the user can transmit rotational pilots simultaneously at different frequencies. Then, the power sensors attached to each RIS element can split the signal of the interference random field (IRF) into components of different frequencies, and perform phase estimation separately for different antennas. Mathematically, it is possible to retrieve $K$ different phases $\varphi_k\in[0,2\pi], k\in\{1,2,\cdots,K\}$ from the following composite power signal 
 \begin{equation}
     P(t) = \left|\alpha + \sum_{k=1}^{K} \beta_k e^{\ri \omega_k t}  e^{\ri \varphi_k}\right|^2,
 \end{equation}
-where $\beta_k>0$, and $\omega_k\neq\omega_\ell$ for different antenna indices $k,\ell$. In fact, by assuming a sufficiently small interferential power ratio $r=(\alpha)^{-2}\sum_k \beta_k^2$, the above power signal can be locally linearized into one DC component $\alpha^2$ and $K$ AC components of different frequencies, which may further be separated by directly applying the Fourier transform. Clearly, this sensing RIS-aided multi-antenna MIMO CSI acquisition method is sub-optimal. However, designing the optimal method to estimate all the $\varphi_k$ and $\beta_k$ accurately is also interesting, and we will leave it for our future work. 
+where $\beta_k>0$, and $\omega_k\neq\omega_\ell$ for different antenna indices $k,\ell$. In fact, by assuming a sufficiently small interferential power ratio $r=(\alpha)^{-2}\sum_k \beta_k^2$, the power signal $P(t)$ can be locally linearized into one DC component $\alpha^2$ and $K$ AC components $2\alpha\beta_k \cos(\omega_k t+\varphi_k)$ of different frequencies $\omega_k$, which may further be decomposed by applying the Fourier transform. Clearly, this sensing RIS-aided multi-antenna MIMO CSI acquisition method is sub-optimal. However, designing the optimal method to estimate all the $\varphi_k$ and $\beta_k$ accurately is also interesting, and we will leave it for our future work. 
 
 1.2) The extensibility to multi-user MIMO case. Similar to the above multi-antenna MIMO case, the simultaneous CSI acquisition methodology also works for the multi-user case. By transmitting pilot symbols that rotate at different frequencies, the RIS power sensor can still distinguish between different users. 
-Moreover, since usually different users are separated in the angular domain from the RIS's perspective [R1], in the multi-user case, the RIS can further exploit such angular separation property to distinguish between different users. Thus, by exploiting multi-sensor joint detection and estimation at the RIS, the CSI acquisition precision may be further improved. Such an extension to the multi-user MIMO case is also left for our future work, and we have added a brief discussion about this idea in the revised version.  
+Moreover, since usually different users are separated in the angular domain from the RIS's perspective [R1], in the multi-user case, the RIS can further exploit such angular separation property to distinguish between different users. Thus, by exploiting multi-sensor joint detection and estimation at the RIS, the CSI acquisition precision may be further improved due to the additional angular orthogonality among users. Such an extension to the multi-user MIMO case is also left for our future work, and we have added a brief discussion about this idea in the revised version.  
 
 % It is worth pointing out that the method we proposed to estimate the channel phase difference $\varphi$ is heuristic, which may not be the optimal one. It has been verified in the paper that our method is simple and efficient. However, designing the optimal method to estimate ${{\varphi_{l,c}}}$ is also interesting, and we will leave it for our future work. In the revised paper, we have addressed this issue as:
 
@@ -663,7 +665,7 @@ Specifically, in the revised paper, we have addressed these issues as:
 \begin{framed}
     \red{In fact, for multi-antenna MIMO systems, rotating pilot symbols at different frequencies $k$ can be simultaneously transmitted by different antennas to enable CSI acquisition.  
     Then, the multi-antenna CSI acquisition can be fulfilled by performing Fourier analysis on the composite IRF power signal $P(t)$, and extracting the phase angles for each antenna at distinct frequencies. 
-    Similarly, this pseudo-frequency division idea can be extended to multi-user MIMO systems, where different users can also be distinguished by different IRF frequencies. Fortunately, since different users are usually separated in the angular domain from the RIS's perspective, these users can be further identified by performing joint detection and estimation across all the RIS sensors. The joint CSI estimation is beyond the scope of this paper, and is left for our future work. }
+    Similarly, this pseudo-frequency division idea can be extended to multi-user MIMO systems, where different users can also be distinguished by different IRF frequencies. Fortunately, since different users are usually separated in the angular domain from the RIS's perspective, these users can be further identified by performing joint detection and estimation across all the RIS sensors. The joint multi-user CSI acquisition is beyond the scope of this paper, and is left for our future work. }
 \end{framed}
 
 
@@ -678,7 +680,7 @@ Specifically, in the revised paper, we have addressed these issues as:
 {\color{blue}{\textbf{Authors: } 
 Many thanks for the reviewer's high expectation on this paper. To respond to the reviewer's questions, we would like to clarify our contributions and explain the meanings of the proposed algorithms in a more systematic manner. 
 Specifically, we will show the underlying logic in the proposed algorithms to justify their rationale. 
-Also, as is stressed by the reviewer, it is important to provide performance guarantees for the proposed approaches. We have tried our best to conceive some theorems on the achievability of our proposed algorithms, and the performance guarantees will be provided in response to {\bf question 3)}, which will be presented later. 
+Also, as is stressed by the reviewer, it is important to provide performance guarantees for the proposed approaches. We have tried our best to conceive achievability theorems for our proposed algorithms. These theorems and the corresponding performance guarantees will be provided in response to {\bf question 3)}, which will be presented later. 
 
 We would like to commence by elaborating the novelty of the proposed methods. In this paper, we have proposed a new approach for CSI acquisition by exploiting the power detection capability of sensing RIS. This approach is fundamentally different from the existing schemes in that: 
 \begin{enumerate}
@@ -716,14 +718,16 @@ Many thanks for the reivewer's positive attitude on the correctness of the CRLB.
 
 These newly-added theorems and lemmas are mainly related to detection and estimation theory, which may match the broader scope of this journal. For you to check, we have provided the theoretical contents as follows with some slight modifications, e.g., the number of equations and lemmata may be different from those in the revised paper. The detailed proofs are provided in the {\bf Appendices} of the revised paper.  
 
+We would like to briefly summarize the newly-added theorems and lemmas before going into the details below. These theoretical results are mainly focused on the analysis of the proposed vM-EM phase estimation algorithm. By assuming convergence of the algorithm, we first obtain a fixed-point equation that describes how the estimator $\hat{\varphi}$ varies as a function of the sensor noise ${\bm v}$. In order to quantify how large the deviation of the estimator from the true value can be, we take the derivative of the estimator $\hat{\varphi}$ with respect to ${\bm v}$, and try to upper-bound such a derivative in order to upper-bound the estimation error. After some calculations, we find that the derivative of $\hat{\varphi}$ is jointly determined by ${\bm v}$ and the estimator $\hat{\varphi}$ itself, so we try to model this relation by an ordinary differential equation to capture the increasing rate of the estimation error. Finally, we reach the desired conclusion that the mean squared estimation error (MSE) is of order $\mathcal{O}(\bar{\gamma}^{-1})$, which is the best error decay rate expectable in most of the estimation problems where the signals are corrupted by some Gaussian noise.  
+
 \begin{framed}
     \red{
         \begin{theorem}[MSE of the vM-EM estimator] \label{thm3:asymp_perf_vM-EM}
             Assume $\alpha>\beta>0$ are fixed. Then, there exists a sufficiently large integer $L_0$, such that for any $L\geq L_0$, if the proposed vM-EM algorithm converges, the returned estimator $\hat{\varphi}$ achieves an MSE performance of $\mathbb{E}[(\hat{\varphi}-\varphi)^2] = \mathcal{O}(\bar{\gamma}^{-1})$, where $\varphi$ is the true parameter, and $\bar{\gamma}$ is the interferential SNR defined as $\bar{\gamma} = (\alpha^2+\beta^2)/\sigma_v^2$.    
         \end{theorem}
-    }
     
-        \red{Before proving this theorem, we first introduce the following {\bf Lemma~\ref{lemma:wirtinger_der_vM-EM}} that characterizes how the vM-EM estimator $\hat{\varphi}$ in {\bf Algorithm~2} varies with the random noise vector $\bm v$. }
+    
+        Before proving this theorem, we first introduce the following {\bf Lemma~\ref{lemma:wirtinger_der_vM-EM}} that characterizes how the vM-EM estimator $\hat{\varphi}$ in {\bf Algorithm~2} varies with the random noise vector $\bm v$. }
     
         \red{\begin{lemma} \label{lemma3:wirtinger_der_vM-EM}
             Suppose that for the input data sequence ${\bm s} = \sqrt{{\bm P}/A} = (s_0, \cdots, s_{L-1})\T$, the vM-EM algorithm converges to the estimator $\hat{\varphi}$. Then, the estimator $\hat{\varphi} = \hat{\varphi}({\bm v})$ can be viewed as a function of the noise $\bm v$, and the Wirtinger derivative of $\hat{\varphi}$ w.r.t. $\bm v$ satisfies 
