@@ -43,6 +43,7 @@
 \renewcommand{\baselinestretch}{1.65}
 \hyphenation{op-tical net-works semi-conduc-tor IEEEtran}
 \DeclareGraphicsRule{.png}{eps}{.bb}{}
+\allowdisplaybreaks[4]
 
 \newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
 \newcommand{\red}[1]{{\color{red}{#1}}}
@@ -499,7 +500,7 @@ We appreciate the reviewer's concise summary of the key points of this paper. We
 While the proposed idea \& results seem correct, I do not believe the main contributions of the paper (largely algorithmic) are a good fit for IEEE Transactions on Information Theory. My recommendation to the authors would be to submit the paper to wireless communication- and/or signal processing-focused journals, which would be a better fit for the paper's contributions.
 
 {\color{blue}{\textbf{Authors: } 
-Much thanks for the reviewer's positive attitude on the novelty and correctness of this paper. Also, as is stressed by the reviewer, the previous version of this paper lacks a series of sound information-theoretic analyses. We agree with the reviewer that the analytical results are necessary for the high-quality journals like IEEE T-IT. To this end, we have tried our best to provide achievable bounds for our proposed interference random field (IRF)-based CSI acquisition schemes. These newly-added theorems and lemmas are mainly related to detection and estimation theory, which may match the broader scope of this journal. For you to check, we have provided the theoretical contents as follows with some slight modifications, e.g., the number of equations and lemmata may be different from those in the revised paper. 
+Many thanks for the reviewer's positive attitude on the novelty and correctness of this paper. Also, as is stressed by the reviewer, the previous version of this paper lacks a series of sound information-theoretic analyses. We agree with the reviewer that the analytical results are necessary for the high-quality journals like IEEE T-IT. To this end, we have tried our best to provide achievable bounds for our proposed interference random field (IRF)-based CSI acquisition schemes. These newly-added theorems and lemmas are mainly related to detection and estimation theory, which may match the broader scope of this journal. For you to check, we have provided the theoretical contents as follows with some slight modifications, e.g., the number of equations and lemmata may be different from those in the revised paper. 
 \begin{framed}
 \red{
     \begin{theorem}[Fixed-point perturbation bound] \label{thm:asymp_perf_vM-EM}
@@ -545,14 +546,12 @@ Much thanks for the reviewer's positive attitude on the novelty and correctness 
         \label{eqn:differential_of_error}
     \end{equation}
     Thus, an integration inequality will hold to upper-bound the MSE of the estimator $\hat{\varphi}$, i.e., 
-    \begin{equation}
-        \begin{aligned}
-            |\Delta{\varphi}|^2 &= \left| \int {\rm d}\Delta\varphi \right|^2 \\
-            &= 4 \left| \int_{0}^{1} \Re\langle\nabla_{{\bm v}'=t {\bm v}}\hat{\varphi}, {\bm v}\rangle{\rm d}t \right|^2 \\
-            &\leq 4\|{\bm v}\|^2 \left(\int_{0}^{1} \|\nabla_{{\bm v}'=t{\bm v}}\hat{\varphi} \| {\rm d} t \right)^2. 
-        \end{aligned}
-        \label{ineq:gradient_bound}
-    \end{equation}
+    \begin{align}\label{ineq:gradient_bound}
+        |\Delta{\varphi}|^2 &= \left| \int {\rm d}\Delta\varphi \right|^2 \notag \\
+        &= 4 \left| \int_{0}^{1} \Re\langle\nabla_{{\bm v}'=t {\bm v}}\hat{\varphi}, {\bm v}\rangle{\rm d}t \right|^2 \notag  \\
+        &\leq 4\|{\bm v}\|^2 \left(\int_{0}^{1} \|\nabla_{{\bm v}'=t{\bm v}}\hat{\varphi} \| {\rm d} t \right)^2. 
+    \end{align}
+        
     Before explaining this idea in detail, we first introduce some interesting results about some intermediate variables. }
     
     \red{\begin{lemma}[Asymptotic invariants]\label{lemma:asymp_inv}
@@ -801,14 +800,12 @@ We would like to briefly summarize the newly-added theorems and lemmas before go
             \label{eqn3:differential_of_error}
         \end{equation}
         Thus, an integration inequality will hold to upper-bound the MSE of the estimator $\hat{\varphi}$, i.e., 
-        \begin{equation}
-            \begin{aligned}
-                |\Delta{\varphi}|^2 &= \left| \int {\rm d}\Delta\varphi \right|^2 \\
-                &= 4 \left| \int_{0}^{1} \Re\langle\nabla_{{\bm v}'=t {\bm v}}\hat{\varphi}, {\bm v}\rangle{\rm d}t \right|^2 \\
-                &\leq 4\|{\bm v}\|^2 \left(\int_{0}^{1} \|\nabla_{{\bm v}'=t{\bm v}}\hat{\varphi} \| {\rm d} t \right)^2. 
-            \end{aligned}
-            \label{ineq3:gradient_bound}
-        \end{equation}
+        \begin{align}\label{ineq3:gradient_bound}
+            |\Delta{\varphi}|^2 &= \left| \int {\rm d}\Delta\varphi \right|^2 \notag \\
+            &= 4 \left| \int_{0}^{1} \Re\langle\nabla_{{\bm v}'=t {\bm v}}\hat{\varphi}, {\bm v}\rangle{\rm d}t \right|^2 \notag \\
+            &\leq 4\|{\bm v}\|^2 \left(\int_{0}^{1} \|\nabla_{{\bm v}'=t{\bm v}}\hat{\varphi} \| {\rm d} t \right)^2. 
+        \end{align}
+    
         Before explaining this idea in detail, we first introduce some interesting results about some intermediate variables. }
         
         \red{\begin{lemma}[Asymptotic invariants]\label{lemma3:asymp_inv}
