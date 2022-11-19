@@ -128,16 +128,14 @@ breaklinks=true}
 \maketitle
 
 \begin{abstract}
-\red{
 Reconfigurable intelligent surfaces (RISs) are envisioned as a potentially transformative technology for future wireless communications.
-However, RIS's inability to process signals and their attendant  increased channel dimension have brought new challenges to RIS-assisted systems, which greatly increases the pilot overhead required for channel estimation.
-To address these problems, several prior contributions that enhance the hardware architecture of RISs or develop algorithms to exploit the channels' mathematical properties have been made, where the required pilot overhead is reduced to be proportional to the number of RIS elements.
+\red{However, RISs' inability to process signals and the attendant increased channel dimension have brought new challenges to RIS-assisted systems, including significantly increased pilot overhead required for channel estimation. } To address these problems, several prior contributions that enhance the hardware architecture of RISs or develop algorithms to exploit the channels' mathematical properties have been made, where the required pilot overhead is reduced to be proportional to the number of RIS elements.
 In this paper, we propose a dimension-independent channel state information (CSI) acquisition approach in which the required pilot overhead is independent of the number of RIS elements.
 Specifically, in contrast to traditional signal transmission methods, where signals from the base station (BS) and the users are transmitted in different time slots, we propose a novel method in which signals are transmitted from the BS and the user simultaneously during CSI acquisition. 
-Under this method, an electromagnetic interference random field (IRF) will be induced on the RIS, and we employ a sensing RIS to capture its features.
-Moreover, we develop three algorithms for parameter estimation in this system, and we analyzed the achievable asymptotic performance of the proposed vM-EM algorithm through the fixed point perturbation method. 
+\red{With this method, an electromagnetic interference random field (IRF) will be induced on the RIS, and we propose the structure of sensing RIS to capture its features. 
+Moreover, we develop three algorithms for parameter estimation in this system, in which one of the proposed vM-EM algorithm is analyzed with the fixed-point perturbation method to obtain an asymptotic achievable bound. } 
 In addition, we also derive the Cram{\'e}r-Rao lower bound (CRLB) and an asymptotic expression for characterizing the best possible performance of the proposed algorithms. 
-Simulation results verify that our proposed signal transmission method and the corresponding algorithms can achieve dimension-independent CSI acquisition for beamforming. }
+Simulation results verify that our proposed signal transmission method and the corresponding algorithms can achieve dimension-independent CSI acquisition for beamforming. 
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -197,8 +195,8 @@ Specifically, the contributions of this paper can be summarized as follows.
         We then develop discrete Fourier transform (DFT), maximum likelihood (ML), and von Mises-expectation maximization (vM-EM) phase estimation algorithms to extract the phase information from the power detector signals in order to perform beamforming. 
         \item \red{
         By the fixed-point perturbation method, we analytically prove that the proposed vM-EM algorithm achieves an error decay of $\mathcal{O}(\bar{\gamma}^{-1})$, which is the best expectable asymptotic precision that a phase estimator could attain. Furthermore, we derive the \ac{CRLB} of the IRF phase estimation problem as well as its approximated asymptotic expression. 
-        Our numerical results verify that our developed vM-EM algorithm numerically achieves the theoretical error decay rate, and that it is close to the \ac{CRLB}.  
-        Our simulation results further demonstrate that the proposed signal transmission method and the corresponding algorithms can realize dimension-independent CSI acquisition for beamforming, and can achieve near-optimal spectral efficiency. }
+        Our numerical results verify that the developed vM-EM algorithm achieves the theoretical error decay rate, and that it is close to the \ac{CRLB}.  
+        Our simulation results further demonstrate that the proposed signal transmission method and the corresponding algorithms can realize dimension-independent CSI acquisition for beamforming, and can achieve near-optimal system spectral efficiency. }
     \end{itemize}
 
 \subsection{Organization and Notation}
@@ -238,31 +236,31 @@ $I_\nu(z)$ is the $\nu$-th order modified Bessel function of the first kind.
 
 
 \section{System Model}  \label{System Model}
-    In this section, we will first specify the system model of the RIS-assisted \ac{MISO} system.
-    Then, we will specify the channel assumptions in~\ref{Sec2-Subsec1}. 
-    Traditional approaches for the corresponding beamforming design and channel estimation will be introduced in Subsection~\ref{Beamforming design} and~\ref{Channel Estimation}, respectively.
+    \red{In this section, we will first specify the system model of the RIS-assisted \ac{MISO} system.
+    Then, we will clarify the power allocation between CSI acquisition and data transmission in~\ref{Sec2-Subsec1}. 
+    Finally, traditional approaches for the corresponding beamforming design and channel estimation will be introduced in Subsection~\ref{Beamforming design} and~\ref{Channel Estimation}, respectively.}
 
     Let us consider an RIS-aided MISO system, where an $N$-element RIS is employed for enhancing the transmission from an $M$-antenna \ac{BS} to a single-antenna user. 
-    Assume furthermore that the phase-shift of each element of the RIS can be continuously and independently controlled~\cite{wu2019intelligent}. Then, the precoding matrix of the RIS can be represented by $\bm \Theta = \diag \left(\bm \theta\right)=\diag \left(\left[\theta_{1},\cdots ,\theta_{N}\right]\T\right)$,
+    Assume furthermore that the phase-shift of each element of the RIS can be continuously and independently controlled with unit reflective gain~\cite{wu2019intelligent}. Then, the precoding matrix of the RIS can be represented by $\bm \Theta = \diag \left(\bm \theta\right)=\diag \left(\left[\theta_{1},\cdots ,\theta_{N}\right]\T\right)$,
     where $\theta_n (n\in \{N\})$ denotes the phase-shift of the $n$-th RIS element, satisfying $\lvert \theta_n\rvert=1$. Therefore, the signal received by the user can be written as 
         \begin{equation}
             \label{Signal model}
             y=\bm f\H \bm\Theta \bm G \bm w s+z,
         \end{equation}
-        where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamforming vector at the transmitter BS, with power constraint $\left\Vert \bm w\right\Vert_{2}^{2}\leq P_{\text{max}}$; $s$ denotes the normalized BS transmitted symbol; $z\sim \mathcal{CN}\left(0,\sigma_{z}^{2}\right)$ denotes the \ac{AWGN} introduced at the receiver user. To focus on RIS beamforming, other possible links are neglected in this paper\footnote{In fact, our proposed CSI acquisition procedure automatically works when there exist direct BS-user links, which will be explained in Sec.~\ref{Sec4-Subsec4}.}.
+        where $\bm f\in \mathbb C ^{N\times 1}$ and $\bm G \in \mathbb C^{N\times M}$ denote the channel spanning from the RIS to the user and the channel spanning from the BS to the RIS, respectively; $\bm w\in \mathbb C^{M\times 1}$ denotes the beamformer at the BS transmitter, with power constraint $\left\Vert \bm w\right\Vert_{2}^{2}\leq P_{\text{max}}$; $s$ denotes the normalized BS transmitted symbol satisfying $\mathbb{E}[ss^*]=1$; $z\sim \mathcal{CN}\left(0,\sigma_{z}^{2}\right)$ denotes the \ac{AWGN} introduced at the receiver user. To focus on RIS beamforming, other possible links are neglected in this paper\footnote{In fact, our proposed CSI acquisition procedure automatically works when there exist direct BS-user links, which will be explained in Sec.~\ref{Sec4-Subsec4}.}.
 
 
 \red{
-\subsection{Channel Assumptions}\label{Sec2-Subsec1}
+\subsection{Power Allocation}\label{Sec2-Subsec1}
 
-We assume a block-fading Rayleigh channel with $B$ symbols in each block, i.e., the i.i.d. Rayleigh random channel matrices $\bm G$ and $\bm f$ are generated once for every consecutive $B$ symbols. Within these $B$ symbols, there are $N_p$ pilot symbols (the number of time slots for pilot signals) for channel estimation, and $N_d$ data symbols for data transmission, where $B=N_p+N_d$. The pilot symbols have a total energy of $E_p$, and the data symbols have a total energy of $E_d$.
-Suppose we want to ensure that the average transmit power of each block is $P$, then the energy values $E_p$ and $E_d$ should satisfy 
+We assume a block-fading Rayleigh channel with $B$ symbols in each block, i.e., the i.i.d. Rayleigh random channel matrices $\bm G$ and $\bm f$ are generated once for every consecutive $B$ symbols. Within these $B$ symbols, there are $N_p$ pilot symbols (i.e., the number of time slots for pilot signals) for channel estimation, and $N_d$ data symbols for data transmission, where $B=N_p+N_d$. The pilot symbols and the data symbols are subject to a total energy of $E_p$ and $E_d$, respectively.
+Suppose the average transmit power of each block is $P$, then the energy values $E_p$ and $E_d$ should satisfy 
 \begin{equation}
     P=\frac{E_p+E_d}{B}.
 \end{equation}
-Thus, if the number of pilot symbols $N_p$ are smaller for some CSI acquisition scheme, then the average pilot signal-to-noise ratio (SNR) $\gamma_p = E_p/(N_p \sigma_n^2)$ would be automatically higher, ensuring fair comparison in the sense that equal energy is injected into the channel for different channel estimation schemes.   
+Thus, a smaller number of pilot symbols $N_p$ will lead to a higher average pilot signal-to-noise ratio (SNR) $\gamma_p = E_p/(N_p \sigma_z^2)$ during CSI acquisition. This property ensures fair comparison among different channel estimation schemes, since equal energy $E_p$ is injected into the channel for the purpose of CSI acquisition.    
 
-The actual transmit power values during CSI acquisition and data transmission are determined by the following equations:  
+By defining the total pilot energy $E_p$ and the total data enery $E_d$, the actual transmit power values during the CSI acquisition phase and the data transmission phase are given by   
 \begin{equation}
     \begin{aligned}
         P_{{\rm BS}, p} &= \frac{E_p}{N_p}P_{\rm max},\quad P_{{\rm BS}, d} = \frac{E_d}{N_d}P_{\rm max}, \\
@@ -270,49 +268,66 @@ The actual transmit power values during CSI acquisition and data transmission ar
     \end{aligned}
     \label{eqn:transmit_power}
 \end{equation}
-where $P_{\rm max}$ is the average BS transmit power budget, $P'_{\rm max}$ is the average user transmit power budget, and $E_p, E_d$ jointly determine the power allocation between pilot symbols and data symbols.  
+where $P_{\rm max}$ is the average BS transmit power budget, $P'_{\rm max}$ is the average user transmit power budget. 
 }
-        
-\subsection{Beamforming Design}
-        \label{Beamforming design}
-        Based on the received signal \eqref{Signal model}, we can formulate the \ac{SNR} maximization problem for designing the beamforming vector $\bm w$ and precoding matrix $\bm \Theta$, i.e.,
-        \begin{subequations}
-            \label{optimization}
-            \begin{align}
-            \label{objective}
-                \max_{\bm \Theta}~~&\text{SNR}=\frac{1}{\sigma_{z}^{2}}
-                \left\vert
-                \bm f\H\bm \Theta\bm G\bm w \right\vert^{2},\\
-            \label{constraint}
-                ~~~~~\text{s.t.~~~}&\text{C}_{1}: \left\Vert \bm w\right\Vert_{2}^{2}\leq P_{\text{max}},\\
-                &\text{C}_{2}: \left\vert\theta_{n}\right\vert=1,~\forall n.
-            \end{align}
-        \end{subequations}
-        
-    In this paper, we assume that the locations of the \ac{BS} and the RIS are unchanged, which can provide us a feasible beamforming approach expressed as
+
+\red{
+\subsection{Beamforming Design} \label{Beamforming design}
+    Based on the received signal~\eqref{Signal model}, we can formulate the \ac{SNR} maximization problem for designing the BS beamformer $\bm w$ and precoding matrix $\bm \Theta$, i.e.,
+    \begin{subequations}
+        \label{optimization}
+        \begin{align}
+        \label{objective}
+            \max_{\bm \Theta}~~&\text{SNR}=\frac{1}{\sigma_{z}^{2}}
+            \left\vert
+            \bm f\H\bm \Theta\bm G\bm w \right\vert^{2},\\
+        \label{constraint}
+            ~~~~~\text{s.t.~~~}&\text{C}_{1}: \left\Vert \bm w\right\Vert_{2}^{2}\leq P_{\text{max}},\\
+            &\text{C}_{2}: \left\vert\theta_{n}\right\vert=1,~\forall n.
+        \end{align}
+    \end{subequations}
+
+    A near-optimal solution to this joint active-passive beamforming problem can be solved by the following alternating optimization (AO) loop~\cite{wu2019intelligent}:
     \begin{equation}
-        \label{traditional beamforming}
-        \bm w=\sqrt{P_{\rm max}}\bm a\left(\alpha\right),~ \theta_{n} = \exp\left(-\ri \arg\left(f_{n}^{*}\bm g_{n}\T \bm w\right)\right),~\forall n\in \{N\},
+        \left\{\begin{aligned}
+            & {\bm \theta}^{(t+1)} = \exp(-\ri \arg({\rm diag}({\bm f}^*) {\bm G} {\bm w}^{(t)})), \\
+            & {\bm w}^{(t+1)} = \sqrt{P_{\rm max}}{\rm norm}(({{\rm diag}({\bm f}^*) {\bm G}})\H {\bm \theta}^{(t+1)*}),
+        \end{aligned}\right. \label{eqn:iter_beamforming}
     \end{equation}
-    where $\bm a(\alpha)$ denotes the array steering vector with respect to the wave departure angle $\alpha$ of the BS antenna array, and $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]\T$. 
+    where ${\rm norm}({\bm z}), {\bm z}\in\mathbb{C}^{M\times 1}$ denotes ${\bm z}/\|{\bm z}\|$, and $t$ is the iteration index. Note that this AO-based beamforming method depends on the knowledge of the full channel matrices $\bm G$ and $\bm f$, thus the active beamformer $\bm w$ and the passive beamformer $\Theta$ have to be frequently re-optimized once the channel changes.  
+
+    However, a more often assumption in real-world RIS-aided systems is that the locations of the \ac{BS} and the RIS are usually fixed, implying that the BS-RIS channel $\bm G$ enjoys a much longer channel coherence time compared with the RIS-user channel $\bm f$~\cite{Huchen}. Thus, in order to mitigate the computational cost, a suboptimal solution can be immediately obtained by designing $\bm w$ and $\bm\Theta$ in a one-shot manner, i.e., 
+    \begin{equation}
+        \begin{aligned}
+            {\bm w} &= \sqrt{P_{{\rm BS}, d}}\underset{\tilde{\bm w}\in\mathbb{C}^M, \|\tilde{\bm w}\|=1}{\rm argmax}\,\|{\bm G}\tilde{\bm w}\|^2, \\
+            \theta_{n} &= \exp\left(-\ri \arg\left(f_{n}^{*}\bm g_{n}\T \bm w\right)\right),~\forall n\in \{N\},
+        \end{aligned}
+        \label{traditional beamforming}
+    \end{equation}
+    where $\bm G = \left[\bm g_{1}, \cdots, \bm g_{N}\right]\T$. Note that this method is equivalent to optimizing the upper bound of the target function~\eqref{objective}:
+    \begin{equation}
+        {\rm SNR} = \frac{1}{\sigma_z^2}\left|\langle {\bm \Theta}{\bm G}{\bm w}, {\bm f}\rangle \right|^2 \leq \frac{1}{\sigma_z^2}\|{\bm G}{\bm w}\|^2\cdot \| {\bm f} \|^2.
+    \end{equation} 
+    }
+
 
 \subsection{Channel Estimation}
 \label{Channel Estimation}
-    Observe from~\eqref{traditional beamforming} that, the estimation for the cascaded channel ${\bm H} = {\rm diag}({\bm f}^{*})\bm G$ is enough for beamforming design. 
-    To accurately acquire this cascaded channel, the user generally sends pilot signal $x$ to the BS under $N_p$ different RIS configurations which are the first $N_p$ columns of the DFT matrix ${\bm F}_N$, denoted as $\bm F_{N,N_p}$. 
+    Observe from~\eqref{eqn:iter_beamforming} that, it suffices to know the cascaded channel ${\bm H} = {\rm diag}({\bm f}^{*})\bm G$ for beamforming design. 
+    To accurately acquire this cascaded channel, the user sends pilot signal $x\in\mathbb{C}$ to the BS with $N_p$ different RIS configurations. These different RIS configurations are usually designed to be the first $N_p$ columns of the DFT matrix ${\bm F}_N$, denoted as $\bm F_{N,N_p}$. 
     Due to the channel reciprocity, the received signal at the BS with the $p$-th RIS configuration $\bm \Theta_{p}=\diag({\bm \theta}_p)$ can be written as~\cite{atapattu2020reconfigurable}
     \begin{equation}
     \label{CE received signal}
         {\bm y}_{{\rm BS}, p} =\bm H\T {\bm \theta}_p w' s'+\bm n,\quad p=1,2,\cdots,N_p,
     \end{equation}
-    where $w'$ is the precoding scalar of the user satisfying $|w'|^2 \leq P_{\rm max}'$, $s'$ is the normalized user transmitted symbol, and $\bm n\sim \mathcal{CN}\left( \bm 0_{M}, \sigma_{z}^{2}\bm I_{M}\right)$ is the \ac{AWGN} at the receiver BS.
+    where $w'$ is the precoding scalar of the user satisfying $|w'|^2 \leq P_{\rm max}'$, $s'$ is the normalized user transmitted symbol with $\mathbb{E}[s'(s')^*]=1$, and $\bm n\sim \mathcal{CN}\left( \bm 0_{M}, \sigma_{z}^{2}\bm I_{M}\right)$ is the \ac{AWGN} at the BS receiver.
     Equivalently, \eqref{CE received signal} can be expressed in the matrix form
     \begin{equation}
     \label{eqn:LS_CE model}
         {\bm Y}_{\rm BS}=\bm H\T \bm F_{N,N_p}w' s' + {\bm N},
     \end{equation}
     where ${\bm Y}_{\rm BS}=\left[\bm y_{{\rm BS}, 1},\cdots,\bm y_{{\rm BS}, N_p}\right]$ and $\bm N = \left[ \bm n_{1},\cdots,\bm n_{N_p}\right]$.
-    \red{Given the received signal $\bm Y_{\rm BS}$ and, without loss of generality, assuming $w's'=\sqrt{P'_{\rm max}}$, the channel estimation problem in RIS-assisted system can be obtained by the MMSE estimator~\cite{kundu2021channel} as  
+    \red{Given the received signal $\bm Y_{\rm BS}$ and, without loss of generality, assuming $w's'=\sqrt{P'_{\rm max}}$, the channel estimation problem in RIS-assisted system can be solved by the MMSE estimator~\cite{kundu2021channel} as  
     \begin{equation}
         \begin{aligned}
             \hat{\bm H}\T &= \underset{\hat{\bm H}\T}{\rm argmin}\,\mathbb{E}\left[\|\hat{\bm H}\T - {\bm H}\T\|_{F}^2 | {\bm Y}_{\rm BS}\right]\\
@@ -320,9 +335,9 @@ where $P_{\rm max}$ is the average BS transmit power budget, $P'_{\rm max}$ is t
         \end{aligned} 
         \label{eqn:MMSE_H}
     \end{equation}
-    However, the evaluation of the MMSE estimator requires exact knowledge of the prior p.d.f. of the channel $p({\bm H})$, which is difficult to be written in an explicit form. This is because the entries of the cascaded channel matrix ${\bm H}_{ij}$ is the product of two Gaussian-distributed random variables ${\bm f}_i^{*}\sim{\mathcal{CN}}(0,\sigma_f^2), {\bm G}_{ij}\sim{\mathcal{CN}}(0,\sigma_g^2)$. }
+    However, the evaluation of the MMSE estimator requires exact knowledge of the prior p.d.f. of the channel $p({\bm H})$, which is difficult to be written in an explicit form. This is because the entries of the cascaded channel matrix ${\bm H}_{ij}$ is the product of two Gaussian-distributed random variables ${\bm f}_i^{*}\sim{\mathcal{CN}}(0,\sigma_f^2)$ and ${\bm G}_{ij}\sim{\mathcal{CN}}(0,\sigma_g^2)$, which is generally not a Gaussian random variable.  }
 
-    \red{An alternative way to circumvent this difficulty is to constrain the estimator $\hat{\bm H}$ in~\eqref{eqn:MMSE_H} to be a linear transform of ${\bm Y}_{\rm BS}$, obtaining a linearly approximated MMSE estimator, which is called the linear MMSE (LMMSE) estimator. By assuming $\sigma_h^2 = \sigma_f^2\sigma_g^2$, the LMMSE estimator can be obtained as }
+    \red{An alternative way to circumvent this difficulty is to constrain the estimator $\hat{\bm H}$ in~\eqref{eqn:MMSE_H} to be a linear transform of ${\bm Y}_{\rm BS}$. This linear constraint produces a linearly approximated MMSE estimator, which is called the linear MMSE (LMMSE) estimator. By assuming $\sigma_h^2 = \sigma_f^2\sigma_g^2$, the LMMSE estimator can be obtained as }
     \red{
     \ifx\onecol\undefined
         \begin{equation}
@@ -353,12 +368,12 @@ where $P_{\rm max}$ is the average BS transmit power budget, $P'_{\rm max}$ is t
     \begin{equation}
         {\bm A} = \sqrt{P'_{\rm max}}\left[ {\bm G}\T\diag({\bm \theta}_1);\cdots;  {\bm G}\T\diag({\bm \theta}_{N_p})\right] \in \mathbb{C}^{N_pM\times N}.
     \end{equation}
-    Since this channel estimation scheme assumes known $\bm G$ and estimates unknown $\bm f$ by the MMSE estimator, we refer to it as the MMSE-$\bm f$ scheme. 
+    Since this channel estimation scheme assumes known $\bm G$ and estimates the unknown $\bm f$ by an MMSE estimator, we refer to it as the MMSE-$\bm f$ scheme. 
 
     It is worth noting that, both the LMMSE-$\bm G$ and the MMSE-$\bm f$ methods consume a linear number of pilot slots in $N$. 
     For the LMMSE-$\bm G$ scheme, 
     In order to determine the RIS-user channel $\bm{f}\in\mathbb{C}^{N\times 1}$, at least $N_p = \lceil N/M \rceil = {\Theta}(N)$ pilots are required, even with the assumption that the slow-varying~\cite{Huchen} BS-RIS channel $\bm G$ is known in advance. 
-    In fact, without exploiting the sparsity of $\bm f$, it seems impossible to obtain the $N$ channel coefficients with pilot overhead smaller than $\Theta(N)$. 
+    In fact, without exploiting the inherent structure of $\bm f$, it seems impossible to obtain the $N$ channel coefficients with pilot overhead smaller than $\Theta(N)$. 
     However, in the following section, we will show that it is possible to realize dimension-independent CSI acquisition by exploiting a common physical phenomenon in electrodynamics. }
     
 \section{Interference Random Field}
@@ -412,11 +427,11 @@ where $P_{\rm max}$ is the average BS transmit power budget, $P'_{\rm max}$ is t
         \end{aligned}
     \end{equation}
     where $v(t)\sim \mathcal{CN}(0,\sigma_{v}^{2})$ is the electromagnetic noise signal in its baseband representation,
-    $\bm w$ and $w'$ are the beamforming vector at the BS side and the user side satisfying $\Vert \bm w \Vert_{2}^{2}\leq P_{\text{max}}$ and $|w'|^{2}\leq P'_{\text{max}}$, respectively,
+    $\bm w$ and $w'$ are the beamformer at the BS side and the user side satisfying $\Vert \bm w \Vert_{2}^{2}\leq P_{\text{max}}$ and $|w'|^{2}\leq P'_{\text{max}}$, respectively,
     $s$ is the symbol transmitted from the BS to RIS, and $s'=e^{\ri \psi(t)}$ is the time-varying transmitted symbol from the user to the RIS.  
     Since the interference fringes are not sensitive to a global phase change, we can safely assume that $s=1$, and then the relative phase between the user and the BS can be fully characterized by a time-varying phase function $\psi(t)$.  
 
-    Furthermore, by defining $\alpha = \left\vert\bm g_{n}\T\bm w\right\vert$, $\beta = \left\vert f_{n}^{*} w' \right\vert$, and the phase difference between the \ac{BS}-RIS link\footnote{Since it is usually difficult to obtain the optimal BS beamforming vector $\bm w$, during the CSI acquisition procedure, we fix $\bm w$ to a steering vector that guides most of the signal energy to the RIS aperture. As a result, $\bm g_n\T \bm w$ can be treated as the equivalent BS-link from the BS to the $n$-th RIS element.} and the RIS-user channel as $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}\T\bm w\right)$, then the power of the \ac{IRF} can be written as
+    Furthermore, by defining $\alpha = \left\vert\bm g_{n}\T\bm w\right\vert$, $\beta = \left\vert f_{n}^{*} w' \right\vert$, and the phase difference between the \ac{BS}-RIS link\footnote{Since it is usually difficult to obtain the optimal BS beamformer $\bm w$, during the IRF-based CSI acquisition procedure, we fix $\bm w$ to a vector that guides most of the signal energy to the RIS aperture according to~\eqref{traditional beamforming}. As a result, $\bm g_n\T \bm w$ can be treated as the equivalent BS-link from the BS to the $n$-th RIS element.} and the RIS-user channel as $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}\T\bm w\right)$, then the power of the \ac{IRF} can be written as
     \ifx\onecol\undefined
         \begin{equation}
             \label{eqn:power of interference}
@@ -481,13 +496,13 @@ where $P_{\rm max}$ is the average BS transmit power budget, $P'_{\rm max}$ is t
     The initial phase ($t=0$) of this sinusoidal waveform is uniquely determined by $\varphi$.
     Thus, if we have access to the power received by the $n$-th element at successive instants $t_l$, it is possible to retrieve the phase difference $\varphi$. 
     However, according to~\eqref{traditional beamforming}, it is the phase sum of the RIS-user channel and the BS-RIS channel, i.e., $\arg({\bm g}_n\T{\bm w})+\arg(f_n^*w')$, that determines the optimal phase-shift of the $n$-th element. Given the phase difference $\varphi = \arg\left(f_{n}^{*}w'\right)-\arg\left(\bm g_{n}\T\bm w\right)$, we assume the phase $\arg({\bm g}_n\T{\bm w})$ to be known in our algorithms in order to acquire the phase sum.
-    \red{The underlying reason for this assumption is that, in contrast to the fast time-varying RIS-user link, the BS-RIS link often exhibits a quasi-static property, thus two-timescale methods in~\cite{Huchen} can be applied to solely estimate the BS-RIS channel.
-    Thus, in our simulations for the IRF-based methods, the phase $\arg({\bm g}_n\T{\bm w})$ is assumed to be known.  } 
+    \red{The underlying reason for this assumption is that, in contrast to the fast time-varying RIS-user link, the BS-RIS link often exhibits a quasi-static property, thus two-timescale methods in~\cite{Huchen} can be applied, in which the quasi-static BS-RIS channel $\bm G$ is estimated in a longer timescale, while the frequently-varying RIS-user channel $\bm f$ is estimated in a shorter timescale.
+    Since the BS-RIS link $\bm G$ is usually stable, it can be estimated only once for many following data frames. Thus, in our simulations for the IRF-based methods, the phase $\arg({\bm g}_n\T{\bm w})$ is assumed to be known.  } 
 
 
 \section{Sensing RIS-Based Channel Estimation}
 \label{Sensing RIS-Based Channel Estimation}
-\red{In this section, we will first briefly introduce the hardware architecture required for detecting the \ac{IRF} in Subsection~\ref{Hardware Architecture of Sensing RIS}. Then, the core concept of IRF channel estimation and beamforming procedures will be introduced in Subsection~\ref{IRF Channel Estimation and Beamforming}. After that, Subsection~\ref{Pilot Overhead} will include the analysis on pilot overhead and computational complexity of our proposed IRF-based CSI acquisition methods. Finally, the extension to the co-existence case of direct-reflective links are presented in Subsection~\ref{Sec4-Subsec4}. 
+\red{In this section, we will first briefly introduce the hardware architecture required for detecting the \ac{IRF} in Subsection~\ref{Hardware Architecture of Sensing RIS}. Then, the core concept of IRF channel estimation and beamforming procedures will be introduced in Subsection~\ref{IRF Channel Estimation and Beamforming}. After that, Subsection~\ref{Pilot Overhead} will include the analysis on pilot overhead and computational complexity of the proposed IRF-based CSI acquisition methods. Finally, the extension to the co-existence case of direct-reflective links are presented in Subsection~\ref{Sec4-Subsec4}. 
 }
 
 \subsection{Hardware Architecture of Sensing RIS} \label{Hardware Architecture of Sensing RIS}
@@ -528,7 +543,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
     As is mentioned above, if we denote the OFDM symbol period by $T_s$, then the equivalent IRF angular frequency $\omega$ is given by $\omega = 2\pi k /T_s$, which means the noiseless power signal exhibits exactly $k$ sinusoidal periods during an OFDM symbol. 
     Without loss of generality, in this paper, we always assume $k=1$. 
     \red{In fact, for multi-antenna MIMO systems, rotating pilot symbols at different frequencies $k$ can be simultaneously transmitted by different antennas to enable CSI acquisition.  
-    Then, the multi-antenna CSI acquisition can be fulfilled by performing Fourier analysis on the composite IRF power signal $P(t)$, and extracting the phase angles for each antenna at distinct frequencies. 
+    Then, multi-antenna CSI acquisition can be fulfilled by performing Fourier analysis on the composite IRF power signal $P(t)$, and extracting the phase angles for each antenna at distinct frequencies. 
     Similarly, this pseudo-frequency division idea can be extended to multi-user MIMO systems, where different users can also be distinguished by different IRF frequencies. Fortunately, since different users are usually separated in the angular domain from the RIS's perspective, these users can be further identified by performing joint detection and estimation across all the RIS sensors. The joint CSI estimation is beyond the scope of this paper, and is left for our future work. }
 
     The second step 2) is called {\it phase estimation}. This step is designed to extract the phase difference $\varphi$ between the BS-RIS and RIS-user channel. 
@@ -611,7 +626,7 @@ However, for extremely large-scale RIS systems, sparse sensing and controlling m
 
 \red{
 \subsection{Extension to Systems with Direct BS-User Link} \label{Sec4-Subsec4}
-Since the direct link does not affect the creation of the IRF, the RIS phase-shift matrix $\bm \Theta$ can be obtained as if there were no such direct link, up to an undetermined global phase $e^{\ri \phi}$. Note that this IRF-based procedure for obtaining ${\bf\Theta}$ consumes only 3 time slots. After this procedure, two additional uplink training symbols can be transmitted from the user. The uplink channel model is 
+Since the direct link does not affect the creation of the IRF, the RIS phase-shift matrix $\bm \Theta$ can be obtained as if there were no such a direct link, up to an undetermined global phase $e^{\ri \phi}$. Note that this IRF-based procedure for obtaining ${\bf\Theta}$ consumes only 3 time slots. After this procedure, two additional uplink training symbols can be transmitted from the user. The uplink channel model is 
 \begin{equation}
     \begin{aligned}
         {\bm y}_{\rm BS} &= ({\bm h}_{\rm d} + e^{\ri \phi}{\bm G}\T {\bm \Theta} {\bm f}^*) s' + {\bm n} \\
@@ -635,7 +650,7 @@ Though the final solution $\exp(\ri \hat{\phi}) {\bm \Theta}$ for the RIS phase-
 
     
 \section{Phase Estimation Algorithms}
-In this section, three phase estimation algorithms will be proposed in Subsection~\ref{DFT method}, \ref{ML method}, and \ref{von Mises-EM method} respectively, which constitute the core of the \ac{IRF} channel estimation and beamforming algorithm.
+In this section, three phase estimation algorithms will be proposed in Subsection~\ref{DFT method}, \ref{ML method}, and~\ref{von Mises-EM method} respectively, which constitute the core of the \ac{IRF} channel estimation and beamforming algorithm.
 
 \subsection{DFT method}  \label{DFT method}
     The key challenge of the IRF channel estimation and beamforming is the phase estimation step, i.e., how to obtain the phase difference $\varphi$. Since the interferential power $P(t)$ exhibits a sinusoidal waveform, Fourier transforms can be applied to extract its phase. Apply $L$-point \ac{DFT} to the discrete-time  observed sensor detection signals $P[0],\cdots ,P[L-1]$, and we have
@@ -1086,18 +1101,19 @@ In this section, we will present our simulation results. In Subsection~\ref{Phas
     The CRLB and CRLB-approx curves are calculated from \eqref{eqn:precise_CRLB} and \eqref{eqn:asymptotic CRLB}, respectively. 
     For Newton-ML algorithm, the Newton iteration is performed 4 times according to \eqref{eqn:Newton-ML renewal formula}. 
     For vM-EM algorithm, the iteration number is also fixed to 4. The true value of random variable $\varphi$ under estimation is drawn from a uniform distribution on $[0,2\pi]$. 
-    In the simulations in Fig.~\ref{fig:phase estimation_gamma}, all the simulation parameters, except for $K$ and $\bar{\gamma}$, are the same with Fig.~\ref{fig:phase estimation_K}.
+    In the simulations in Fig.~\ref{fig:phase estimation_gamma}, all the simulation parameters, except for $K$ and $\bar{\gamma}$, are the same with that of Fig.~\ref{fig:phase estimation_K}.
 
-    From Fig.~\ref{fig:phase estimation_K} and Fig.~\ref{fig:phase estimation_gamma} we discover that the vM-EM algorithm has comparable performance with the Newton-ML algorithm, but the computational cost is significantly lower, since {\bf Algorithm \ref{alg:vM-EM}} does not require the evaluation of the complicated modified Bessel functions. 
-    Both the Newton-ML and vM-EM algorithms are close to the CRLB, and both of them outperform the simple DFT algorithm\footnote{The DFT estimator in Fig.~\ref{fig:phase estimation_gamma} exhibits a near-constant performance gap toward the CRLB in the high-SNR region, while the Newton-ML and vM-EM estimators seem to bridge this gap and finally approaches the CRLB as $\bar{\gamma}\to\infty$.}. 
-    The CRLB approximation is also satisfactory under a wide range of $K$ and $\bar{\gamma}$. 
+    It can be concluded from Fig.~\ref{fig:phase estimation_K} and Fig.~\ref{fig:phase estimation_gamma} that, the vM-EM algorithm has comparable performance with the Newton-ML algorithm, but the computational cost is significantly lower, since {\bf Algorithm~\ref{alg:vM-EM}} does not require the evaluation of the complicated modified Bessel functions. 
+    
+    It is shown in Fig.~\ref{fig:phase estimation_gamma} that the vM-EM algorithm achieves an asymptotic error decay of $\mathcal{O}(\bar{\gamma}^{-1})$, which coincides with the statement in {\bf Theorem~\ref{thm:asymp_perf_vM-EM}}. Furthermore, both the Newton-ML and vM-EM algorithms are close to the CRLB, and both of them outperform the simple DFT algorithm. The CRLB approximation~\eqref{eqn:asymptotic CRLB} is also satisfactory under a wide range of $K$ and $\bar{\gamma}$. However, the DFT estimator in Fig.~\ref{fig:phase estimation_gamma} exhibits a near-constant performance gap toward the CRLB in the high-SNR region, while the Newton-ML and vM-EM estimators are able to bridge this gap and finally approaches the CRLB as $\bar{\gamma}\to\infty$. 
+    
 
 \subsection{Spectral Efficiency with IRF-based CSI Acquisition} \label{Achievable Spectral Efficiency under IRF}
 
     All our simulation data are acquired under $f_c = 3.5\,{\rm GHz}$, $P_{\rm max}'=300 \,{\rm mW}$, $n_0=-174\,{\rm dBm/Hz}$, subcarrier bandwidth ${\rm BW} = 180\,{\rm kHz}$, thermal noise at the receiver $\sigma^2 = {\rm BW}\times n_0$, $\sigma_v^2=100\,{\rm MHz}\times n_0 F_p$, where $F_p=10\,{\rm dB}$ is the noise factor of the power sensor. 
     Both the BS and the RIS are equipped with $\lambda/2$-spaced uniform planar arrays (UPAs), while the user has a single antenna. 
     The BS is located at a distance from the RIS that is drawn from a uniform distribution between $20\,{\rm m}$ and $100\,{\rm m}$, and the user appears uniformly within a distance ranging from $10\,{\rm m}$ to $100\,{\rm m}$.
-    The size of the RIS is set to be $N=20\times 10$, and that of the BS antenna is $4\times 2$. The detailed simulation settings are listed in {\bf Table~\ref{tab:sim_parameters}}.
+    The size of the RIS is set to be $N=20\times 10$, and that of the BS antenna is $4\times 2$. The detailed simulation settings about the pilot energy and data energy~\eqref{eqn:transmit_power} are listed in {\bf Table~\ref{tab:sim_parameters}}.
     
     \begin{table}[t] 
         \color{red}
@@ -1125,26 +1141,19 @@ In this section, we will present our simulation results. In Subsection~\ref{Phas
         \label{fig:rate}
     \end{figure}
     \red{
-    Moreover, for the IRF methods, the BS beamformer $\bm w$ is chosen to be the right singular vector that corresponds to the most significant singular value of the BS-RIS channel $\bm G$, which automatically maximizes the total signal energy received by the RIS from the BS, i.e., 
+    Moreover, for the IRF methods, the BS beamformer $\bm w$ is chosen to be the right singular vector that corresponds to the most significant singular value of the BS-RIS channel $\bm G$, which maximizes the total signal energy received by the RIS from the BS, i.e., 
     \begin{equation}
         {\bm w} = \underset{\left\|{\bm w}\right\|\leq P_{\rm max}}{\rm argmax}\left\|{\bm G}{\bm w} \right\|^2,
     \end{equation}
     and the user's transmit scaler is set to the maximum allowed power $w'=\sqrt{P'_{\rm max}}$ for all the CSI acquisition schemes to ensure a high SNR. 
-    For the LMMSE algorithms, after the channel estimation procedure, the beamforming step is fulfilled by alternately updating the BS beamformer $\bm w$ and the RIS phase-shift matrix $\bm\Theta = {\rm diag}({\bm \theta})$ according to  
-    \begin{equation}
-        \left\{\begin{aligned}
-            & {\bm \theta}^{(t+1)} = \exp(-\ri \arg(\hat{\bm H}{\bm w}^{(t)})), \\
-            & {\bm w}^{(t+1)} = \sqrt{P_{\rm max}}{\rm norm}(\hat{\bm H}\H {\bm \theta}^{(t+1)*}),
-        \end{aligned}\right. \label{eqn:iterative_beamforming}
-    \end{equation}
-    where ${\rm norm}({\bm z})$ denotes ${\bm z}/\left\|{\bm z}\right\|$. The initial values ${\bm w}^{(0)}$ and ${\bm\theta}^{(0)}$ are generated randomly, and both subject to their corresponding power constraint and unit-modulus constraint, respectively. In our simulations, the iteration is performed at most $T=10$ times. 
+    For the MMSE/LMMSE algorithms, after the channel estimation procedure, the beamforming step is fulfilled by alternately updating the BS beamformer $\bm w$ and the RIS phase-shift matrix $\bm\Theta = {\rm diag}({\bm \theta})$ according to~\eqref{eqn:iter_beamforming}. 
+    The initial values ${\bm w}^{(0)}$ and ${\bm\theta}^{(0)}$ are generated randomly, and are subject to their corresponding power constraint and unit-modulus constraint, respectively. In our simulations, the iteration is performed for at most $T=10$ times. 
     
-
-    We compare our proposed \ac{IRF} channel estimation and beamforming method with classical MMSE-$\bm f$, LMMSE-$\bm H$, and other idealized settings in Fig.~\ref{fig:rate}. 
-    In the simulation of our IRF method, the vM-EM phase estimation algorithm is utilized with the assumption that the phases of the BS-RIS \ac{LOS} path are known. 
-    The ``Oracle'' (black dashed line) assumes perfectly-known CSI with iterative beamforming~\eqref{eqn:iterative_beamforming}. 
-    In the LMMSE-$\bm H$ method (pink dashed line), we first utilize~\eqref{eqn:LMMSE} to obtain estimates for the cascaded channel~\cite{kundu2021channel,wei2021channel}, and then perform iterative RIS beamforming~\eqref{eqn:iterative_beamforming} based on the estimated channel.
-    The MMSE-$\bm f$ method (blue line) is calculated by~\eqref{eqn:MMSE-f-estimator}. 
+    The proposed \ac{IRF} channel estimation and beamforming method are compared with the conventional MMSE-$\bm f$, LMMSE-$\bm H$, and other idealized settings in Fig.~\ref{fig:rate}. 
+    In the simulation of the IRF method, the vM-EM phase estimation algorithm is utilized with the assumption that the phases of the BS-RIS \ac{LOS} path are known. 
+    The ``Oracle'' (black dashed line) assumes perfectly-known CSI with iterative beamforming~\eqref{eqn:iter_beamforming}. 
+    In the LMMSE-$\bm H$ method (pink dashed line), we first utilize~\eqref{eqn:LMMSE} to obtain estimates for the cascaded channel~\cite{kundu2021channel,wei2021channel}, and then perform iterative RIS beamforming~\eqref{eqn:iter_beamforming} based on the estimated channel.
+    The MMSE-$\bm f$ method (blue line) is calculated by~\eqref{eqn:MMSE-f-estimator} before applying the beamforming algorithm~\eqref{eqn:iter_beamforming}. 
     The matched filter (MF) scheme (cyan line) is obtained by assuming $\sigma_z^2\to\infty$ in~\eqref{eqn:LMMSE}. 
     In addition, we also consider the randomly-phased RIS scheme as a benchmark.  
 
@@ -1152,11 +1161,11 @@ In this section, we will present our simulation results. In Subsection~\ref{Phas
     \begin{equation}
         C_{\rm PSI} = \frac{N_d}{B} \mathbb{E}\left[\log\left( 1+\gamma_{\rm user} \right)\right], \label{eqn:capacity_def}
     \end{equation} 
-    where the subscript ${\rm PSI}$ represents perfect side information~\cite{lapidoth2002fading}, and the achievable user SNR is defined as 
+    which is normalized by the pilot overhead, and the subscript ${\rm PSI}$ represents perfect side information~\cite{lapidoth2002fading}. The achievable user SNR is defined as 
     \begin{equation}
         \gamma_{\rm user} = \frac{P_{{\rm BS}, d} |{\bm f}\H {\bm \Theta} {\bm G}{\bm w}|^2}{\sigma_z^2}.
     \end{equation}
-    From this figure, we can conclude that the proposed IRF method with vM-EM phase estimation is nearly optimal even with extremely low pilot overhead. The proposed IRF method is even close to the oracle scheme, and achieves satisfactory performance throughout a wide range of the BS transmitted power. 
+    From Fig.~\ref{fig:rate}, we can conclude that the proposed IRF method with vM-EM phase estimation is nearly optimal even with extremely low pilot overhead. The proposed IRF method is even close to the oracle scheme, and achieves satisfactory performance throughout a wide range of the BS transmitted power. 
     }
 
 \section{Conclusion}
